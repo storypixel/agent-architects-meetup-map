@@ -417,7 +417,7 @@
         </div>
         <div class="stat">
           <div class="num" id="stat-coverage">&mdash;</div>
-          <div class="lbl">covered by<br>top ten hubs</div>
+          <div class="lbl">in the top<br>five hubs (k=20)</div>
         </div>
         <div class="stat">
           <div class="num" id="stat-share">&mdash;</div>
@@ -465,13 +465,13 @@ const PALETTE = [
 function topByMembers(clusters, n) {
   return clusters.slice().sort((a,b) => b.n - a.n).slice(0, n).reduce((s,c) => s + c.n, 0);
 }
-const allClusters10 = DATA.clusters[String(10)];
-const tenHubCoverage = topByMembers(allClusters10, 10);
+const top5At20 = topByMembers(DATA.clusters[String(20)], 5);
+const top5Pct = Math.round(top5At20 / DATA.total * 100);
 const allClusters30 = DATA.clusters[String(30)];
 const usMembersInClusters = allClusters30.filter(c => c.country === "United States").reduce((s,c)=>s+c.n,0);
 const countriesInClusters = new Set(allClusters30.map(c => c.country)).size;
 
-document.getElementById('stat-coverage').textContent = String(tenHubCoverage);
+document.getElementById('stat-coverage').innerHTML = `<em>${top5Pct}<span style="font-size:0.55em;letter-spacing:-0.02em;">%</span></em>`;
 document.getElementById('stat-share').innerHTML = `<em>${Math.round(usMembersInClusters / DATA.total * 100)}<span style="font-size:0.55em;letter-spacing:-0.02em;">%</span></em>`;
 document.getElementById('stat-countries').textContent = String(countriesInClusters);
 
