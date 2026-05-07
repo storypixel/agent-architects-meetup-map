@@ -3,114 +3,495 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Agent Architects · Meetup City Analysis</title>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<title>Where should Agent Architects meet? — A meetup atlas</title>
+<meta name="description" content="476 community members, k-means clustered into theoretical meetup networks at six different scales.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..900,0..100&family=Geist:wght@300..900&family=Geist+Mono:wght@400..600&display=swap">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
   :root {
-    --bg: #ffffff;
-    --panel: #f6f8fa;
-    --panel-border: #d0d7de;
-    --text: #1f2328;
-    --muted: #656d76;
-    --accent: #0969da;
-    --accent-2: #cf222e;
+    --bg: #f6f1e7;
+    --bg-warm: #efe8d9;
+    --paper: #fdfaf3;
+    --ink: #1f1a14;
+    --ink-2: #2c241c;
+    --muted: #756a5a;
+    --muted-2: #9c8f7a;
+    --rule: #d8cfc0;
+    --rule-soft: #e8dfce;
+    --accent: #b04127;
+    --accent-deep: #88311e;
+    --accent-soft: #e8d2c8;
+    --display: "Fraunces", "Times New Roman", serif;
+    --body: "Geist", -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+    --mono: "Geist Mono", "JetBrains Mono", ui-monospace, Menlo, monospace;
   }
   * { box-sizing: border-box; }
-  html, body { margin: 0; padding: 0; height: 100%; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); }
-  .layout { display: grid; grid-template-columns: 380px 1fr; height: 100vh; }
-  @media (max-width: 800px) { .layout { grid-template-columns: 1fr; grid-template-rows: auto 1fr; } #sidebar { max-height: 50vh; overflow-y: auto; } }
-  #sidebar { padding: 24px 22px; border-right: 1px solid var(--panel-border); overflow-y: auto; }
-  h1 { font-size: 18px; margin: 0 0 4px; color: var(--text); font-weight: 600; }
-  .blurb { font-size: 13px; color: var(--muted); line-height: 1.5; margin: 0 0 18px; }
-  .blurb a { color: var(--accent); text-decoration: none; }
-  .blurb a:hover { text-decoration: underline; }
-  .k-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin: 16px 0 8px; }
-  .k-buttons { display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; margin-bottom: 18px; }
-  .k-btn { padding: 8px; font-size: 13px; font-weight: 500; background: #ffffff; border: 1px solid var(--panel-border); color: var(--text); border-radius: 4px; cursor: pointer; transition: all 0.1s; }
-  .k-btn:hover { background: var(--panel); }
-  .k-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
-  .stats { font-size: 12px; color: var(--muted); margin-bottom: 12px; }
-  .stats b { color: var(--text); }
-  .cluster-table { font-size: 12px; }
-  .cluster-table table { width: 100%; border-collapse: collapse; }
-  .cluster-table th { text-align: left; font-weight: 600; color: var(--muted); padding: 6px 8px 6px 0; border-bottom: 1px solid var(--panel-border); font-size: 11px; text-transform: uppercase; letter-spacing: 0.3px; }
-  .cluster-table th.r { text-align: right; }
-  .cluster-table td { padding: 6px 8px 6px 0; border-bottom: 1px solid #eaeef2; vertical-align: top; }
-  .cluster-table tr:hover td { background: var(--panel); }
-  .cluster-table .swatch { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 8px; vertical-align: middle; flex-shrink: 0; }
-  .cluster-table .city { font-weight: 500; color: var(--text); }
-  .cluster-table .country { color: var(--muted); font-size: 11px; display: block; margin-top: 1px; }
-  .cluster-table .n { text-align: right; font-variant-numeric: tabular-nums; color: var(--text); font-weight: 500; }
-  .cluster-table .km { text-align: right; font-variant-numeric: tabular-nums; color: var(--muted); font-size: 11px; }
-  #map { width: 100%; height: 100%; background: #f0f3f6; }
-  .leaflet-container { background: #f0f3f6; }
-  .leaflet-popup-content-wrapper { background: #fff; color: var(--text); border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
-  .leaflet-popup-content { font-size: 12px; line-height: 1.5; }
-  .leaflet-popup-tip { background: #fff; }
-  .host-label { background: rgba(255,255,255,0.95); color: var(--text); padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; white-space: nowrap; border: 1px solid rgba(0,0,0,0.15); box-shadow: 0 1px 3px rgba(0,0,0,0.12); pointer-events: none; transform: translate(-50%, -130%); }
-  .host-label .pop-n { color: var(--accent-2); margin-left: 6px; }
-  .footer { font-size: 11px; color: var(--muted); margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--panel-border); line-height: 1.5; }
+  html, body {
+    margin: 0; padding: 0; min-height: 100vh;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--body);
+    font-feature-settings: "ss01", "cv11", "cv09";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  body::before {
+    content: "";
+    position: fixed; inset: 0;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.06 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    background-size: 160px 160px;
+    mix-blend-mode: multiply;
+    opacity: 0.7;
+    z-index: 9999;
+  }
+
+  /* ───────────────── HEADER ───────────────── */
+  header {
+    border-bottom: 1px solid var(--rule);
+    padding: 26px clamp(20px, 4vw, 56px) 22px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 16px 32px;
+    align-items: end;
+    position: relative;
+  }
+  .kicker {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .kicker::before {
+    content: "";
+    display: inline-block;
+    width: 18px;
+    height: 1px;
+    background: var(--accent);
+  }
+  h1.headline {
+    font-family: var(--display);
+    font-variation-settings: "opsz" 144, "SOFT" 30;
+    font-weight: 380;
+    font-style: italic;
+    font-size: clamp(34px, 5.6vw, 72px);
+    line-height: 0.96;
+    letter-spacing: -0.025em;
+    margin: 0 0 8px;
+    color: var(--ink);
+    max-width: 18ch;
+  }
+  h1.headline em {
+    font-style: normal;
+    font-weight: 600;
+    font-variation-settings: "opsz" 144, "SOFT" 0;
+    color: var(--accent-deep);
+  }
+  .dek {
+    font-family: var(--display);
+    font-variation-settings: "opsz" 24;
+    font-weight: 380;
+    font-size: clamp(15px, 1.4vw, 19px);
+    line-height: 1.45;
+    color: var(--muted);
+    max-width: 56ch;
+    margin: 0;
+  }
+  .meta {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted-2);
+    letter-spacing: 0.04em;
+    text-align: right;
+    line-height: 1.7;
+    white-space: nowrap;
+  }
+  .meta a { color: var(--ink-2); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 0.5px; text-decoration-color: var(--rule); }
+  .meta a:hover { text-decoration-color: var(--accent); color: var(--accent); }
+
+  /* ───────────────── MAIN ─────────────────── */
+  main {
+    display: grid;
+    grid-template-columns: minmax(340px, 420px) 1fr;
+    min-height: calc(100vh - 132px);
+  }
+  @media (max-width: 900px) {
+    main { grid-template-columns: 1fr; grid-template-rows: auto auto; }
+    aside { border-right: 0 !important; border-bottom: 1px solid var(--rule); }
+    #map { min-height: 60vh; }
+  }
+
+  aside {
+    border-right: 1px solid var(--rule);
+    padding: 32px clamp(20px, 2.4vw, 40px) 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    overflow-y: auto;
+  }
+
+  .section-label {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 14px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .section-label::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--rule-soft);
+  }
+
+  .summary-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px 18px;
+  }
+  .stat .num {
+    font-family: var(--display);
+    font-variation-settings: "opsz" 144;
+    font-weight: 380;
+    font-size: 44px;
+    line-height: 0.95;
+    letter-spacing: -0.025em;
+    color: var(--ink);
+  }
+  .stat .num em { font-style: italic; color: var(--accent); }
+  .stat .lbl {
+    margin-top: 6px;
+    font-size: 11.5px;
+    color: var(--muted);
+    line-height: 1.4;
+    letter-spacing: 0.01em;
+  }
+
+  /* ───────────────── K TOGGLE ────────────── */
+  .toggle-row {
+    display: flex;
+    gap: 0;
+    padding: 4px;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    margin-bottom: 10px;
+  }
+  .k-btn {
+    flex: 1;
+    padding: 8px 0;
+    background: transparent;
+    border: 0;
+    border-radius: 999px;
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted);
+    cursor: pointer;
+    transition: color 220ms cubic-bezier(0.16, 1, 0.3, 1), background 220ms cubic-bezier(0.16, 1, 0.3, 1), transform 120ms ease;
+    letter-spacing: 0.04em;
+  }
+  .k-btn:hover { color: var(--ink); }
+  .k-btn:active { transform: translateY(0.5px); }
+  .k-btn.active {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .toggle-caption {
+    font-size: 11.5px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* ───────────────── TABLE ───────────────── */
+  .ctable { font-size: 13px; line-height: 1.5; }
+  .ctable table { width: 100%; border-collapse: collapse; }
+  .ctable thead th {
+    text-align: left;
+    font-family: var(--mono);
+    font-weight: 500;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--muted-2);
+    padding: 0 8px 8px 0;
+    border-bottom: 1px solid var(--ink-2);
+  }
+  .ctable thead th.r { text-align: right; }
+  .ctable tbody td {
+    padding: 9px 8px 9px 0;
+    border-bottom: 1px solid var(--rule-soft);
+    vertical-align: top;
+  }
+  .ctable tbody tr {
+    animation: rowIn 480ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: calc(var(--i, 0) * 35ms);
+  }
+  @keyframes rowIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .ctable tbody tr:hover td { background: var(--bg-warm); }
+  .ctable .swatch {
+    display: inline-block;
+    width: 9px; height: 9px;
+    background: currentColor;
+    border-radius: 50%;
+    margin-right: 9px;
+    vertical-align: 2px;
+    box-shadow: 0 0 0 2px var(--paper);
+    transition: transform 240ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .ctable tr:hover .swatch { transform: scale(1.35); }
+  .ctable .city { font-weight: 500; color: var(--ink); }
+  .ctable .country {
+    color: var(--muted);
+    font-size: 10.5px;
+    font-family: var(--mono);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    display: block;
+    margin-top: 2px;
+  }
+  .ctable .n {
+    text-align: right;
+    font-family: var(--mono);
+    font-variant-numeric: tabular-nums;
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .ctable .km {
+    text-align: right;
+    font-family: var(--mono);
+    font-variant-numeric: tabular-nums;
+    color: var(--muted);
+    font-size: 11.5px;
+  }
+
+  /* ───────────────── FOOTNOTE ───────────── */
+  .footnote {
+    font-family: var(--display);
+    font-variation-settings: "opsz" 14;
+    font-style: italic;
+    font-size: 12.5px;
+    line-height: 1.55;
+    color: var(--muted);
+    border-top: 1px solid var(--rule-soft);
+    padding-top: 18px;
+  }
+  .footnote::first-line { font-style: normal; }
+  .footnote a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 0.5px;
+  }
+
+  /* ───────────────── MAP ─────────────────── */
+  #map { width: 100%; height: 100%; min-height: 50vh; }
+  .leaflet-container {
+    background: var(--bg-warm);
+    font-family: var(--body);
+    font-size: 12px;
+  }
+  .leaflet-control-attribution {
+    background: rgba(253, 250, 243, 0.85) !important;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    padding: 2px 6px;
+  }
+  .leaflet-control-attribution a { color: var(--muted-2) !important; }
+  .leaflet-control-zoom {
+    border: 1px solid var(--rule) !important;
+    box-shadow: none !important;
+    border-radius: 4px !important;
+    overflow: hidden;
+  }
+  .leaflet-control-zoom a {
+    background: var(--paper) !important;
+    color: var(--ink-2) !important;
+    border: 0 !important;
+    border-bottom: 1px solid var(--rule) !important;
+    width: 28px !important;
+    height: 28px !important;
+    line-height: 28px !important;
+    font-family: var(--display) !important;
+    font-weight: 400 !important;
+  }
+  .leaflet-control-zoom a:last-child { border-bottom: 0 !important; }
+  .leaflet-control-zoom a:hover { background: var(--bg-warm) !important; }
+  .leaflet-popup-content-wrapper {
+    background: var(--paper);
+    color: var(--ink);
+    border-radius: 4px;
+    border: 1px solid var(--rule);
+    box-shadow: 0 8px 24px -12px rgba(31, 26, 20, 0.18);
+  }
+  .leaflet-popup-content { font-size: 12.5px; line-height: 1.55; margin: 12px 14px; }
+  .leaflet-popup-content b {
+    font-family: var(--display);
+    font-variation-settings: "opsz" 14;
+    font-weight: 500;
+    font-size: 14px;
+    color: var(--ink);
+  }
+  .leaflet-popup-content .pop-stats {
+    margin-top: 6px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.02em;
+  }
+  .leaflet-popup-tip { background: var(--paper); border: 1px solid var(--rule); }
+
+  .host-label {
+    background: var(--paper);
+    color: var(--ink);
+    padding: 3px 8px;
+    border-radius: 2px;
+    font-family: var(--body);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.005em;
+    white-space: nowrap;
+    border: 1px solid var(--rule);
+    box-shadow: 0 1px 2px rgba(31, 26, 20, 0.08);
+    pointer-events: none;
+    transform: translate(-50%, -150%);
+    line-height: 1.2;
+  }
+  .host-label .pop-n {
+    margin-left: 8px;
+    font-family: var(--mono);
+    font-variant-numeric: tabular-nums;
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  /* ───────────────── REVEAL ─────────────── */
+  .reveal { opacity: 0; transform: translateY(8px); animation: reveal 760ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+  @keyframes reveal { to { opacity: 1; transform: translateY(0); } }
+  .d1 { animation-delay: 60ms; }
+  .d2 { animation-delay: 140ms; }
+  .d3 { animation-delay: 220ms; }
+  .d4 { animation-delay: 300ms; }
+  .d5 { animation-delay: 380ms; }
+  .d6 { animation-delay: 460ms; }
 </style>
 </head>
 <body>
-<div class="layout">
-  <div id="sidebar">
-    <h1>Agent Architects · Meetup City Analysis</h1>
-    <p class="blurb">476 community members from <a href="https://www.skool.com/agent-architects/-/map" target="_blank" rel="noopener">Skool's member map</a>, k-means clustered into theoretical meetup hubs. Toggle k below to see how the picture changes.</p>
 
-    <div class="k-label">Number of meetup cities</div>
-    <div class="k-buttons" id="k-buttons"></div>
-
-    <div class="stats" id="stats"></div>
-
-    <div class="cluster-table" id="cluster-table"></div>
-
-    <div class="footer">
-      Snap-to-metro uses cities with population ≥ 500k. K-means runs on raw lat/lng. A handful of labels are remapped to the recognizable metro name (e.g. The Bronx → New York; Havana → Miami area).
-    </div>
+<header>
+  <div class="reveal d1">
+    <div class="kicker">Cartography &middot; May 2026</div>
+    <h1 class="headline">Where should <em>Agent Architects</em> meet?</h1>
+    <p class="dek">A k-means atlas of 476 community members &mdash; six theoretical meetup networks, drawn from one map.</p>
   </div>
-  <div id="map"></div>
-</div>
+  <div class="meta reveal d2">
+    Source &middot; <a href="https://www.skool.com/agent-architects/-/map" target="_blank" rel="noopener">Skool member map</a><br>
+    Method &middot; k-means &middot; haversine<br>
+    Code &middot; <a href="https://github.com/storypixel/agent-architects-meetup-map" target="_blank" rel="noopener">github &#8599;</a>
+  </div>
+</header>
+
+<main>
+  <aside>
+
+    <section class="reveal d3">
+      <div class="section-label">By the numbers</div>
+      <div class="summary-grid">
+        <div class="stat">
+          <div class="num"><em>476</em></div>
+          <div class="lbl">members<br>mapped</div>
+        </div>
+        <div class="stat">
+          <div class="num" id="stat-coverage">&mdash;</div>
+          <div class="lbl">covered by<br>five hubs</div>
+        </div>
+        <div class="stat">
+          <div class="num" id="stat-share">&mdash;</div>
+          <div class="lbl">share of<br>members in US</div>
+        </div>
+        <div class="stat">
+          <div class="num" id="stat-countries">&mdash;</div>
+          <div class="lbl">countries<br>represented</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="reveal d4">
+      <div class="section-label">Number of hubs</div>
+      <div class="toggle-row" id="k-buttons" role="tablist"></div>
+      <p class="toggle-caption" id="toggle-caption"></p>
+    </section>
+
+    <section class="reveal d5">
+      <div class="section-label">Cluster ledger</div>
+      <div class="ctable" id="cluster-table"></div>
+    </section>
+
+    <p class="footnote reveal d6">
+      A cluster's <em>host</em> is the major metro where the most members in that cluster live. Distances are great&#8209;circle, not driving. A handful of metros below the population&#8209;500,000 threshold are force&#8209;included where they&rsquo;re obvious anchors &mdash; Miami, Orlando, Salt&nbsp;Lake&nbsp;City, and a few others &mdash; so the map snaps to the city people actually live in.
+    </p>
+  </aside>
+
+  <div id="map" class="reveal d3"></div>
+</main>
 
 <script>
-const DATA = {"members": [{"lat": 51.209257, "lng": 1.072083}, {"lat": 38.48799461, "lng": -81.87011719}, {"lat": 42.142112, "lng": -87.682321}, {"lat": 47.67740909, "lng": -122.3286438}, {"lat": 28.875856, "lng": -81.550448}, {"lat": 30.307724, "lng": 31.232452}, {"lat": 39.63806844, "lng": -83.90787954}, {"lat": 13.964473, "lng": 100.61611}, {"lat": 31.365693, "lng": -106.106658}, {"lat": 40.376383, "lng": -111.947583}, {"lat": 54.87579308, "lng": -1.4307009}, {"lat": 50.17669068, "lng": 8.66463844}, {"lat": 49.10867342, "lng": -122.54844946}, {"lat": 45.65244829, "lng": 25.6111908}, {"lat": 38.61687046, "lng": -102.3046875}, {"lat": 36.922576, "lng": -94.28799}, {"lat": 48.032948, "lng": 16.592204}, {"lat": 49.869287, "lng": -122.849685}, {"lat": 35.825918, "lng": -78.620027}, {"lat": 40.75505951, "lng": -111.88682556}, {"lat": 34.10136422, "lng": -117.7468727}, {"lat": 26.008879, "lng": -80.200078}, {"lat": 51.269267, "lng": -2.354736}, {"lat": 38.740753, "lng": -76.786551}, {"lat": 48.50955339, "lng": -123.51318107}, {"lat": 33.590521, "lng": -117.552086}, {"lat": 35.672365, "lng": -84.144752}, {"lat": 36.07615969, "lng": -86.68472137}, {"lat": 30.280705, "lng": 31.339874}, {"lat": 33.452802, "lng": -111.777708}, {"lat": 37.85762655, "lng": 32.29239845}, {"lat": 47.387426, "lng": -122.217244}, {"lat": 36.20007696, "lng": -86.71580774}, {"lat": 41.39007281, "lng": -73.5059913}, {"lat": 33.39993132, "lng": -111.85394665}, {"lat": 2.935011, "lng": 101.595746}, {"lat": 29.79092871, "lng": -95.58775887}, {"lat": 47.517785, "lng": -122.691147}, {"lat": 48.20637134, "lng": 16.36413574}, {"lat": 38.98129653, "lng": -94.68360901}, {"lat": 40.640861, "lng": -78.121711}, {"lat": 37.768174, "lng": 23.611258}, {"lat": 32.789219, "lng": -97.47727}, {"lat": 33.16629498, "lng": -117.32917786}, {"lat": 40.677998, "lng": -73.894811}, {"lat": 49.399381, "lng": -123.239201}, {"lat": 25.926128, "lng": -79.991905}, {"lat": 49.494011, "lng": -123.00789}, {"lat": 40.11700852, "lng": -75.29011215}, {"lat": 33.874659, "lng": -118.44813}, {"lat": 14.60077588, "lng": 121.12695638}, {"lat": -27.708786, "lng": 153.087548}, {"lat": 40.47816, "lng": -111.958424}, {"lat": 50.009074, "lng": 14.068312}, {"lat": 49.19276396, "lng": -122.97101691}, {"lat": 33.934046, "lng": -84.062502}, {"lat": 33.839004, "lng": -118.084747}, {"lat": 35.266759, "lng": -119.21359}, {"lat": 36.027522, "lng": -78.658532}, {"lat": 37.05703525, "lng": -113.49213905}, {"lat": 38.743971, "lng": -8.830408}, {"lat": 50.912572, "lng": 2.883244}, {"lat": 33.997848, "lng": -119.009321}, {"lat": 41.94531425, "lng": -73.72001115}, {"lat": 53.284377, "lng": -5.816271}, {"lat": 52.5835667, "lng": -7.2272696}, {"lat": 33.505179, "lng": -117.680801}, {"lat": 43.886586, "lng": -70.358411}, {"lat": 32.289596, "lng": -111.198884}, {"lat": 43.75453, "lng": -79.731283}, {"lat": 38.928786, "lng": -86.471736}, {"lat": 25.64343419, "lng": -80.40743573}, {"lat": 26.052187, "lng": -98.520921}, {"lat": 37.69009, "lng": -122.14943}, {"lat": 42.56104275, "lng": -84.6052263}, {"lat": 50.08646766, "lng": 8.53440635}, {"lat": 30.312431, "lng": -98.008419}, {"lat": 47.75267036, "lng": 11.4853601}, {"lat": 43.40287431, "lng": -79.96647812}, {"lat": 37.329609, "lng": -122.261534}, {"lat": -33.946164, "lng": 150.833648}, {"lat": 32.982584, "lng": -117.477332}, {"lat": 36.253425, "lng": -79.052467}, {"lat": 25.779867, "lng": -80.474615}, {"lat": 51.533028, "lng": -3.57087}, {"lat": 36.08116521, "lng": -115.03832206}, {"lat": 32.70449, "lng": -116.947923}, {"lat": 39.862941, "lng": -105.254213}, {"lat": 36.028266, "lng": -78.633258}, {"lat": 40.955389, "lng": -74.128318}, {"lat": 29.66233623, "lng": -95.33785486}, {"lat": 37.110931, "lng": -122.056608}, {"lat": 42.192489, "lng": -70.811775}, {"lat": -38.039715, "lng": 144.843326}, {"lat": 30.73183752, "lng": -97.82592842}, {"lat": 40.478034, "lng": -111.543581}, {"lat": 34.23401564, "lng": -118.53492737}, {"lat": 38.840357, "lng": -121.587488}, {"lat": 41.53539, "lng": -72.847128}, {"lat": 59.86756471, "lng": 10.8578663}, {"lat": 45.609706, "lng": -122.993347}, {"lat": 39.00312035, "lng": -76.79967513}, {"lat": 27.700238, "lng": -82.019331}, {"lat": 41.783508, "lng": -91.855444}, {"lat": 55.434157, "lng": 12.541579}, {"lat": 36.417365, "lng": -86.812768}, {"lat": 42.157974, "lng": -87.575205}, {"lat": 41.001521, "lng": -74.042758}, {"lat": 42.163247, "lng": -70.838646}, {"lat": 39.26043, "lng": -77.281875}, {"lat": 45.31127567, "lng": -75.82027616}, {"lat": 40.62983452, "lng": -111.86327236}, {"lat": 51.807348, "lng": 0.097823}, {"lat": 47.581393, "lng": -121.82985}, {"lat": 42.138214, "lng": -70.506596}, {"lat": 51.257333, "lng": -0.028032}, {"lat": 33.475497, "lng": -112.209798}, {"lat": -0.21285962, "lng": -78.51104736}, {"lat": 40.669437, "lng": -74.379905}, {"lat": 33.76681867, "lng": -118.19641113}, {"lat": 38.882096, "lng": -77.228921}, {"lat": 41.191106, "lng": 28.749819}, {"lat": 44.4012, "lng": -79.216573}, {"lat": 41.25299262, "lng": -111.98551949}, {"lat": 50.244267, "lng": -104.346887}, {"lat": 55.655701, "lng": -3.727794}, {"lat": 53.096589, "lng": -6.227744}, {"lat": 50.915007, "lng": -113.877839}, {"lat": 33.76578215, "lng": -117.99167278}, {"lat": 25.10674092, "lng": 55.23376465}, {"lat": 39.857726, "lng": -105.181513}, {"lat": 37.760802, "lng": 23.842735}, {"lat": 38.839984, "lng": -94.544683}, {"lat": 18.608485, "lng": -65.86829}, {"lat": 33.931584, "lng": -118.527049}, {"lat": 34.219095, "lng": -118.115414}, {"lat": 37.36156, "lng": 126.788269}, {"lat": 42.794711, "lng": -73.996064}, {"lat": 31.843593, "lng": 34.788477}, {"lat": 26.22243728, "lng": -80.24917417}, {"lat": 24.477904, "lng": 46.567902}, {"lat": 29.015541, "lng": -81.446579}, {"lat": 42.591823, "lng": -71.119962}, {"lat": 41.63688, "lng": -87.579991}, {"lat": 47.29264983, "lng": 8.39710557}, {"lat": 31.92923, "lng": 34.526965}, {"lat": 37.522668, "lng": 126.74213}, {"lat": 9.73313585, "lng": 99.98505092}, {"lat": 6.21470994, "lng": -75.6665995}, {"lat": 38.65805, "lng": -0.560697}, {"lat": -34.184301, "lng": 22.315296}, {"lat": 33.546157, "lng": -117.849955}, {"lat": 77.69287034, "lng": -159.2578125}, {"lat": 40.1603608, "lng": -75.12097165}, {"lat": 47.248802, "lng": 19.186871}, {"lat": 33.875821, "lng": -118.042963}, {"lat": 1.110831, "lng": 103.964623}, {"lat": 1.28115203, "lng": 103.85071491}, {"lat": 37.532658, "lng": -121.815313}, {"lat": 45.29131277, "lng": -93.66217478}, {"lat": 30.200422, "lng": -98.031066}, {"lat": 34.109871, "lng": -118.764684}, {"lat": 33.241993, "lng": -112.167974}, {"lat": 44.814281, "lng": -93.018686}, {"lat": 37.31048603, "lng": -121.90085685}, {"lat": 37.97962, "lng": -122.462345}, {"lat": 51.31481, "lng": 0.120294}, {"lat": -22.89034476, "lng": -43.07660572}, {"lat": 44.803602, "lng": 22.386553}, {"lat": 42.849734, "lng": -79.199366}, {"lat": -33.662369, "lng": 151.401293}, {"lat": 33.080766, "lng": -96.938038}, {"lat": 40.714151, "lng": -74.233066}, {"lat": 24.830495, "lng": 55.345338}, {"lat": 51.395423, "lng": 3.510291}, {"lat": 52.36386043, "lng": 4.90539551}, {"lat": 30.051877, "lng": -97.514342}, {"lat": 51.47111883, "lng": 7.15209961}, {"lat": -33.9033097, "lng": 151.10058476}, {"lat": -15.603645, "lng": -48.121462}, {"lat": 18.209541, "lng": -65.170753}, {"lat": 37.40191735, "lng": -121.8412502}, {"lat": 18.80824, "lng": 72.921267}, {"lat": 33.78946978, "lng": -84.41482716}, {"lat": 44.839416, "lng": 20.831669}, {"lat": 33.829664, "lng": -118.156276}, {"lat": 32.598648, "lng": -96.981939}, {"lat": 40.60205224, "lng": -73.96065278}, {"lat": 41.071825, "lng": -73.919601}, {"lat": 33.98564551, "lng": -118.31836676}, {"lat": 41.277685, "lng": -72.86012}, {"lat": 42.430634, "lng": -70.787533}, {"lat": 36.295502, "lng": -114.980973}, {"lat": 45.551473, "lng": -122.475156}, {"lat": 13.9234039, "lng": 100.8984375}, {"lat": 42.11920729, "lng": -71.17487608}, {"lat": 39.635687, "lng": -105.293352}, {"lat": 59.543303, "lng": 18.391837}, {"lat": -23.414781, "lng": -46.891066}, {"lat": 40.76909712, "lng": -73.67274169}, {"lat": 37.115134, "lng": -122.030057}, {"lat": 40.71457861, "lng": -74.02498247}, {"lat": 49.03384574, "lng": 2.45988797}, {"lat": 26.047134, "lng": -80.190454}, {"lat": 51.787327, "lng": -0.254301}, {"lat": 37.727862, "lng": 23.664663}, {"lat": 51.423278, "lng": 0.281364}, {"lat": -33.715206, "lng": 150.990132}, {"lat": 41.702803, "lng": -71.342249}, {"lat": 41.593857, "lng": -87.81496}, {"lat": 38.97515797, "lng": -94.68463898}, {"lat": 53.16876922, "lng": -6.29599009}, {"lat": 33.54316971, "lng": -117.6919198}, {"lat": 25.16624118, "lng": 55.35442027}, {"lat": 33.732924, "lng": -118.357483}, {"lat": 38.13455658, "lng": -81.9140625}, {"lat": 42.59564007, "lng": 23.00260544}, {"lat": 49.056855, "lng": -122.475343}, {"lat": 42.241023, "lng": -88.057003}, {"lat": 28.898331, "lng": -81.504355}, {"lat": 47.71063402, "lng": -122.2271784}, {"lat": 30.038922, "lng": -97.662188}, {"lat": 41.24781872, "lng": 1.86855465}, {"lat": 34.05961, "lng": -118.700766}, {"lat": 13.558487, "lng": 100.671157}, {"lat": 25.745479, "lng": -80.471461}, {"lat": 25.53363895, "lng": -80.47078942}, {"lat": 33.942325, "lng": -118.115028}, {"lat": 34.259896, "lng": -84.542233}, {"lat": 45.94687177, "lng": 16.03789054}, {"lat": 38.71747817, "lng": -121.23764525}, {"lat": 29.925383, "lng": -95.939305}, {"lat": 33.08295, "lng": -112.10732}, {"lat": 37.515142, "lng": -97.974713}, {"lat": 42.094602, "lng": -87.942895}, {"lat": 32.07803835, "lng": 34.77422297}, {"lat": 45.194055, "lng": -93.056064}, {"lat": 35.11625782, "lng": -89.84670639}, {"lat": 51.366045, "lng": 7.408892}, {"lat": 40.75634, "lng": -73.664145}, {"lat": 59.110398, "lng": 18.296952}, {"lat": 28.103059, "lng": -82.720065}, {"lat": 29.526319, "lng": -95.406965}, {"lat": 45.39432248, "lng": -73.57147134}, {"lat": 51.36247433, "lng": -0.60412461}, {"lat": 29.76506469, "lng": -95.51354528}, {"lat": 33.8950777, "lng": -118.05929543}, {"lat": 41.862083, "lng": -70.30639}, {"lat": 41.95642632, "lng": 12.37956731}, {"lat": 26.64316264, "lng": -81.87149048}, {"lat": 40.553369, "lng": -74.109183}, {"lat": 29.66896253, "lng": -82.35900879}, {"lat": 39.75457744, "lng": -105.12699758}, {"lat": 33.504945, "lng": -117.790624}, {"lat": 52.111787, "lng": 10.855667}, {"lat": 33.93414815, "lng": -117.86403137}, {"lat": 45.571248, "lng": -73.939015}, {"lat": 26.593091, "lng": -79.987844}, {"lat": 30.206028, "lng": -97.467885}, {"lat": 39.445562, "lng": -106.758806}, {"lat": -8.62260063, "lng": 115.1182555}, {"lat": 32.89851555, "lng": -117.15128404}, {"lat": 19.317913, "lng": -99.380263}, {"lat": 41.569433, "lng": -73.849693}, {"lat": 37.329276, "lng": -121.680108}, {"lat": 51.270991, "lng": -0.081606}, {"lat": 35.612428, "lng": -78.476033}, {"lat": 46.628042, "lng": -96.867678}, {"lat": 34.015081, "lng": -118.155321}, {"lat": 47.981031, "lng": 11.321705}, {"lat": 42.331981, "lng": -87.546106}, {"lat": 40.946306, "lng": -73.907448}, {"lat": 50.544264, "lng": 6.862205}, {"lat": 39.401869, "lng": -86.486559}, {"lat": 33.352745, "lng": -112.360874}, {"lat": 29.97769, "lng": -95.349714}, {"lat": 33.82416758, "lng": -84.3356684}, {"lat": 48.417688, "lng": 16.152283}, {"lat": 59.33924416, "lng": 18.31679289}, {"lat": 48.462383, "lng": 17.820106}, {"lat": 45.281244, "lng": -122.480949}, {"lat": 34.35628, "lng": -119.027294}, {"lat": 27.64095129, "lng": -99.52848773}, {"lat": 37.521932, "lng": -122.448227}, {"lat": 38.52625553, "lng": -122.87105174}, {"lat": 40.59619922, "lng": -111.758392}, {"lat": 35.842916, "lng": -115.170184}, {"lat": 39.05223664, "lng": -77.00211495}, {"lat": 45.304107, "lng": -73.415869}, {"lat": -33.200899, "lng": -70.543278}, {"lat": 30.27152139, "lng": -97.74398804}, {"lat": 45.49660233, "lng": -74.00349906}, {"lat": 38.91257546, "lng": -77.74909792}, {"lat": 40.3338021, "lng": -76.86870399}, {"lat": 37.283703, "lng": -121.580978}, {"lat": 41.554022, "lng": -81.047146}, {"lat": -27.688874, "lng": 153.256224}, {"lat": 36.657899, "lng": -4.620222}, {"lat": 41.630518, "lng": 2.261117}, {"lat": 13.8672, "lng": 100.661213}, {"lat": 35.12595523, "lng": -80.98528093}, {"lat": 42.96115195, "lng": -85.81020482}, {"lat": 43.780472, "lng": -115.9402}, {"lat": 43.336833, "lng": -116.463568}, {"lat": 11.52158252, "lng": 104.979845}, {"lat": 36.291019, "lng": -115.052447}, {"lat": -41.309043, "lng": 175.134761}, {"lat": 50.198756, "lng": 11.867847}, {"lat": 40.938592, "lng": -73.706115}, {"lat": 34.34657503, "lng": -119.29839461}, {"lat": 55.0430086, "lng": -1.72011455}, {"lat": 42.191368, "lng": -71.944664}, {"lat": 34.03268832, "lng": -84.17628101}, {"lat": 37.201002, "lng": -121.929729}, {"lat": 25.07472, "lng": 55.572894}, {"lat": 33.75989574, "lng": -84.27916925}, {"lat": 34.121747, "lng": -118.350402}, {"lat": 29.116492, "lng": 47.937696}, {"lat": 33.824596, "lng": -117.447414}, {"lat": 28.23864144, "lng": -81.55464247}, {"lat": 37.91522, "lng": -122.664907}, {"lat": 54.095037, "lng": -5.914477}, {"lat": 43.625731, "lng": -79.09355}, {"lat": 50.06806022, "lng": 8.93909536}, {"lat": 50.92008585, "lng": 4.47760916}, {"lat": -15.586233, "lng": -47.748157}, {"lat": 38.764548, "lng": 0.041834}, {"lat": 34.926838, "lng": -82.599258}, {"lat": 1.42072, "lng": 103.682191}, {"lat": 33.93745722, "lng": -117.86024994}, {"lat": 40.030742, "lng": -74.920732}, {"lat": 52.727559, "lng": 13.310285}, {"lat": 36.022617, "lng": 14.752305}, {"lat": 41.86637922, "lng": -87.63122555}, {"lat": 45.68625, "lng": 9.407136}, {"lat": 43.752272, "lng": -79.408843}, {"lat": 40.84459586, "lng": -73.87458171}, {"lat": 59.585851, "lng": 18.077667}, {"lat": 40.533487, "lng": -74.757785}, {"lat": 33.055994, "lng": -116.99491}, {"lat": 36.065508, "lng": -86.645536}, {"lat": 36.965125, "lng": 126.711526}, {"lat": 37.73235414, "lng": -97.66621196}, {"lat": 37.71369, "lng": -122.082298}, {"lat": -36.823113, "lng": 174.456135}, {"lat": 34.19617, "lng": -117.958731}, {"lat": -27.44557371, "lng": 152.87827422}, {"lat": 78.63000557, "lng": -163.125}, {"lat": -13.5819209, "lng": 63.45703125}, {"lat": 26.183094, "lng": -79.950227}, {"lat": 52.97654636, "lng": 6.18557498}, {"lat": 39.989118, "lng": -85.869437}, {"lat": 45.4146693, "lng": -75.40752332}, {"lat": 40.5081519, "lng": -111.91286118}, {"lat": 59.89673632, "lng": 10.99616727}, {"lat": 39.488307, "lng": -77.730649}, {"lat": 42.451223, "lng": -82.868054}, {"lat": -37.864178, "lng": 145.372858}, {"lat": 53.55319918, "lng": -1.62297273}, {"lat": 36.16254765, "lng": -86.77310944}, {"lat": -43.720898, "lng": 172.838009}, {"lat": 41.37422986, "lng": -72.74058904}, {"lat": 50.9065181, "lng": -114.15416088}, {"lat": 63.207963, "lng": 22.167143}, {"lat": 37.219104, "lng": -120.151558}, {"lat": 32.825227, "lng": -97.104592}, {"lat": 34.71452466, "lng": -86.57226563}, {"lat": 37.705979, "lng": -122.544303}, {"lat": 43.64421094, "lng": -116.3640211}, {"lat": 37.38752324, "lng": -121.96270501}, {"lat": 40.71851, "lng": -74.108179}, {"lat": 33.83605, "lng": -112.317687}, {"lat": 42.097994, "lng": -88.090035}, {"lat": 19.388731, "lng": -99.045428}, {"lat": 25.77148411, "lng": -80.32465422}, {"lat": 36.586327, "lng": -75.761743}, {"lat": 29.778722, "lng": -98.592455}, {"lat": 40.6126, "lng": -73.661126}, {"lat": 33.937596, "lng": -83.865434}, {"lat": 52.692495, "lng": -1.318681}, {"lat": -22.890154, "lng": -42.903753}, {"lat": 45.5128731, "lng": -73.57020378}, {"lat": 24.905867, "lng": 46.874416}, {"lat": 40.539321, "lng": -74.184691}, {"lat": 42.907377, "lng": -84.230153}, {"lat": 42.287976, "lng": -72.910122}, {"lat": 38.205824, "lng": 23.635101}, {"lat": 41.10068376, "lng": -84.8080476}, {"lat": 51.454925, "lng": -3.166695}, {"lat": 49.216628, "lng": -123.320065}, {"lat": 40.656609, "lng": -74.26386}, {"lat": 28.070001, "lng": -81.732523}, {"lat": 33.599267, "lng": -117.97365}, {"lat": 49.20988867, "lng": -123.00786996}, {"lat": 52.315683, "lng": 5.764775}, {"lat": 38.67210882, "lng": -121.06693268}, {"lat": 40.103264, "lng": -88.370587}, {"lat": 41.339211, "lng": -81.135041}, {"lat": 51.806669, "lng": 4.266183}, {"lat": -38.197039, "lng": 145.354736}, {"lat": 38.367608, "lng": -121.973807}, {"lat": 53.47341824, "lng": 10.07426414}, {"lat": 33.52150461, "lng": -117.70751953}, {"lat": 25.905212, "lng": -79.903989}, {"lat": 52.4805458, "lng": 5.02351298}, {"lat": 40.12752206, "lng": -111.60727462}, {"lat": 30.380117, "lng": -97.406335}, {"lat": 25.76652298, "lng": -80.19497037}, {"lat": 45.37353426, "lng": -73.63917876}, {"lat": 33.75411822, "lng": -84.30902946}, {"lat": 42.048028, "lng": -87.925423}, {"lat": 49.114241, "lng": 2.406553}, {"lat": -0.447563, "lng": -78.669826}, {"lat": 32.000973, "lng": -111.142342}, {"lat": -37.632823, "lng": 145.197306}, {"lat": 36.321813, "lng": -83.55102}, {"lat": 37.907585, "lng": -97.557814}, {"lat": 41.024363, "lng": -73.763613}, {"lat": 38.530662, "lng": -90.456344}, {"lat": 1.368755, "lng": 104.130953}, {"lat": 51.58525216, "lng": -0.56516913}, {"lat": 32.857966, "lng": -96.637046}, {"lat": 37.190099, "lng": 127.361912}, {"lat": -36.52729481, "lng": 174.73974606}, {"lat": 45.58232862, "lng": -73.56445313}, {"lat": 26.3735776, "lng": -98.30303501}, {"lat": 45.62719209, "lng": -122.85572946}, {"lat": 34.008481, "lng": -84.429556}, {"lat": 32.544407, "lng": -97.482868}, {"lat": 41.740479, "lng": -87.963305}, {"lat": 33.549483, "lng": -117.594416}, {"lat": 28.50027496, "lng": -81.35614484}, {"lat": 38.78339786, "lng": -9.44337946}, {"lat": 40.366207, "lng": -111.764126}, {"lat": 47.55429102, "lng": -122.33272081}, {"lat": 39.702972, "lng": -105.041267}, {"lat": 32.80825998, "lng": -96.93789498}, {"lat": 33.718811, "lng": -84.646781}, {"lat": 39.989404, "lng": -104.967029}, {"lat": 42.21732, "lng": -87.937586}, {"lat": 35.507204, "lng": -80.611373}, {"lat": 39.923639, "lng": -104.683769}, {"lat": 42.015267, "lng": -73.67184}, {"lat": 18.308749, "lng": -65.882941}, {"lat": 45.928395, "lng": 7.243967}, {"lat": 33.529, "lng": -84.421377}, {"lat": 16.692161, "lng": 80.47691}, {"lat": 37.818981, "lng": -122.101061}, {"lat": 39.676933, "lng": -85.874256}, {"lat": 33.04750144, "lng": -96.43705119}, {"lat": -22.852922, "lng": -42.932578}, {"lat": 60.000583, "lng": 11.18935}, {"lat": 38.92920672, "lng": -77.10821544}, {"lat": 32.998855, "lng": -96.663127}, {"lat": -33.725308, "lng": 151.473051}, {"lat": -8.136893, "lng": -35.278885}, {"lat": 28.825292, "lng": 77.385834}, {"lat": 45.40182488, "lng": 11.87759399}, {"lat": 34.279558, "lng": -119.157213}, {"lat": 40.976345, "lng": -73.665822}, {"lat": 40.766583, "lng": -73.586084}, {"lat": 29.6478848, "lng": -95.20074261}, {"lat": 41.260754, "lng": -81.929689}, {"lat": 30.42841968, "lng": -97.70469295}, {"lat": 52.539215, "lng": 12.94404}, {"lat": 32.938166, "lng": -117.225428}, {"lat": 6.071317, "lng": -75.755576}, {"lat": 35.66916385, "lng": -87.05423915}, {"lat": 31.99769, "lng": 34.488925}, {"lat": 52.357563, "lng": 4.473193}, {"lat": 60.168324, "lng": 10.819783}, {"lat": 42.584062, "lng": -71.183984}, {"lat": 50.06689461, "lng": 8.54420401}, {"lat": 39.07485, "lng": -94.781464}, {"lat": 51.276585, "lng": 4.847041}, {"lat": -37.727621, "lng": 144.841444}], "assignments": {"5": [2, 0, 0, 1, 0, 2, 0, 3, 1, 1, 2, 2, 1, 2, 1, 0, 2, 1, 0, 1, 1, 0, 2, 0, 1, 1, 0, 0, 2, 1, 2, 1, 0, 0, 1, 3, 0, 1, 2, 0, 0, 2, 0, 1, 0, 1, 0, 1, 0, 1, 3, 4, 1, 2, 1, 0, 1, 1, 0, 1, 2, 2, 1, 0, 2, 2, 1, 0, 1, 0, 0, 0, 0, 1, 0, 2, 0, 2, 0, 1, 4, 1, 0, 0, 2, 1, 1, 1, 0, 0, 0, 1, 0, 4, 0, 1, 1, 1, 0, 2, 1, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 1, 2, 1, 0, 2, 1, 0, 0, 1, 0, 2, 0, 1, 1, 2, 2, 1, 1, 3, 1, 2, 0, 0, 1, 1, 3, 0, 2, 0, 2, 0, 0, 0, 2, 2, 3, 3, 0, 2, 2, 1, 1, 0, 2, 1, 3, 3, 1, 0, 0, 1, 1, 0, 1, 1, 2, 0, 2, 0, 4, 0, 0, 3, 2, 2, 0, 2, 4, 0, 0, 1, 3, 0, 2, 1, 0, 0, 0, 1, 0, 0, 1, 1, 3, 0, 1, 2, 0, 0, 1, 0, 2, 0, 2, 2, 2, 4, 0, 0, 0, 2, 1, 3, 1, 0, 2, 1, 0, 0, 1, 0, 2, 1, 3, 0, 0, 1, 0, 2, 1, 0, 1, 0, 0, 2, 0, 0, 2, 0, 2, 0, 0, 0, 2, 0, 1, 0, 2, 0, 0, 0, 1, 1, 2, 1, 0, 0, 0, 1, 3, 1, 0, 0, 1, 2, 0, 0, 1, 2, 0, 0, 2, 0, 1, 0, 0, 2, 2, 2, 1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 4, 2, 2, 3, 0, 0, 1, 1, 3, 1, 4, 2, 0, 1, 2, 0, 0, 1, 3, 0, 1, 2, 1, 0, 1, 2, 0, 2, 2, 0, 2, 0, 3, 1, 0, 2, 2, 0, 2, 0, 0, 2, 0, 1, 0, 3, 0, 1, 4, 1, 4, 1, 3, 0, 2, 0, 0, 1, 2, 0, 0, 4, 2, 0, 4, 0, 1, 2, 1, 0, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 2, 0, 0, 0, 2, 0, 2, 1, 0, 0, 1, 1, 2, 1, 0, 0, 2, 4, 1, 2, 1, 0, 2, 1, 0, 0, 0, 0, 0, 2, 0, 1, 4, 0, 0, 0, 0, 3, 2, 0, 3, 4, 0, 0, 1, 0, 0, 0, 1, 0, 2, 1, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 2, 0, 3, 1, 0, 0, 0, 2, 0, 0, 4, 0, 3, 2, 1, 0, 0, 0, 0, 0, 2, 1, 0, 0, 2, 2, 2, 0, 2, 0, 2, 4], "10": [2, 0, 0, 1, 4, 5, 0, 7, 3, 1, 2, 2, 1, 5, 3, 3, 2, 1, 0, 1, 1, 4, 2, 0, 1, 1, 0, 0, 5, 1, 5, 1, 0, 0, 1, 7, 3, 1, 2, 3, 0, 5, 3, 1, 0, 1, 4, 1, 0, 1, 7, 6, 1, 2, 1, 0, 1, 1, 0, 1, 2, 2, 1, 0, 2, 2, 1, 0, 1, 0, 0, 4, 3, 1, 0, 2, 3, 2, 0, 1, 6, 1, 0, 4, 2, 1, 1, 3, 0, 0, 3, 1, 0, 6, 3, 1, 1, 1, 0, 2, 1, 0, 4, 3, 2, 0, 0, 0, 0, 0, 0, 1, 2, 1, 0, 2, 1, 4, 0, 1, 0, 5, 0, 1, 3, 2, 2, 1, 1, 8, 3, 5, 3, 4, 1, 1, 7, 0, 5, 4, 8, 4, 0, 0, 2, 5, 7, 7, 4, 2, 9, 1, 1, 0, 5, 1, 7, 7, 1, 3, 3, 1, 1, 3, 1, 1, 2, 9, 5, 0, 6, 3, 0, 8, 2, 2, 3, 2, 6, 9, 4, 1, 8, 0, 5, 1, 3, 0, 0, 1, 0, 0, 1, 1, 7, 0, 3, 2, 9, 0, 1, 0, 2, 4, 2, 5, 2, 6, 0, 0, 3, 2, 1, 8, 1, 0, 5, 1, 0, 4, 1, 3, 2, 1, 7, 4, 4, 1, 0, 2, 1, 3, 1, 3, 0, 5, 3, 3, 2, 0, 2, 4, 3, 0, 2, 3, 1, 0, 2, 4, 0, 4, 3, 1, 2, 1, 0, 4, 3, 3, 7, 1, 3, 0, 1, 2, 0, 3, 1, 2, 0, 0, 2, 0, 1, 3, 0, 2, 2, 2, 1, 1, 3, 1, 1, 1, 1, 0, 0, 9, 3, 0, 0, 0, 1, 0, 6, 2, 2, 7, 0, 0, 1, 1, 7, 1, 6, 2, 0, 1, 2, 0, 0, 1, 8, 0, 1, 8, 1, 4, 1, 2, 0, 2, 2, 9, 2, 0, 7, 1, 0, 2, 5, 0, 2, 0, 0, 2, 0, 1, 0, 7, 3, 1, 6, 1, 6, 1, 8, 4, 2, 0, 0, 1, 2, 0, 0, 6, 2, 0, 6, 0, 1, 2, 1, 3, 0, 1, 1, 1, 0, 1, 0, 3, 4, 0, 3, 0, 0, 2, 9, 0, 8, 0, 0, 0, 5, 0, 2, 1, 0, 4, 1, 1, 2, 1, 0, 0, 2, 6, 1, 2, 1, 4, 2, 1, 3, 4, 0, 0, 0, 2, 4, 1, 6, 0, 3, 0, 3, 7, 2, 3, 7, 6, 0, 3, 1, 0, 3, 0, 1, 4, 2, 1, 1, 3, 3, 0, 3, 0, 0, 3, 0, 4, 2, 0, 8, 1, 0, 3, 9, 2, 0, 3, 6, 9, 8, 2, 1, 0, 0, 3, 0, 3, 2, 1, 4, 0, 5, 2, 2, 0, 2, 3, 2, 6], "15": [2, 4, 3, 5, 4, 6, 4, 8, 3, 0, 2, 2, 5, 6, 3, 3, 6, 5, 4, 0, 0, 4, 2, 1, 5, 0, 4, 4, 6, 0, 6, 5, 4, 1, 0, 8, 3, 5, 6, 3, 1, 6, 3, 0, 1, 5, 4, 5, 1, 0, 8, 7, 0, 2, 5, 4, 0, 0, 4, 0, 2, 2, 0, 1, 2, 2, 0, 1, 0, 1, 4, 4, 3, 0, 1, 2, 3, 2, 1, 0, 7, 0, 4, 4, 2, 0, 0, 3, 4, 1, 3, 0, 1, 7, 3, 0, 0, 0, 1, 2, 5, 1, 4, 3, 2, 4, 3, 1, 1, 1, 1, 0, 2, 5, 1, 2, 0, 11, 1, 0, 1, 6, 1, 0, 5, 2, 2, 5, 0, 9, 3, 6, 3, 11, 0, 0, 12, 1, 6, 4, 9, 4, 1, 3, 2, 6, 12, 8, 11, 2, 14, 0, 13, 1, 6, 0, 8, 8, 0, 3, 3, 0, 0, 3, 0, 0, 2, 10, 6, 1, 7, 3, 1, 9, 2, 2, 3, 2, 7, 10, 11, 0, 9, 4, 6, 0, 3, 1, 1, 0, 1, 1, 0, 5, 8, 1, 3, 2, 10, 1, 0, 1, 2, 4, 2, 6, 2, 7, 1, 3, 3, 2, 0, 9, 0, 4, 6, 5, 3, 4, 5, 3, 2, 0, 8, 4, 4, 0, 4, 6, 0, 3, 0, 3, 3, 6, 3, 3, 2, 1, 2, 4, 3, 1, 2, 3, 0, 1, 6, 4, 1, 4, 3, 0, 2, 0, 1, 4, 3, 0, 8, 0, 3, 1, 0, 2, 4, 3, 0, 2, 3, 1, 2, 4, 0, 3, 4, 6, 2, 6, 5, 0, 3, 0, 0, 0, 0, 1, 1, 10, 3, 1, 1, 1, 0, 1, 7, 2, 2, 8, 4, 1, 5, 5, 8, 0, 7, 2, 1, 0, 2, 1, 4, 0, 9, 4, 0, 9, 0, 4, 0, 2, 1, 2, 2, 10, 2, 4, 8, 0, 1, 2, 6, 3, 2, 1, 1, 2, 1, 0, 4, 12, 3, 0, 7, 0, 7, 13, 14, 4, 2, 4, 1, 0, 2, 1, 1, 7, 2, 4, 7, 1, 5, 2, 0, 3, 4, 0, 5, 0, 1, 0, 3, 3, 4, 1, 3, 1, 4, 2, 10, 1, 9, 1, 1, 1, 6, 4, 2, 5, 1, 4, 0, 5, 2, 0, 3, 1, 2, 7, 0, 2, 0, 4, 2, 0, 3, 4, 1, 4, 3, 2, 11, 0, 7, 4, 3, 1, 3, 8, 2, 3, 12, 7, 1, 3, 5, 4, 3, 3, 0, 4, 2, 0, 5, 3, 3, 4, 3, 3, 4, 3, 1, 11, 2, 4, 8, 0, 4, 3, 10, 2, 1, 3, 7, 10, 9, 2, 0, 1, 1, 3, 1, 3, 2, 0, 11, 4, 6, 2, 2, 1, 2, 3, 2, 7], "20": [6, 2, 2, 7, 3, 9, 2, 11, 5, 8, 6, 4, 7, 9, 8, 5, 4, 7, 3, 8, 0, 3, 6, 1, 7, 0, 3, 2, 9, 0, 9, 7, 2, 1, 0, 11, 5, 7, 4, 2, 1, 9, 5, 0, 1, 7, 3, 7, 1, 0, 11, 10, 8, 4, 7, 3, 0, 0, 3, 0, 14, 6, 0, 1, 6, 6, 0, 1, 0, 1, 2, 3, 5, 0, 2, 4, 5, 4, 1, 0, 10, 0, 3, 3, 6, 0, 0, 8, 3, 1, 5, 0, 1, 10, 5, 8, 0, 0, 1, 4, 7, 1, 3, 2, 4, 2, 2, 1, 1, 1, 1, 8, 6, 7, 1, 6, 0, 15, 1, 0, 1, 9, 1, 8, 8, 6, 6, 7, 0, 12, 8, 9, 2, 15, 0, 0, 16, 1, 9, 3, 12, 3, 1, 2, 4, 9, 16, 11, 15, 14, 19, 0, 18, 1, 4, 0, 11, 11, 0, 2, 5, 0, 0, 2, 0, 0, 6, 13, 9, 1, 10, 5, 1, 12, 6, 6, 5, 4, 10, 13, 15, 0, 12, 3, 4, 0, 5, 1, 1, 0, 1, 1, 0, 7, 11, 1, 8, 4, 13, 1, 0, 1, 6, 3, 6, 9, 6, 10, 1, 2, 2, 6, 0, 12, 0, 2, 9, 7, 2, 3, 7, 5, 14, 0, 11, 3, 3, 0, 3, 4, 0, 5, 0, 5, 2, 9, 2, 2, 4, 1, 4, 3, 5, 1, 6, 5, 0, 1, 4, 3, 1, 3, 8, 0, 4, 0, 1, 3, 5, 8, 11, 0, 5, 1, 0, 6, 3, 2, 0, 4, 2, 1, 4, 2, 0, 5, 3, 4, 4, 4, 7, 0, 5, 0, 0, 8, 0, 1, 1, 13, 5, 1, 1, 1, 0, 1, 10, 14, 14, 11, 3, 2, 7, 7, 11, 0, 17, 4, 1, 0, 6, 1, 3, 0, 12, 3, 0, 12, 0, 3, 0, 6, 1, 4, 6, 13, 14, 3, 11, 0, 1, 4, 9, 2, 4, 1, 1, 4, 1, 0, 2, 16, 5, 0, 17, 0, 10, 18, 12, 3, 6, 2, 1, 8, 4, 1, 2, 10, 6, 2, 17, 1, 7, 4, 0, 5, 2, 0, 7, 0, 1, 0, 2, 5, 3, 1, 5, 1, 3, 6, 13, 1, 12, 1, 2, 1, 9, 2, 6, 7, 1, 3, 0, 7, 6, 0, 2, 1, 6, 10, 0, 4, 0, 3, 6, 8, 5, 3, 1, 3, 2, 6, 15, 0, 10, 2, 5, 1, 2, 11, 6, 5, 16, 17, 1, 5, 7, 3, 5, 2, 0, 3, 14, 8, 7, 8, 5, 3, 8, 2, 3, 8, 1, 15, 4, 3, 12, 0, 2, 5, 13, 4, 1, 5, 10, 13, 12, 4, 0, 1, 1, 5, 2, 5, 4, 0, 15, 2, 9, 6, 4, 1, 4, 2, 6, 10], "25": [6, 4, 2, 7, 8, 18, 4, 11, 3, 9, 6, 5, 7, 12, 9, 2, 5, 7, 4, 9, 0, 8, 6, 1, 7, 0, 4, 2, 18, 0, 18, 7, 2, 1, 0, 11, 3, 7, 5, 2, 1, 12, 3, 0, 1, 7, 8, 7, 1, 0, 11, 10, 9, 5, 7, 4, 0, 0, 4, 0, 16, 6, 0, 1, 6, 6, 0, 1, 0, 1, 2, 8, 3, 0, 2, 5, 3, 5, 1, 0, 10, 0, 4, 8, 6, 0, 0, 9, 4, 1, 3, 0, 1, 10, 3, 9, 0, 0, 1, 13, 7, 1, 8, 2, 13, 2, 2, 1, 1, 1, 1, 9, 6, 7, 1, 6, 0, 17, 1, 0, 4, 12, 1, 9, 9, 6, 6, 7, 0, 15, 9, 12, 2, 17, 0, 0, 19, 1, 18, 8, 15, 8, 1, 2, 5, 18, 19, 11, 17, 16, 23, 0, 22, 1, 12, 0, 11, 11, 0, 2, 3, 0, 0, 2, 0, 0, 6, 14, 12, 1, 10, 3, 1, 15, 6, 5, 3, 5, 10, 14, 17, 0, 21, 4, 12, 0, 3, 1, 1, 0, 1, 1, 0, 7, 11, 1, 9, 13, 14, 1, 0, 1, 6, 8, 6, 12, 6, 10, 1, 2, 2, 6, 0, 15, 0, 4, 12, 7, 2, 8, 7, 3, 16, 0, 11, 8, 8, 0, 4, 12, 0, 3, 0, 3, 2, 18, 2, 2, 5, 1, 13, 8, 3, 1, 6, 3, 0, 1, 5, 8, 1, 8, 9, 0, 5, 0, 1, 8, 3, 9, 11, 0, 3, 1, 0, 6, 4, 2, 0, 5, 2, 1, 5, 2, 0, 3, 4, 5, 13, 12, 7, 0, 3, 0, 0, 9, 0, 1, 1, 14, 3, 1, 4, 1, 0, 4, 10, 16, 16, 11, 4, 2, 7, 7, 11, 0, 20, 5, 1, 0, 6, 1, 4, 0, 15, 4, 0, 15, 0, 8, 0, 6, 1, 5, 5, 14, 16, 4, 11, 0, 1, 5, 12, 2, 5, 1, 1, 13, 1, 0, 2, 19, 3, 0, 20, 0, 10, 22, 24, 8, 5, 2, 1, 9, 13, 4, 4, 10, 6, 2, 20, 1, 7, 13, 0, 3, 4, 0, 7, 0, 1, 0, 2, 3, 8, 4, 3, 1, 4, 6, 14, 1, 15, 1, 2, 1, 12, 2, 6, 7, 1, 8, 0, 7, 5, 0, 2, 4, 5, 10, 0, 5, 0, 8, 5, 9, 3, 8, 1, 4, 2, 6, 17, 0, 10, 4, 3, 1, 2, 11, 6, 3, 19, 20, 1, 3, 7, 4, 3, 2, 0, 8, 16, 9, 7, 9, 3, 4, 9, 2, 4, 9, 1, 17, 5, 4, 21, 0, 2, 3, 14, 13, 4, 3, 10, 14, 21, 5, 0, 1, 1, 3, 4, 3, 5, 0, 17, 2, 18, 5, 13, 1, 5, 2, 5, 10], "30": [2, 4, 7, 6, 9, 15, 7, 19, 3, 10, 2, 5, 6, 13, 10, 12, 5, 6, 4, 10, 0, 9, 2, 4, 6, 0, 8, 8, 15, 0, 15, 6, 8, 1, 0, 20, 3, 6, 5, 12, 4, 13, 3, 0, 1, 6, 9, 6, 1, 0, 19, 11, 10, 5, 6, 8, 0, 0, 4, 0, 18, 2, 0, 1, 2, 2, 0, 1, 0, 4, 7, 9, 3, 0, 7, 5, 3, 5, 4, 0, 11, 0, 4, 9, 2, 0, 0, 10, 4, 1, 3, 0, 1, 11, 3, 10, 0, 0, 1, 14, 6, 4, 9, 12, 14, 8, 7, 1, 1, 4, 1, 10, 2, 6, 1, 2, 0, 23, 1, 0, 4, 13, 4, 10, 10, 2, 2, 6, 0, 17, 10, 13, 12, 24, 0, 0, 21, 1, 15, 9, 17, 9, 1, 7, 5, 15, 21, 19, 23, 18, 27, 0, 26, 1, 13, 0, 20, 20, 0, 12, 3, 0, 0, 12, 0, 0, 2, 16, 13, 4, 11, 3, 1, 17, 2, 2, 3, 5, 11, 16, 24, 0, 25, 8, 13, 0, 3, 1, 1, 0, 1, 1, 0, 6, 19, 1, 10, 14, 16, 1, 0, 1, 2, 9, 2, 13, 2, 11, 1, 7, 12, 2, 0, 17, 0, 4, 13, 6, 7, 9, 6, 3, 18, 0, 19, 9, 9, 0, 8, 5, 0, 3, 0, 12, 7, 15, 12, 8, 5, 1, 14, 9, 3, 1, 2, 3, 0, 1, 5, 9, 1, 9, 10, 0, 5, 0, 1, 9, 3, 10, 20, 0, 3, 1, 0, 2, 4, 12, 0, 5, 7, 1, 5, 7, 0, 3, 8, 5, 14, 5, 6, 0, 3, 0, 0, 10, 0, 4, 1, 29, 3, 1, 4, 4, 0, 4, 11, 18, 18, 19, 8, 7, 6, 6, 19, 0, 22, 5, 1, 0, 2, 1, 8, 0, 17, 8, 0, 17, 0, 9, 0, 2, 4, 5, 2, 16, 18, 8, 20, 0, 1, 5, 13, 7, 5, 4, 1, 14, 1, 0, 8, 21, 12, 0, 22, 0, 11, 26, 28, 9, 5, 7, 1, 10, 14, 4, 7, 11, 2, 8, 22, 1, 6, 14, 0, 3, 8, 0, 6, 0, 1, 0, 7, 3, 9, 4, 3, 1, 8, 2, 16, 1, 17, 1, 7, 1, 13, 7, 2, 6, 1, 9, 0, 6, 2, 0, 7, 4, 2, 11, 0, 5, 0, 9, 2, 10, 3, 9, 1, 8, 7, 2, 23, 0, 11, 8, 12, 1, 7, 20, 2, 3, 21, 22, 1, 3, 6, 8, 3, 7, 0, 9, 18, 10, 6, 10, 3, 8, 10, 7, 4, 10, 1, 24, 5, 8, 25, 0, 7, 3, 16, 14, 4, 3, 11, 16, 25, 5, 0, 1, 1, 3, 4, 3, 5, 0, 23, 8, 15, 2, 14, 1, 5, 12, 2, 11]}, "clusters": {"5": [{"i": 0, "host": "The Bronx", "country": "United States", "label": "New York metro", "lat": 40.84985, "lng": -73.86641, "n": 211, "local": 15, "mean_km": 1426.9547473516018, "max_km": 8241.11860324044}, {"i": 1, "host": "Los Angeles", "country": "United States", "label": "Los Angeles, United States", "lat": 34.05223, "lng": -118.24368, "n": 125, "local": 35, "mean_km": 757.1062223222738, "max_km": 5375.269674784286}, {"i": 2, "host": "London", "country": "United Kingdom", "label": "London, United Kingdom", "lat": 51.50853, "lng": -0.12574, "n": 98, "local": 9, "mean_km": 1289.707396174777, "max_km": 9777.411526718892}, {"i": 3, "host": "Bangkok", "country": "Thailand", "label": "Bangkok, Thailand", "lat": 13.75398, "lng": 100.50144, "n": 25, "local": 5, "mean_km": 2427.952805017286, "max_km": 5087.365683435485}, {"i": 4, "host": "Sydney", "country": "Australia", "label": "Sydney, Australia", "lat": -33.86785, "lng": 151.20732, "n": 17, "local": 5, "mean_km": 854.3018817298555, "max_km": 2255.642673193117}], "10": [{"i": 0, "host": "The Bronx", "country": "United States", "label": "New York metro", "lat": 40.84985, "lng": -73.86641, "n": 127, "local": 15, "mean_km": 596.6086477668275, "max_km": 1306.5213492473506}, {"i": 1, "host": "Los Angeles", "country": "United States", "label": "Los Angeles, United States", "lat": 34.05223, "lng": -118.24368, "n": 114, "local": 35, "mean_km": 695.7454780667244, "max_km": 5375.269674784286}, {"i": 2, "host": "London", "country": "United Kingdom", "label": "London, United Kingdom", "lat": 51.50853, "lng": -0.12574, "n": 76, "local": 9, "mean_km": 720.4888765644652, "max_km": 1847.3250654582}, {"i": 3, "host": "Austin", "country": "United States", "label": "Austin, United States", "lat": 30.26715, "lng": -97.74306, "n": 57, "local": 9, "mean_km": 704.4855881021733, "max_km": 2288.715641006717}, {"i": 4, "host": "Havana", "country": "Cuba", "label": "Miami / Florida (snap \u2192 Havana)", "lat": 23.13302, "lng": -82.38304, "n": 30, "local": 13, "mean_km": 853.1803469198526, "max_km": 2652.6173342691004}, {"i": 5, "host": "Athens", "country": "Greece", "label": "Athens, Greece", "lat": 37.98376, "lng": 23.72784, "n": 18, "local": 4, "mean_km": 737.8548264519555, "max_km": 1216.4883955363623}, {"i": 6, "host": "Sydney", "country": "Australia", "label": "Sydney, Australia", "lat": -33.86785, "lng": 151.20732, "n": 17, "local": 5, "mean_km": 854.3018817298555, "max_km": 2255.642673193117}, {"i": 7, "host": "Bangkok", "country": "Thailand", "label": "Bangkok, Thailand", "lat": 13.75398, "lng": 100.50144, "n": 17, "local": 5, "mean_km": 1649.6121128279071, "max_km": 3723.488916102335}, {"i": 8, "host": "Dubai", "country": "United Arab Emirates", "label": "Dubai, United Arab Emirates", "lat": 25.07725, "lng": 55.30927, "n": 11, "local": 4, "mean_km": 1271.932092660291, "max_km": 4388.550387438934}, {"i": 9, "host": "Rio de Janeiro", "country": "Brazil", "label": "Rio de Janeiro, Brazil", "lat": -22.90642, "lng": -43.18223, "n": 9, "local": 3, "mean_km": 1502.6229338312942, "max_km": 6413.204203401005}], "15": [{"i": 0, "host": "Los Angeles", "country": "United States", "label": "Los Angeles, United States", "lat": 34.05223, "lng": -118.24368, "n": 89, "local": 35, "mean_km": 367.3531749421047, "max_km": 1184.6502849496144}, {"i": 1, "host": "The Bronx", "country": "United States", "label": "New York metro", "lat": 40.84985, "lng": -73.86641, "n": 78, "local": 15, "mean_km": 292.2112307347017, "max_km": 1014.9603765755745}, {"i": 2, "host": "London", "country": "United Kingdom", "label": "London, United Kingdom", "lat": 51.50853, "lng": -0.12574, "n": 70, "local": 9, "mean_km": 671.0536107277361, "max_km": 1847.3250654582}, {"i": 3, "host": "Chicago", "country": "United States", "label": "Chicago, United States", "lat": 41.85003, "lng": -87.65005, "n": 68, "local": 13, "mean_km": 1093.312801059764, "max_km": 2739.248102464438}, {"i": 4, "host": "Havana", "country": "Cuba", "label": "Miami / Florida (snap \u2192 Havana)", "lat": 23.13302, "lng": -82.38304, "n": 59, "local": 13, "mean_km": 1074.3849955285036, "max_km": 2010.6903182424346}, {"i": 5, "host": "Portland", "country": "United States", "label": "Portland, United States", "lat": 45.52345, "lng": -122.67621, "n": 25, "local": 7, "mean_km": 402.71484694735096, "max_km": 1459.481077855469}, {"i": 6, "host": "Athens", "country": "Greece", "label": "Athens, Greece", "lat": 37.98376, "lng": 23.72784, "n": 24, "local": 4, "mean_km": 855.9530992383521, "max_km": 1311.1277263367558}, {"i": 7, "host": "Sydney", "country": "Australia", "label": "Sydney, Australia", "lat": -33.86785, "lng": 151.20732, "n": 17, "local": 5, "mean_km": 854.3018817298555, "max_km": 2255.642673193117}, {"i": 8, "host": "Bangkok", "country": "Thailand", "label": "Bangkok, Thailand", "lat": 13.75398, "lng": 100.50144, "n": 14, "local": 5, "mean_km": 1102.2495628764593, "max_km": 2965.3741934615973}, {"i": 9, "host": "Dubai", "country": "United Arab Emirates", "label": "Dubai, United Arab Emirates", "lat": 25.07725, "lng": 55.30927, "n": 9, "local": 4, "mean_km": 759.1688422129037, "max_km": 2224.0799456218183}, {"i": 10, "host": "Rio de Janeiro", "country": "Brazil", "label": "Rio de Janeiro, Brazil", "lat": -22.90642, "lng": -43.18223, "n": 8, "local": 3, "mean_km": 888.8002751350803, "max_km": 2907.2944787854362}, {"i": 11, "host": "Carolina", "country": "Puerto Rico", "label": "San Juan area", "lat": 18.38078, "lng": -65.95739, "n": 7, "local": 3, "mean_km": 1223.4357109287082, "max_km": 2512.712873653218}, {"i": 12, "host": "Ansan-si", "country": "South Korea", "label": "Seoul metro", "lat": 37.32361, "lng": 126.82194, "n": 4, "local": 1, "mean_km": 29.870196730955634, "max_km": 50.04204580580272}, {"i": 13, "host": "Edmonton", "country": "Canada", "label": "Edmonton, Canada", "lat": 53.55014, "lng": -113.46871, "n": 2, "local": 2, "mean_km": 3293.25812925894, "max_km": 3356.304481267749}, {"i": 14, "host": "Port Elizabeth", "country": "South Africa", "label": "Port Elizabeth, South Africa", "lat": -33.96109, "lng": 25.61494, "n": 2, "local": 1, "mean_km": 2367.3247438832573, "max_km": 4429.734912752773}], "20": [{"i": 0, "host": "Los Angeles", "country": "United States", "label": "Los Angeles, United States", "lat": 34.05223, "lng": -118.24368, "n": 78, "local": 35, "mean_km": 286.09916251726315, "max_km": 700.0366873211246}, {"i": 1, "host": "The Bronx", "country": "United States", "label": "New York metro", "lat": 40.84985, "lng": -73.86641, "n": 73, "local": 15, "mean_km": 253.88314544906865, "max_km": 611.3506952639482}, {"i": 2, "host": "Chicago", "country": "United States", "label": "Chicago, United States", "lat": 41.85003, "lng": -87.65005, "n": 45, "local": 13, "mean_km": 391.5795444716641, "max_km": 905.3822715305021}, {"i": 3, "host": "Havana", "country": "Cuba", "label": "Miami / Florida (snap \u2192 Havana)", "lat": 23.13302, "lng": -82.38304, "n": 43, "local": 13, "mean_km": 858.2111425202366, "max_km": 1493.6703502566916}, {"i": 4, "host": "Frankfurt am Main", "country": "Germany", "label": "Frankfurt", "lat": 50.11552, "lng": 8.68417, "n": 37, "local": 4, "mean_km": 614.3576073549139, "max_km": 1665.1200022337841}, {"i": 5, "host": "Austin", "country": "United States", "label": "Austin, United States", "lat": 30.26715, "lng": -97.74306, "n": 36, "local": 9, "mean_km": 344.255227850122, "max_km": 1228.6099737891498}, {"i": 6, "host": "London", "country": "United Kingdom", "label": "London, United Kingdom", "lat": 51.50853, "lng": -0.12574, "n": 34, "local": 9, "mean_km": 265.162146320002, "max_km": 518.6732336920087}, {"i": 7, "host": "Portland", "country": "United States", "label": "Portland, United States", "lat": 45.52345, "lng": -122.67621, "n": 24, "local": 7, "mean_km": 358.6829206595127, "max_km": 884.513554961273}, {"i": 8, "host": "Denver", "country": "United States", "label": "Denver, United States", "lat": 39.73915, "lng": -104.9847, "n": 20, "local": 11, "mean_km": 381.60995774059006, "max_km": 1169.1799393662918}, {"i": 9, "host": "Athens", "country": "Greece", "label": "Athens, Greece", "lat": 37.98376, "lng": 23.72784, "n": 16, "local": 4, "mean_km": 711.6993200788507, "max_km": 1216.4883955363623}, {"i": 10, "host": "Sydney", "country": "Australia", "label": "Sydney, Australia", "lat": -33.86785, "lng": 151.20732, "n": 13, "local": 5, "mean_km": 448.0023612866334, "max_km": 736.7763952001076}, {"i": 11, "host": "Bangkok", "country": "Thailand", "label": "Bangkok, Thailand", "lat": 13.75398, "lng": 100.50144, "n": 13, "local": 5, "mean_km": 1019.9491272183524, "max_km": 2965.3741934615973}, {"i": 12, "host": "Dubai", "country": "United Arab Emirates", "label": "Dubai, United Arab Emirates", "lat": 25.07725, "lng": 55.30927, "n": 11, "local": 4, "mean_km": 1271.932092660291, "max_km": 4388.550387438934}, {"i": 13, "host": "Rio de Janeiro", "country": "Brazil", "label": "Rio de Janeiro, Brazil", "lat": -22.90642, "lng": -43.18223, "n": 8, "local": 3, "mean_km": 888.8002751350803, "max_km": 2907.2944787854362}, {"i": 14, "host": "Valencia", "country": "Spain", "label": "Valencia, Spain", "lat": 39.47391, "lng": -0.37966, "n": 7, "local": 2, "mean_km": 397.82464096249566, "max_km": 785.2360309044277}, {"i": 15, "host": "Carolina", "country": "Puerto Rico", "label": "San Juan area", "lat": 18.38078, "lng": -65.95739, "n": 7, "local": 3, "mean_km": 1223.4357109287082, "max_km": 2512.712873653218}, {"i": 16, "host": "Ansan-si", "country": "South Korea", "label": "Seoul metro", "lat": 37.32361, "lng": 126.82194, "n": 4, "local": 1, "mean_km": 29.870196730955634, "max_km": 50.04204580580272}, {"i": 17, "host": "North Shore", "country": "New Zealand", "label": "Auckland", "lat": -36.8, "lng": 174.75, "n": 4, "local": 2, "mean_km": 336.38114208590616, "max_km": 786.4198713883039}, {"i": 18, "host": "Edmonton", "country": "Canada", "label": "Edmonton, Canada", "lat": 53.55014, "lng": -113.46871, "n": 2, "local": 2, "mean_km": 3293.25812925894, "max_km": 3356.304481267749}, {"i": 19, "host": "Port Elizabeth", "country": "South Africa", "label": "Port Elizabeth, South Africa", "lat": -33.96109, "lng": 25.61494, "n": 1, "local": 1, "mean_km": 304.91457501374117, "max_km": 304.91457501374117}], "25": [{"i": 0, "host": "Los Angeles", "country": "United States", "label": "Los Angeles, United States", "lat": 34.05223, "lng": -118.24368, "n": 78, "local": 35, "mean_km": 286.09916251726315, "max_km": 700.0366873211246}, {"i": 1, "host": "The Bronx", "country": "United States", "label": "New York metro", "lat": 40.84985, "lng": -73.86641, "n": 66, "local": 15, "mean_km": 232.5431791354361, "max_km": 589.295023537891}, {"i": 2, "host": "Chicago", "country": "United States", "label": "Chicago, United States", "lat": 41.85003, "lng": -87.65005, "n": 39, "local": 13, "mean_km": 368.3854140678807, "max_km": 905.3822715305021}, {"i": 3, "host": "Austin", "country": "United States", "label": "Austin, United States", "lat": 30.26715, "lng": -97.74306, "n": 35, "local": 9, "mean_km": 331.0595012625415, "max_km": 1228.6099737891498}, {"i": 4, "host": "Atlanta", "country": "United States", "label": "Atlanta, United States", "lat": 33.749, "lng": -84.38798, "n": 34, "local": 12, "mean_km": 427.87908260412075, "max_km": 976.690497442479}, {"i": 5, "host": "Amsterdam", "country": "The Netherlands", "label": "Amsterdam, The Netherlands", "lat": 52.37403, "lng": 4.88969, "n": 31, "local": 5, "mean_km": 463.0215811726807, "max_km": 1287.7330685335626}, {"i": 6, "host": "London", "country": "United Kingdom", "label": "London, United Kingdom", "lat": 51.50853, "lng": -0.12574, "n": 26, "local": 9, "mean_km": 234.96156374718262, "max_km": 518.6732336920087}, {"i": 7, "host": "Portland", "country": "United States", "label": "Portland, United States", "lat": 45.52345, "lng": -122.67621, "n": 24, "local": 7, "mean_km": 358.6829206595127, "max_km": 884.513554961273}, {"i": 8, "host": "Havana", "country": "Cuba", "label": "Miami / Florida (snap \u2192 Havana)", "lat": 23.13302, "lng": -82.38304, "n": 23, "local": 13, "mean_km": 470.4070949602604, "max_km": 726.7675839155805}, {"i": 9, "host": "Denver", "country": "United States", "label": "Denver, United States", "lat": 39.73915, "lng": -104.9847, "n": 20, "local": 11, "mean_km": 381.60995774059006, "max_km": 1169.1799393662918}, {"i": 10, "host": "Sydney", "country": "Australia", "label": "Sydney, Australia", "lat": -33.86785, "lng": 151.20732, "n": 13, "local": 5, "mean_km": 448.0023612866334, "max_km": 736.7763952001076}, {"i": 11, "host": "Bangkok", "country": "Thailand", "label": "Bangkok, Thailand", "lat": 13.75398, "lng": 100.50144, "n": 13, "local": 5, "mean_km": 1019.9491272183524, "max_km": 2965.3741934615973}, {"i": 12, "host": "Athens", "country": "Greece", "label": "Athens, Greece", "lat": 37.98376, "lng": 23.72784, "n": 13, "local": 4, "mean_km": 606.471765898862, "max_km": 1258.7013954611157}, {"i": 13, "host": "Stockholm", "country": "Sweden", "label": "Stockholm, Sweden", "lat": 59.32938, "lng": 18.06871, "n": 10, "local": 4, "mean_km": 275.08827705684223, "max_km": 544.9217806487848}, {"i": 14, "host": "Rio de Janeiro", "country": "Brazil", "label": "Rio de Janeiro, Brazil", "lat": -22.90642, "lng": -43.18223, "n": 8, "local": 3, "mean_km": 888.8002751350803, "max_km": 2907.2944787854362}, {"i": 15, "host": "Dubai", "country": "United Arab Emirates", "label": "Dubai, United Arab Emirates", "lat": 25.07725, "lng": 55.30927, "n": 7, "local": 4, "mean_km": 380.7120114367303, "max_km": 884.8713786502584}, {"i": 16, "host": "Valencia", "country": "Spain", "label": "Valencia, Spain", "lat": 39.47391, "lng": -0.37966, "n": 7, "local": 2, "mean_km": 397.82464096249566, "max_km": 785.2360309044277}, {"i": 17, "host": "Carolina", "country": "Puerto Rico", "label": "San Juan area", "lat": 18.38078, "lng": -65.95739, "n": 7, "local": 3, "mean_km": 1223.4357109287082, "max_km": 2512.712873653218}, {"i": 18, "host": "Jerusalem", "country": "Israel", "label": "Jerusalem, Israel", "lat": 31.76904, "lng": 35.21633, "n": 7, "local": 4, "mean_km": 254.4647102477415, "max_km": 727.6264958422848}, {"i": 19, "host": "Ansan-si", "country": "South Korea", "label": "Seoul metro", "lat": 37.32361, "lng": 126.82194, "n": 4, "local": 1, "mean_km": 29.870196730955634, "max_km": 50.04204580580272}, {"i": 20, "host": "North Shore", "country": "New Zealand", "label": "Auckland", "lat": -36.8, "lng": 174.75, "n": 4, "local": 2, "mean_km": 336.38114208590616, "max_km": 786.4198713883039}, {"i": 21, "host": "Navi Mumbai", "country": "India", "label": "Mumbai metro", "lat": 19.03681, "lng": 73.01582, "n": 3, "local": 1, "mean_km": 677.9887019814552, "max_km": 1175.2312876971662}, {"i": 22, "host": "Edmonton", "country": "Canada", "label": "Edmonton, Canada", "lat": 53.55014, "lng": -113.46871, "n": 2, "local": 2, "mean_km": 3293.25812925894, "max_km": 3356.304481267749}, {"i": 23, "host": "Port Elizabeth", "country": "South Africa", "label": "Port Elizabeth, South Africa", "lat": -33.96109, "lng": 25.61494, "n": 1, "local": 1, "mean_km": 304.91457501374117, "max_km": 304.91457501374117}, {"i": 24, "host": "Port Louis", "country": "Mauritius", "label": "Port Louis, Mauritius", "lat": -20.16194, "lng": 57.49889, "n": 1, "local": 1, "mean_km": 967.8283907595643, "max_km": 967.8283907595643}], "30": [{"i": 0, "host": "Los Angeles", "country": "United States", "label": "Los Angeles, United States", "lat": 34.05223, "lng": -118.24368, "n": 78, "local": 35, "mean_km": 286.09916251726315, "max_km": 700.0366873211246}, {"i": 1, "host": "The Bronx", "country": "United States", "label": "New York metro", "lat": 40.84985, "lng": -73.86641, "n": 54, "local": 15, "mean_km": 186.29298756416648, "max_km": 526.7950373577445}, {"i": 2, "host": "London", "country": "United Kingdom", "label": "London, United Kingdom", "lat": 51.50853, "lng": -0.12574, "n": 33, "local": 9, "mean_km": 259.27358645503335, "max_km": 518.6732336920087}, {"i": 3, "host": "Austin", "country": "United States", "label": "Austin, United States", "lat": 30.26715, "lng": -97.74306, "n": 32, "local": 9, "mean_km": 284.4058964648228, "max_km": 1228.6099737891498}, {"i": 4, "host": "Washington", "country": "United States", "label": "Washington, United States", "lat": 38.89511, "lng": -77.03637, "n": 28, "local": 9, "mean_km": 316.4282016710284, "max_km": 638.4184032305741}, {"i": 5, "host": "Frankfurt am Main", "country": "Germany", "label": "Frankfurt", "lat": 50.11552, "lng": 8.68417, "n": 26, "local": 4, "mean_km": 370.93542011012465, "max_km": 950.7243994559307}, {"i": 6, "host": "Portland", "country": "United States", "label": "Portland, United States", "lat": 45.52345, "lng": -122.67621, "n": 24, "local": 7, "mean_km": 358.6829206595127, "max_km": 884.513554961273}, {"i": 7, "host": "Chicago", "country": "United States", "label": "Chicago, United States", "lat": 41.85003, "lng": -87.65005, "n": 24, "local": 12, "mean_km": 168.71765357059593, "max_km": 439.31721342066515}, {"i": 8, "host": "Atlanta", "country": "United States", "label": "Atlanta, United States", "lat": 33.749, "lng": -84.38798, "n": 23, "local": 12, "mean_km": 180.9286327747385, "max_km": 523.1243565127426}, {"i": 9, "host": "Havana", "country": "Cuba", "label": "Miami / Florida (snap \u2192 Havana)", "lat": 23.13302, "lng": -82.38304, "n": 23, "local": 13, "mean_km": 470.4070949602604, "max_km": 726.7675839155805}, {"i": 10, "host": "Denver", "country": "United States", "label": "Denver, United States", "lat": 39.73915, "lng": -104.9847, "n": 20, "local": 11, "mean_km": 381.60995774059006, "max_km": 1169.1799393662918}, {"i": 11, "host": "Sydney", "country": "Australia", "label": "Sydney, Australia", "lat": -33.86785, "lng": 151.20732, "n": 13, "local": 5, "mean_km": 448.0023612866334, "max_km": 736.7763952001076}, {"i": 12, "host": "Oklahoma City", "country": "United States", "label": "Oklahoma City, United States", "lat": 35.46756, "lng": -97.51643, "n": 13, "local": 8, "mean_km": 648.6173616692, "max_km": 1242.168535542131}, {"i": 13, "host": "Athens", "country": "Greece", "label": "Athens, Greece", "lat": 37.98376, "lng": 23.72784, "n": 11, "local": 4, "mean_km": 503.3182871114182, "max_km": 1094.686485572171}, {"i": 14, "host": "Stockholm", "country": "Sweden", "label": "Stockholm, Sweden", "lat": 59.32938, "lng": 18.06871, "n": 10, "local": 4, "mean_km": 275.08827705684223, "max_km": 544.9217806487848}, {"i": 15, "host": "Jerusalem", "country": "Israel", "label": "Jerusalem, Israel", "lat": 31.76904, "lng": 35.21633, "n": 7, "local": 4, "mean_km": 254.4647102477415, "max_km": 727.6264958422848}, {"i": 16, "host": "Rio de Janeiro", "country": "Brazil", "label": "Rio de Janeiro, Brazil", "lat": -22.90642, "lng": -43.18223, "n": 7, "local": 3, "mean_km": 600.4439603278864, "max_km": 1846.391027269587}, {"i": 17, "host": "Dubai", "country": "United Arab Emirates", "label": "Dubai, United Arab Emirates", "lat": 25.07725, "lng": 55.30927, "n": 7, "local": 4, "mean_km": 380.7120114367303, "max_km": 884.8713786502584}, {"i": 18, "host": "Valencia", "country": "Spain", "label": "Valencia, Spain", "lat": 39.47391, "lng": -0.37966, "n": 7, "local": 2, "mean_km": 397.82464096249566, "max_km": 785.2360309044277}, {"i": 19, "host": "Bangkok", "country": "Thailand", "label": "Bangkok, Thailand", "lat": 13.75398, "lng": 100.50144, "n": 7, "local": 5, "mean_km": 477.7370275880081, "max_km": 2224.839257723381}, {"i": 20, "host": "Singapore", "country": "Singapore", "label": "Singapore, Singapore", "lat": 1.28967, "lng": 103.85007, "n": 6, "local": 1, "mean_km": 342.75184324108426, "max_km": 1665.6411773127163}, {"i": 21, "host": "Ansan-si", "country": "South Korea", "label": "Seoul metro", "lat": 37.32361, "lng": 126.82194, "n": 4, "local": 1, "mean_km": 29.870196730955634, "max_km": 50.04204580580272}, {"i": 22, "host": "North Shore", "country": "New Zealand", "label": "Auckland", "lat": -36.8, "lng": 174.75, "n": 4, "local": 2, "mean_km": 336.38114208590616, "max_km": 786.4198713883039}, {"i": 23, "host": "Quito", "country": "Ecuador", "label": "Quito, Ecuador", "lat": -0.22985, "lng": -78.52495, "n": 4, "local": 2, "mean_km": 395.07962965707884, "max_km": 783.6804102660396}, {"i": 24, "host": "Carolina", "country": "Puerto Rico", "label": "San Juan area", "lat": 18.38078, "lng": -65.95739, "n": 3, "local": 3, "mean_km": 41.14345450886203, "max_km": 85.20334425657686}, {"i": 25, "host": "Navi Mumbai", "country": "India", "label": "Mumbai metro", "lat": 19.03681, "lng": 73.01582, "n": 3, "local": 1, "mean_km": 677.9887019814552, "max_km": 1175.2312876971662}, {"i": 26, "host": "Edmonton", "country": "Canada", "label": "Edmonton, Canada", "lat": 53.55014, "lng": -113.46871, "n": 2, "local": 2, "mean_km": 3293.25812925894, "max_km": 3356.304481267749}, {"i": 27, "host": "Port Elizabeth", "country": "South Africa", "label": "Port Elizabeth, South Africa", "lat": -33.96109, "lng": 25.61494, "n": 1, "local": 1, "mean_km": 304.91457501374117, "max_km": 304.91457501374117}, {"i": 28, "host": "Port Louis", "country": "Mauritius", "label": "Port Louis, Mauritius", "lat": -20.16194, "lng": 57.49889, "n": 1, "local": 1, "mean_km": 967.8283907595643, "max_km": 967.8283907595643}, {"i": 29, "host": "Santiago", "country": "Chile", "label": "Santiago, Chile", "lat": -33.45694, "lng": -70.64827, "n": 1, "local": 1, "mean_km": 30.09512009772841, "max_km": 30.09512009772841}]}, "total": 476, "ks": [5, 10, 15, 20, 25, 30]};
+const DATA = {"members": [{"lat": 51.209257, "lng": 1.072083}, {"lat": 38.48799461, "lng": -81.87011719}, {"lat": 42.142112, "lng": -87.682321}, {"lat": 47.67740909, "lng": -122.3286438}, {"lat": 28.875856, "lng": -81.550448}, {"lat": 30.307724, "lng": 31.232452}, {"lat": 39.63806844, "lng": -83.90787954}, {"lat": 13.964473, "lng": 100.61611}, {"lat": 31.365693, "lng": -106.106658}, {"lat": 40.376383, "lng": -111.947583}, {"lat": 54.87579308, "lng": -1.4307009}, {"lat": 50.17669068, "lng": 8.66463844}, {"lat": 49.10867342, "lng": -122.54844946}, {"lat": 45.65244829, "lng": 25.6111908}, {"lat": 38.61687046, "lng": -102.3046875}, {"lat": 36.922576, "lng": -94.28799}, {"lat": 48.032948, "lng": 16.592204}, {"lat": 49.869287, "lng": -122.849685}, {"lat": 35.825918, "lng": -78.620027}, {"lat": 40.75505951, "lng": -111.88682556}, {"lat": 34.10136422, "lng": -117.7468727}, {"lat": 26.008879, "lng": -80.200078}, {"lat": 51.269267, "lng": -2.354736}, {"lat": 38.740753, "lng": -76.786551}, {"lat": 48.50955339, "lng": -123.51318107}, {"lat": 33.590521, "lng": -117.552086}, {"lat": 35.672365, "lng": -84.144752}, {"lat": 36.07615969, "lng": -86.68472137}, {"lat": 30.280705, "lng": 31.339874}, {"lat": 33.452802, "lng": -111.777708}, {"lat": 37.85762655, "lng": 32.29239845}, {"lat": 47.387426, "lng": -122.217244}, {"lat": 36.20007696, "lng": -86.71580774}, {"lat": 41.39007281, "lng": -73.5059913}, {"lat": 33.39993132, "lng": -111.85394665}, {"lat": 2.935011, "lng": 101.595746}, {"lat": 29.79092871, "lng": -95.58775887}, {"lat": 47.517785, "lng": -122.691147}, {"lat": 48.20637134, "lng": 16.36413574}, {"lat": 38.98129653, "lng": -94.68360901}, {"lat": 40.640861, "lng": -78.121711}, {"lat": 37.768174, "lng": 23.611258}, {"lat": 32.789219, "lng": -97.47727}, {"lat": 33.16629498, "lng": -117.32917786}, {"lat": 40.677998, "lng": -73.894811}, {"lat": 49.399381, "lng": -123.239201}, {"lat": 25.926128, "lng": -79.991905}, {"lat": 49.494011, "lng": -123.00789}, {"lat": 40.11700852, "lng": -75.29011215}, {"lat": 33.874659, "lng": -118.44813}, {"lat": 14.60077588, "lng": 121.12695638}, {"lat": -27.708786, "lng": 153.087548}, {"lat": 40.47816, "lng": -111.958424}, {"lat": 50.009074, "lng": 14.068312}, {"lat": 49.19276396, "lng": -122.97101691}, {"lat": 33.934046, "lng": -84.062502}, {"lat": 33.839004, "lng": -118.084747}, {"lat": 35.266759, "lng": -119.21359}, {"lat": 36.027522, "lng": -78.658532}, {"lat": 37.05703525, "lng": -113.49213905}, {"lat": 38.743971, "lng": -8.830408}, {"lat": 50.912572, "lng": 2.883244}, {"lat": 33.997848, "lng": -119.009321}, {"lat": 41.94531425, "lng": -73.72001115}, {"lat": 53.284377, "lng": -5.816271}, {"lat": 52.5835667, "lng": -7.2272696}, {"lat": 33.505179, "lng": -117.680801}, {"lat": 43.886586, "lng": -70.358411}, {"lat": 32.289596, "lng": -111.198884}, {"lat": 43.75453, "lng": -79.731283}, {"lat": 38.928786, "lng": -86.471736}, {"lat": 25.64343419, "lng": -80.40743573}, {"lat": 26.052187, "lng": -98.520921}, {"lat": 37.69009, "lng": -122.14943}, {"lat": 42.56104275, "lng": -84.6052263}, {"lat": 50.08646766, "lng": 8.53440635}, {"lat": 30.312431, "lng": -98.008419}, {"lat": 47.75267036, "lng": 11.4853601}, {"lat": 43.40287431, "lng": -79.96647812}, {"lat": 37.329609, "lng": -122.261534}, {"lat": -33.946164, "lng": 150.833648}, {"lat": 32.982584, "lng": -117.477332}, {"lat": 36.253425, "lng": -79.052467}, {"lat": 25.779867, "lng": -80.474615}, {"lat": 51.533028, "lng": -3.57087}, {"lat": 36.08116521, "lng": -115.03832206}, {"lat": 32.70449, "lng": -116.947923}, {"lat": 39.862941, "lng": -105.254213}, {"lat": 36.028266, "lng": -78.633258}, {"lat": 40.955389, "lng": -74.128318}, {"lat": 29.66233623, "lng": -95.33785486}, {"lat": 37.110931, "lng": -122.056608}, {"lat": 42.192489, "lng": -70.811775}, {"lat": -38.039715, "lng": 144.843326}, {"lat": 30.73183752, "lng": -97.82592842}, {"lat": 40.478034, "lng": -111.543581}, {"lat": 34.23401564, "lng": -118.53492737}, {"lat": 38.840357, "lng": -121.587488}, {"lat": 41.53539, "lng": -72.847128}, {"lat": 59.86756471, "lng": 10.8578663}, {"lat": 45.609706, "lng": -122.993347}, {"lat": 39.00312035, "lng": -76.79967513}, {"lat": 27.700238, "lng": -82.019331}, {"lat": 41.783508, "lng": -91.855444}, {"lat": 55.434157, "lng": 12.541579}, {"lat": 36.417365, "lng": -86.812768}, {"lat": 42.157974, "lng": -87.575205}, {"lat": 41.001521, "lng": -74.042758}, {"lat": 42.163247, "lng": -70.838646}, {"lat": 39.26043, "lng": -77.281875}, {"lat": 45.31127567, "lng": -75.82027616}, {"lat": 40.62983452, "lng": -111.86327236}, {"lat": 51.807348, "lng": 0.097823}, {"lat": 47.581393, "lng": -121.82985}, {"lat": 42.138214, "lng": -70.506596}, {"lat": 51.257333, "lng": -0.028032}, {"lat": 33.475497, "lng": -112.209798}, {"lat": -0.21285962, "lng": -78.51104736}, {"lat": 40.669437, "lng": -74.379905}, {"lat": 33.76681867, "lng": -118.19641113}, {"lat": 38.882096, "lng": -77.228921}, {"lat": 41.191106, "lng": 28.749819}, {"lat": 44.4012, "lng": -79.216573}, {"lat": 41.25299262, "lng": -111.98551949}, {"lat": 50.244267, "lng": -104.346887}, {"lat": 55.655701, "lng": -3.727794}, {"lat": 53.096589, "lng": -6.227744}, {"lat": 50.915007, "lng": -113.877839}, {"lat": 33.76578215, "lng": -117.99167278}, {"lat": 25.10674092, "lng": 55.23376465}, {"lat": 39.857726, "lng": -105.181513}, {"lat": 37.760802, "lng": 23.842735}, {"lat": 38.839984, "lng": -94.544683}, {"lat": 18.608485, "lng": -65.86829}, {"lat": 33.931584, "lng": -118.527049}, {"lat": 34.219095, "lng": -118.115414}, {"lat": 37.36156, "lng": 126.788269}, {"lat": 42.794711, "lng": -73.996064}, {"lat": 31.843593, "lng": 34.788477}, {"lat": 26.22243728, "lng": -80.24917417}, {"lat": 24.477904, "lng": 46.567902}, {"lat": 29.015541, "lng": -81.446579}, {"lat": 42.591823, "lng": -71.119962}, {"lat": 41.63688, "lng": -87.579991}, {"lat": 47.29264983, "lng": 8.39710557}, {"lat": 31.92923, "lng": 34.526965}, {"lat": 37.522668, "lng": 126.74213}, {"lat": 9.73313585, "lng": 99.98505092}, {"lat": 6.21470994, "lng": -75.6665995}, {"lat": 38.65805, "lng": -0.560697}, {"lat": -34.184301, "lng": 22.315296}, {"lat": 33.546157, "lng": -117.849955}, {"lat": 77.69287034, "lng": -159.2578125}, {"lat": 40.1603608, "lng": -75.12097165}, {"lat": 47.248802, "lng": 19.186871}, {"lat": 33.875821, "lng": -118.042963}, {"lat": 1.110831, "lng": 103.964623}, {"lat": 1.28115203, "lng": 103.85071491}, {"lat": 37.532658, "lng": -121.815313}, {"lat": 45.29131277, "lng": -93.66217478}, {"lat": 30.200422, "lng": -98.031066}, {"lat": 34.109871, "lng": -118.764684}, {"lat": 33.241993, "lng": -112.167974}, {"lat": 44.814281, "lng": -93.018686}, {"lat": 37.31048603, "lng": -121.90085685}, {"lat": 37.97962, "lng": -122.462345}, {"lat": 51.31481, "lng": 0.120294}, {"lat": -22.89034476, "lng": -43.07660572}, {"lat": 44.803602, "lng": 22.386553}, {"lat": 42.849734, "lng": -79.199366}, {"lat": -33.662369, "lng": 151.401293}, {"lat": 33.080766, "lng": -96.938038}, {"lat": 40.714151, "lng": -74.233066}, {"lat": 24.830495, "lng": 55.345338}, {"lat": 51.395423, "lng": 3.510291}, {"lat": 52.36386043, "lng": 4.90539551}, {"lat": 30.051877, "lng": -97.514342}, {"lat": 51.47111883, "lng": 7.15209961}, {"lat": -33.9033097, "lng": 151.10058476}, {"lat": -15.603645, "lng": -48.121462}, {"lat": 18.209541, "lng": -65.170753}, {"lat": 37.40191735, "lng": -121.8412502}, {"lat": 18.80824, "lng": 72.921267}, {"lat": 33.78946978, "lng": -84.41482716}, {"lat": 44.839416, "lng": 20.831669}, {"lat": 33.829664, "lng": -118.156276}, {"lat": 32.598648, "lng": -96.981939}, {"lat": 40.60205224, "lng": -73.96065278}, {"lat": 41.071825, "lng": -73.919601}, {"lat": 33.98564551, "lng": -118.31836676}, {"lat": 41.277685, "lng": -72.86012}, {"lat": 42.430634, "lng": -70.787533}, {"lat": 36.295502, "lng": -114.980973}, {"lat": 45.551473, "lng": -122.475156}, {"lat": 13.9234039, "lng": 100.8984375}, {"lat": 42.11920729, "lng": -71.17487608}, {"lat": 39.635687, "lng": -105.293352}, {"lat": 59.543303, "lng": 18.391837}, {"lat": -23.414781, "lng": -46.891066}, {"lat": 40.76909712, "lng": -73.67274169}, {"lat": 37.115134, "lng": -122.030057}, {"lat": 40.71457861, "lng": -74.02498247}, {"lat": 49.03384574, "lng": 2.45988797}, {"lat": 26.047134, "lng": -80.190454}, {"lat": 51.787327, "lng": -0.254301}, {"lat": 37.727862, "lng": 23.664663}, {"lat": 51.423278, "lng": 0.281364}, {"lat": -33.715206, "lng": 150.990132}, {"lat": 41.702803, "lng": -71.342249}, {"lat": 41.593857, "lng": -87.81496}, {"lat": 38.97515797, "lng": -94.68463898}, {"lat": 53.16876922, "lng": -6.29599009}, {"lat": 33.54316971, "lng": -117.6919198}, {"lat": 25.16624118, "lng": 55.35442027}, {"lat": 33.732924, "lng": -118.357483}, {"lat": 38.13455658, "lng": -81.9140625}, {"lat": 42.59564007, "lng": 23.00260544}, {"lat": 49.056855, "lng": -122.475343}, {"lat": 42.241023, "lng": -88.057003}, {"lat": 28.898331, "lng": -81.504355}, {"lat": 47.71063402, "lng": -122.2271784}, {"lat": 30.038922, "lng": -97.662188}, {"lat": 41.24781872, "lng": 1.86855465}, {"lat": 34.05961, "lng": -118.700766}, {"lat": 13.558487, "lng": 100.671157}, {"lat": 25.745479, "lng": -80.471461}, {"lat": 25.53363895, "lng": -80.47078942}, {"lat": 33.942325, "lng": -118.115028}, {"lat": 34.259896, "lng": -84.542233}, {"lat": 45.94687177, "lng": 16.03789054}, {"lat": 38.71747817, "lng": -121.23764525}, {"lat": 29.925383, "lng": -95.939305}, {"lat": 33.08295, "lng": -112.10732}, {"lat": 37.515142, "lng": -97.974713}, {"lat": 42.094602, "lng": -87.942895}, {"lat": 32.07803835, "lng": 34.77422297}, {"lat": 45.194055, "lng": -93.056064}, {"lat": 35.11625782, "lng": -89.84670639}, {"lat": 51.366045, "lng": 7.408892}, {"lat": 40.75634, "lng": -73.664145}, {"lat": 59.110398, "lng": 18.296952}, {"lat": 28.103059, "lng": -82.720065}, {"lat": 29.526319, "lng": -95.406965}, {"lat": 45.39432248, "lng": -73.57147134}, {"lat": 51.36247433, "lng": -0.60412461}, {"lat": 29.76506469, "lng": -95.51354528}, {"lat": 33.8950777, "lng": -118.05929543}, {"lat": 41.862083, "lng": -70.30639}, {"lat": 41.95642632, "lng": 12.37956731}, {"lat": 26.64316264, "lng": -81.87149048}, {"lat": 40.553369, "lng": -74.109183}, {"lat": 29.66896253, "lng": -82.35900879}, {"lat": 39.75457744, "lng": -105.12699758}, {"lat": 33.504945, "lng": -117.790624}, {"lat": 52.111787, "lng": 10.855667}, {"lat": 33.93414815, "lng": -117.86403137}, {"lat": 45.571248, "lng": -73.939015}, {"lat": 26.593091, "lng": -79.987844}, {"lat": 30.206028, "lng": -97.467885}, {"lat": 39.445562, "lng": -106.758806}, {"lat": -8.62260063, "lng": 115.1182555}, {"lat": 32.89851555, "lng": -117.15128404}, {"lat": 19.317913, "lng": -99.380263}, {"lat": 41.569433, "lng": -73.849693}, {"lat": 37.329276, "lng": -121.680108}, {"lat": 51.270991, "lng": -0.081606}, {"lat": 35.612428, "lng": -78.476033}, {"lat": 46.628042, "lng": -96.867678}, {"lat": 34.015081, "lng": -118.155321}, {"lat": 47.981031, "lng": 11.321705}, {"lat": 42.331981, "lng": -87.546106}, {"lat": 40.946306, "lng": -73.907448}, {"lat": 50.544264, "lng": 6.862205}, {"lat": 39.401869, "lng": -86.486559}, {"lat": 33.352745, "lng": -112.360874}, {"lat": 29.97769, "lng": -95.349714}, {"lat": 33.82416758, "lng": -84.3356684}, {"lat": 48.417688, "lng": 16.152283}, {"lat": 59.33924416, "lng": 18.31679289}, {"lat": 48.462383, "lng": 17.820106}, {"lat": 45.281244, "lng": -122.480949}, {"lat": 34.35628, "lng": -119.027294}, {"lat": 27.64095129, "lng": -99.52848773}, {"lat": 37.521932, "lng": -122.448227}, {"lat": 38.52625553, "lng": -122.87105174}, {"lat": 40.59619922, "lng": -111.758392}, {"lat": 35.842916, "lng": -115.170184}, {"lat": 39.05223664, "lng": -77.00211495}, {"lat": 45.304107, "lng": -73.415869}, {"lat": -33.200899, "lng": -70.543278}, {"lat": 30.27152139, "lng": -97.74398804}, {"lat": 45.49660233, "lng": -74.00349906}, {"lat": 38.91257546, "lng": -77.74909792}, {"lat": 40.3338021, "lng": -76.86870399}, {"lat": 37.283703, "lng": -121.580978}, {"lat": 41.554022, "lng": -81.047146}, {"lat": -27.688874, "lng": 153.256224}, {"lat": 36.657899, "lng": -4.620222}, {"lat": 41.630518, "lng": 2.261117}, {"lat": 13.8672, "lng": 100.661213}, {"lat": 35.12595523, "lng": -80.98528093}, {"lat": 42.96115195, "lng": -85.81020482}, {"lat": 43.780472, "lng": -115.9402}, {"lat": 43.336833, "lng": -116.463568}, {"lat": 11.52158252, "lng": 104.979845}, {"lat": 36.291019, "lng": -115.052447}, {"lat": -41.309043, "lng": 175.134761}, {"lat": 50.198756, "lng": 11.867847}, {"lat": 40.938592, "lng": -73.706115}, {"lat": 34.34657503, "lng": -119.29839461}, {"lat": 55.0430086, "lng": -1.72011455}, {"lat": 42.191368, "lng": -71.944664}, {"lat": 34.03268832, "lng": -84.17628101}, {"lat": 37.201002, "lng": -121.929729}, {"lat": 25.07472, "lng": 55.572894}, {"lat": 33.75989574, "lng": -84.27916925}, {"lat": 34.121747, "lng": -118.350402}, {"lat": 29.116492, "lng": 47.937696}, {"lat": 33.824596, "lng": -117.447414}, {"lat": 28.23864144, "lng": -81.55464247}, {"lat": 37.91522, "lng": -122.664907}, {"lat": 54.095037, "lng": -5.914477}, {"lat": 43.625731, "lng": -79.09355}, {"lat": 50.06806022, "lng": 8.93909536}, {"lat": 50.92008585, "lng": 4.47760916}, {"lat": -15.586233, "lng": -47.748157}, {"lat": 38.764548, "lng": 0.041834}, {"lat": 34.926838, "lng": -82.599258}, {"lat": 1.42072, "lng": 103.682191}, {"lat": 33.93745722, "lng": -117.86024994}, {"lat": 40.030742, "lng": -74.920732}, {"lat": 52.727559, "lng": 13.310285}, {"lat": 36.022617, "lng": 14.752305}, {"lat": 41.86637922, "lng": -87.63122555}, {"lat": 45.68625, "lng": 9.407136}, {"lat": 43.752272, "lng": -79.408843}, {"lat": 40.84459586, "lng": -73.87458171}, {"lat": 59.585851, "lng": 18.077667}, {"lat": 40.533487, "lng": -74.757785}, {"lat": 33.055994, "lng": -116.99491}, {"lat": 36.065508, "lng": -86.645536}, {"lat": 36.965125, "lng": 126.711526}, {"lat": 37.73235414, "lng": -97.66621196}, {"lat": 37.71369, "lng": -122.082298}, {"lat": -36.823113, "lng": 174.456135}, {"lat": 34.19617, "lng": -117.958731}, {"lat": -27.44557371, "lng": 152.87827422}, {"lat": 78.63000557, "lng": -163.125}, {"lat": -13.5819209, "lng": 63.45703125}, {"lat": 26.183094, "lng": -79.950227}, {"lat": 52.97654636, "lng": 6.18557498}, {"lat": 39.989118, "lng": -85.869437}, {"lat": 45.4146693, "lng": -75.40752332}, {"lat": 40.5081519, "lng": -111.91286118}, {"lat": 59.89673632, "lng": 10.99616727}, {"lat": 39.488307, "lng": -77.730649}, {"lat": 42.451223, "lng": -82.868054}, {"lat": -37.864178, "lng": 145.372858}, {"lat": 53.55319918, "lng": -1.62297273}, {"lat": 36.16254765, "lng": -86.77310944}, {"lat": -43.720898, "lng": 172.838009}, {"lat": 41.37422986, "lng": -72.74058904}, {"lat": 50.9065181, "lng": -114.15416088}, {"lat": 63.207963, "lng": 22.167143}, {"lat": 37.219104, "lng": -120.151558}, {"lat": 32.825227, "lng": -97.104592}, {"lat": 34.71452466, "lng": -86.57226563}, {"lat": 37.705979, "lng": -122.544303}, {"lat": 43.64421094, "lng": -116.3640211}, {"lat": 37.38752324, "lng": -121.96270501}, {"lat": 40.71851, "lng": -74.108179}, {"lat": 33.83605, "lng": -112.317687}, {"lat": 42.097994, "lng": -88.090035}, {"lat": 19.388731, "lng": -99.045428}, {"lat": 25.77148411, "lng": -80.32465422}, {"lat": 36.586327, "lng": -75.761743}, {"lat": 29.778722, "lng": -98.592455}, {"lat": 40.6126, "lng": -73.661126}, {"lat": 33.937596, "lng": -83.865434}, {"lat": 52.692495, "lng": -1.318681}, {"lat": -22.890154, "lng": -42.903753}, {"lat": 45.5128731, "lng": -73.57020378}, {"lat": 24.905867, "lng": 46.874416}, {"lat": 40.539321, "lng": -74.184691}, {"lat": 42.907377, "lng": -84.230153}, {"lat": 42.287976, "lng": -72.910122}, {"lat": 38.205824, "lng": 23.635101}, {"lat": 41.10068376, "lng": -84.8080476}, {"lat": 51.454925, "lng": -3.166695}, {"lat": 49.216628, "lng": -123.320065}, {"lat": 40.656609, "lng": -74.26386}, {"lat": 28.070001, "lng": -81.732523}, {"lat": 33.599267, "lng": -117.97365}, {"lat": 49.20988867, "lng": -123.00786996}, {"lat": 52.315683, "lng": 5.764775}, {"lat": 38.67210882, "lng": -121.06693268}, {"lat": 40.103264, "lng": -88.370587}, {"lat": 41.339211, "lng": -81.135041}, {"lat": 51.806669, "lng": 4.266183}, {"lat": -38.197039, "lng": 145.354736}, {"lat": 38.367608, "lng": -121.973807}, {"lat": 53.47341824, "lng": 10.07426414}, {"lat": 33.52150461, "lng": -117.70751953}, {"lat": 25.905212, "lng": -79.903989}, {"lat": 52.4805458, "lng": 5.02351298}, {"lat": 40.12752206, "lng": -111.60727462}, {"lat": 30.380117, "lng": -97.406335}, {"lat": 25.76652298, "lng": -80.19497037}, {"lat": 45.37353426, "lng": -73.63917876}, {"lat": 33.75411822, "lng": -84.30902946}, {"lat": 42.048028, "lng": -87.925423}, {"lat": 49.114241, "lng": 2.406553}, {"lat": -0.447563, "lng": -78.669826}, {"lat": 32.000973, "lng": -111.142342}, {"lat": -37.632823, "lng": 145.197306}, {"lat": 36.321813, "lng": -83.55102}, {"lat": 37.907585, "lng": -97.557814}, {"lat": 41.024363, "lng": -73.763613}, {"lat": 38.530662, "lng": -90.456344}, {"lat": 1.368755, "lng": 104.130953}, {"lat": 51.58525216, "lng": -0.56516913}, {"lat": 32.857966, "lng": -96.637046}, {"lat": 37.190099, "lng": 127.361912}, {"lat": -36.52729481, "lng": 174.73974606}, {"lat": 45.58232862, "lng": -73.56445313}, {"lat": 26.3735776, "lng": -98.30303501}, {"lat": 45.62719209, "lng": -122.85572946}, {"lat": 34.008481, "lng": -84.429556}, {"lat": 32.544407, "lng": -97.482868}, {"lat": 41.740479, "lng": -87.963305}, {"lat": 33.549483, "lng": -117.594416}, {"lat": 28.50027496, "lng": -81.35614484}, {"lat": 38.78339786, "lng": -9.44337946}, {"lat": 40.366207, "lng": -111.764126}, {"lat": 47.55429102, "lng": -122.33272081}, {"lat": 39.702972, "lng": -105.041267}, {"lat": 32.80825998, "lng": -96.93789498}, {"lat": 33.718811, "lng": -84.646781}, {"lat": 39.989404, "lng": -104.967029}, {"lat": 42.21732, "lng": -87.937586}, {"lat": 35.507204, "lng": -80.611373}, {"lat": 39.923639, "lng": -104.683769}, {"lat": 42.015267, "lng": -73.67184}, {"lat": 18.308749, "lng": -65.882941}, {"lat": 45.928395, "lng": 7.243967}, {"lat": 33.529, "lng": -84.421377}, {"lat": 16.692161, "lng": 80.47691}, {"lat": 37.818981, "lng": -122.101061}, {"lat": 39.676933, "lng": -85.874256}, {"lat": 33.04750144, "lng": -96.43705119}, {"lat": -22.852922, "lng": -42.932578}, {"lat": 60.000583, "lng": 11.18935}, {"lat": 38.92920672, "lng": -77.10821544}, {"lat": 32.998855, "lng": -96.663127}, {"lat": -33.725308, "lng": 151.473051}, {"lat": -8.136893, "lng": -35.278885}, {"lat": 28.825292, "lng": 77.385834}, {"lat": 45.40182488, "lng": 11.87759399}, {"lat": 34.279558, "lng": -119.157213}, {"lat": 40.976345, "lng": -73.665822}, {"lat": 40.766583, "lng": -73.586084}, {"lat": 29.6478848, "lng": -95.20074261}, {"lat": 41.260754, "lng": -81.929689}, {"lat": 30.42841968, "lng": -97.70469295}, {"lat": 52.539215, "lng": 12.94404}, {"lat": 32.938166, "lng": -117.225428}, {"lat": 6.071317, "lng": -75.755576}, {"lat": 35.66916385, "lng": -87.05423915}, {"lat": 31.99769, "lng": 34.488925}, {"lat": 52.357563, "lng": 4.473193}, {"lat": 60.168324, "lng": 10.819783}, {"lat": 42.584062, "lng": -71.183984}, {"lat": 50.06689461, "lng": 8.54420401}, {"lat": 39.07485, "lng": -94.781464}, {"lat": 51.276585, "lng": 4.847041}, {"lat": -37.727621, "lng": 144.841444}], "assignments": {"5": [2, 0, 0, 1, 0, 2, 0, 3, 1, 1, 2, 2, 1, 2, 1, 0, 2, 1, 0, 1, 1, 0, 2, 0, 1, 1, 0, 0, 2, 1, 2, 1, 0, 0, 1, 3, 0, 1, 2, 0, 0, 2, 0, 1, 0, 1, 0, 1, 0, 1, 3, 4, 1, 2, 1, 0, 1, 1, 0, 1, 2, 2, 1, 0, 2, 2, 1, 0, 1, 0, 0, 0, 0, 1, 0, 2, 0, 2, 0, 1, 4, 1, 0, 0, 2, 1, 1, 1, 0, 0, 0, 1, 0, 4, 0, 1, 1, 1, 0, 2, 1, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 1, 2, 1, 0, 2, 1, 0, 0, 1, 0, 2, 0, 1, 1, 2, 2, 1, 1, 3, 1, 2, 0, 0, 1, 1, 3, 0, 2, 0, 2, 0, 0, 0, 2, 2, 3, 3, 0, 2, 2, 1, 1, 0, 2, 1, 3, 3, 1, 0, 0, 1, 1, 0, 1, 1, 2, 0, 2, 0, 4, 0, 0, 3, 2, 2, 0, 2, 4, 0, 0, 1, 3, 0, 2, 1, 0, 0, 0, 1, 0, 0, 1, 1, 3, 0, 1, 2, 0, 0, 1, 0, 2, 0, 2, 2, 2, 4, 0, 0, 0, 2, 1, 3, 1, 0, 2, 1, 0, 0, 1, 0, 2, 1, 3, 0, 0, 1, 0, 2, 1, 0, 1, 0, 0, 2, 0, 0, 2, 0, 2, 0, 0, 0, 2, 0, 1, 0, 2, 0, 0, 0, 1, 1, 2, 1, 0, 0, 0, 1, 3, 1, 0, 0, 1, 2, 0, 0, 1, 2, 0, 0, 2, 0, 1, 0, 0, 2, 2, 2, 1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 4, 2, 2, 3, 0, 0, 1, 1, 3, 1, 4, 2, 0, 1, 2, 0, 0, 1, 3, 0, 1, 2, 1, 0, 1, 2, 0, 2, 2, 0, 2, 0, 3, 1, 0, 2, 2, 0, 2, 0, 0, 2, 0, 1, 0, 3, 0, 1, 4, 1, 4, 1, 3, 0, 2, 0, 0, 1, 2, 0, 0, 4, 2, 0, 4, 0, 1, 2, 1, 0, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 2, 0, 0, 0, 2, 0, 2, 1, 0, 0, 1, 1, 2, 1, 0, 0, 2, 4, 1, 2, 1, 0, 2, 1, 0, 0, 0, 0, 0, 2, 0, 1, 4, 0, 0, 0, 0, 3, 2, 0, 3, 4, 0, 0, 1, 0, 0, 0, 1, 0, 2, 1, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 2, 0, 3, 1, 0, 0, 0, 2, 0, 0, 4, 0, 3, 2, 1, 0, 0, 0, 0, 0, 2, 1, 0, 0, 2, 2, 2, 0, 2, 0, 2, 4], "10": [2, 0, 0, 1, 4, 5, 0, 7, 3, 1, 2, 2, 1, 5, 3, 3, 2, 1, 0, 1, 1, 4, 2, 0, 1, 1, 0, 0, 5, 1, 5, 1, 0, 0, 1, 7, 3, 1, 2, 3, 0, 5, 3, 1, 0, 1, 4, 1, 0, 1, 7, 6, 1, 2, 1, 0, 1, 1, 0, 1, 2, 2, 1, 0, 2, 2, 1, 0, 1, 0, 0, 4, 3, 1, 0, 2, 3, 2, 0, 1, 6, 1, 0, 4, 2, 1, 1, 3, 0, 0, 3, 1, 0, 6, 3, 1, 1, 1, 0, 2, 1, 0, 4, 3, 2, 0, 0, 0, 0, 0, 0, 1, 2, 1, 0, 2, 1, 4, 0, 1, 0, 5, 0, 1, 3, 2, 2, 1, 1, 8, 3, 5, 3, 4, 1, 1, 7, 0, 5, 4, 8, 4, 0, 0, 2, 5, 7, 7, 4, 2, 9, 1, 1, 0, 5, 1, 7, 7, 1, 3, 3, 1, 1, 3, 1, 1, 2, 9, 5, 0, 6, 3, 0, 8, 2, 2, 3, 2, 6, 9, 4, 1, 8, 0, 5, 1, 3, 0, 0, 1, 0, 0, 1, 1, 7, 0, 3, 2, 9, 0, 1, 0, 2, 4, 2, 5, 2, 6, 0, 0, 3, 2, 1, 8, 1, 0, 5, 1, 0, 4, 1, 3, 2, 1, 7, 4, 4, 1, 0, 2, 1, 3, 1, 3, 0, 5, 3, 3, 2, 0, 2, 4, 3, 0, 2, 3, 1, 0, 2, 4, 0, 4, 3, 1, 2, 1, 0, 4, 3, 3, 7, 1, 3, 0, 1, 2, 0, 3, 1, 2, 0, 0, 2, 0, 1, 3, 0, 2, 2, 2, 1, 1, 3, 1, 1, 1, 1, 0, 0, 9, 3, 0, 0, 0, 1, 0, 6, 2, 2, 7, 0, 0, 1, 1, 7, 1, 6, 2, 0, 1, 2, 0, 0, 1, 8, 0, 1, 8, 1, 4, 1, 2, 0, 2, 2, 9, 2, 0, 7, 1, 0, 2, 5, 0, 2, 0, 0, 2, 0, 1, 0, 7, 3, 1, 6, 1, 6, 1, 8, 4, 2, 0, 0, 1, 2, 0, 0, 6, 2, 0, 6, 0, 1, 2, 1, 3, 0, 1, 1, 1, 0, 1, 0, 3, 4, 0, 3, 0, 0, 2, 9, 0, 8, 0, 0, 0, 5, 0, 2, 1, 0, 4, 1, 1, 2, 1, 0, 0, 2, 6, 1, 2, 1, 4, 2, 1, 3, 4, 0, 0, 0, 2, 4, 1, 6, 0, 3, 0, 3, 7, 2, 3, 7, 6, 0, 3, 1, 0, 3, 0, 1, 4, 2, 1, 1, 3, 3, 0, 3, 0, 0, 3, 0, 4, 2, 0, 8, 1, 0, 3, 9, 2, 0, 3, 6, 9, 8, 2, 1, 0, 0, 3, 0, 3, 2, 1, 4, 0, 5, 2, 2, 0, 2, 3, 2, 6], "15": [2, 4, 3, 5, 4, 6, 4, 8, 3, 0, 2, 2, 5, 6, 3, 3, 6, 5, 4, 0, 0, 4, 2, 1, 5, 0, 4, 4, 6, 0, 6, 5, 4, 1, 0, 8, 3, 5, 6, 3, 1, 6, 3, 0, 1, 5, 4, 5, 1, 0, 8, 7, 0, 2, 5, 4, 0, 0, 4, 0, 2, 2, 0, 1, 2, 2, 0, 1, 0, 1, 4, 4, 3, 0, 1, 2, 3, 2, 1, 0, 7, 0, 4, 4, 2, 0, 0, 3, 4, 1, 3, 0, 1, 7, 3, 0, 0, 0, 1, 2, 5, 1, 4, 3, 2, 4, 3, 1, 1, 1, 1, 0, 2, 5, 1, 2, 0, 11, 1, 0, 1, 6, 1, 0, 5, 2, 2, 5, 0, 9, 3, 6, 3, 11, 0, 0, 12, 1, 6, 4, 9, 4, 1, 3, 2, 6, 12, 8, 11, 2, 14, 0, 13, 1, 6, 0, 8, 8, 0, 3, 3, 0, 0, 3, 0, 0, 2, 10, 6, 1, 7, 3, 1, 9, 2, 2, 3, 2, 7, 10, 11, 0, 9, 4, 6, 0, 3, 1, 1, 0, 1, 1, 0, 5, 8, 1, 3, 2, 10, 1, 0, 1, 2, 4, 2, 6, 2, 7, 1, 3, 3, 2, 0, 9, 0, 4, 6, 5, 3, 4, 5, 3, 2, 0, 8, 4, 4, 0, 4, 6, 0, 3, 0, 3, 3, 6, 3, 3, 2, 1, 2, 4, 3, 1, 2, 3, 0, 1, 6, 4, 1, 4, 3, 0, 2, 0, 1, 4, 3, 0, 8, 0, 3, 1, 0, 2, 4, 3, 0, 2, 3, 1, 2, 4, 0, 3, 4, 6, 2, 6, 5, 0, 3, 0, 0, 0, 0, 1, 1, 10, 3, 1, 1, 1, 0, 1, 7, 2, 2, 8, 4, 1, 5, 5, 8, 0, 7, 2, 1, 0, 2, 1, 4, 0, 9, 4, 0, 9, 0, 4, 0, 2, 1, 2, 2, 10, 2, 4, 8, 0, 1, 2, 6, 3, 2, 1, 1, 2, 1, 0, 4, 12, 3, 0, 7, 0, 7, 13, 14, 4, 2, 4, 1, 0, 2, 1, 1, 7, 2, 4, 7, 1, 5, 2, 0, 3, 4, 0, 5, 0, 1, 0, 3, 3, 4, 1, 3, 1, 4, 2, 10, 1, 9, 1, 1, 1, 6, 4, 2, 5, 1, 4, 0, 5, 2, 0, 3, 1, 2, 7, 0, 2, 0, 4, 2, 0, 3, 4, 1, 4, 3, 2, 11, 0, 7, 4, 3, 1, 3, 8, 2, 3, 12, 7, 1, 3, 5, 4, 3, 3, 0, 4, 2, 0, 5, 3, 3, 4, 3, 3, 4, 3, 1, 11, 2, 4, 8, 0, 4, 3, 10, 2, 1, 3, 7, 10, 9, 2, 0, 1, 1, 3, 1, 3, 2, 0, 11, 4, 6, 2, 2, 1, 2, 3, 2, 7], "20": [6, 2, 2, 7, 3, 9, 2, 11, 5, 8, 6, 4, 7, 9, 8, 5, 4, 7, 3, 8, 0, 3, 6, 1, 7, 0, 3, 2, 9, 0, 9, 7, 2, 1, 0, 11, 5, 7, 4, 2, 1, 9, 5, 0, 1, 7, 3, 7, 1, 0, 11, 10, 8, 4, 7, 3, 0, 0, 3, 0, 14, 6, 0, 1, 6, 6, 0, 1, 0, 1, 2, 3, 5, 0, 2, 4, 5, 4, 1, 0, 10, 0, 3, 3, 6, 0, 0, 8, 3, 1, 5, 0, 1, 10, 5, 8, 0, 0, 1, 4, 7, 1, 3, 2, 4, 2, 2, 1, 1, 1, 1, 8, 6, 7, 1, 6, 0, 15, 1, 0, 1, 9, 1, 8, 8, 6, 6, 7, 0, 12, 8, 9, 2, 15, 0, 0, 16, 1, 9, 3, 12, 3, 1, 2, 4, 9, 16, 11, 15, 14, 19, 0, 18, 1, 4, 0, 11, 11, 0, 2, 5, 0, 0, 2, 0, 0, 6, 13, 9, 1, 10, 5, 1, 12, 6, 6, 5, 4, 10, 13, 15, 0, 12, 3, 4, 0, 5, 1, 1, 0, 1, 1, 0, 7, 11, 1, 8, 4, 13, 1, 0, 1, 6, 3, 6, 9, 6, 10, 1, 2, 2, 6, 0, 12, 0, 2, 9, 7, 2, 3, 7, 5, 14, 0, 11, 3, 3, 0, 3, 4, 0, 5, 0, 5, 2, 9, 2, 2, 4, 1, 4, 3, 5, 1, 6, 5, 0, 1, 4, 3, 1, 3, 8, 0, 4, 0, 1, 3, 5, 8, 11, 0, 5, 1, 0, 6, 3, 2, 0, 4, 2, 1, 4, 2, 0, 5, 3, 4, 4, 4, 7, 0, 5, 0, 0, 8, 0, 1, 1, 13, 5, 1, 1, 1, 0, 1, 10, 14, 14, 11, 3, 2, 7, 7, 11, 0, 17, 4, 1, 0, 6, 1, 3, 0, 12, 3, 0, 12, 0, 3, 0, 6, 1, 4, 6, 13, 14, 3, 11, 0, 1, 4, 9, 2, 4, 1, 1, 4, 1, 0, 2, 16, 5, 0, 17, 0, 10, 18, 12, 3, 6, 2, 1, 8, 4, 1, 2, 10, 6, 2, 17, 1, 7, 4, 0, 5, 2, 0, 7, 0, 1, 0, 2, 5, 3, 1, 5, 1, 3, 6, 13, 1, 12, 1, 2, 1, 9, 2, 6, 7, 1, 3, 0, 7, 6, 0, 2, 1, 6, 10, 0, 4, 0, 3, 6, 8, 5, 3, 1, 3, 2, 6, 15, 0, 10, 2, 5, 1, 2, 11, 6, 5, 16, 17, 1, 5, 7, 3, 5, 2, 0, 3, 14, 8, 7, 8, 5, 3, 8, 2, 3, 8, 1, 15, 4, 3, 12, 0, 2, 5, 13, 4, 1, 5, 10, 13, 12, 4, 0, 1, 1, 5, 2, 5, 4, 0, 15, 2, 9, 6, 4, 1, 4, 2, 6, 10], "25": [6, 4, 2, 7, 8, 18, 4, 11, 3, 9, 6, 5, 7, 12, 9, 2, 5, 7, 4, 9, 0, 8, 6, 1, 7, 0, 4, 2, 18, 0, 18, 7, 2, 1, 0, 11, 3, 7, 5, 2, 1, 12, 3, 0, 1, 7, 8, 7, 1, 0, 11, 10, 9, 5, 7, 4, 0, 0, 4, 0, 16, 6, 0, 1, 6, 6, 0, 1, 0, 1, 2, 8, 3, 0, 2, 5, 3, 5, 1, 0, 10, 0, 4, 8, 6, 0, 0, 9, 4, 1, 3, 0, 1, 10, 3, 9, 0, 0, 1, 13, 7, 1, 8, 2, 13, 2, 2, 1, 1, 1, 1, 9, 6, 7, 1, 6, 0, 17, 1, 0, 4, 12, 1, 9, 9, 6, 6, 7, 0, 15, 9, 12, 2, 17, 0, 0, 19, 1, 18, 8, 15, 8, 1, 2, 5, 18, 19, 11, 17, 16, 23, 0, 22, 1, 12, 0, 11, 11, 0, 2, 3, 0, 0, 2, 0, 0, 6, 14, 12, 1, 10, 3, 1, 15, 6, 5, 3, 5, 10, 14, 17, 0, 21, 4, 12, 0, 3, 1, 1, 0, 1, 1, 0, 7, 11, 1, 9, 13, 14, 1, 0, 1, 6, 8, 6, 12, 6, 10, 1, 2, 2, 6, 0, 15, 0, 4, 12, 7, 2, 8, 7, 3, 16, 0, 11, 8, 8, 0, 4, 12, 0, 3, 0, 3, 2, 18, 2, 2, 5, 1, 13, 8, 3, 1, 6, 3, 0, 1, 5, 8, 1, 8, 9, 0, 5, 0, 1, 8, 3, 9, 11, 0, 3, 1, 0, 6, 4, 2, 0, 5, 2, 1, 5, 2, 0, 3, 4, 5, 13, 12, 7, 0, 3, 0, 0, 9, 0, 1, 1, 14, 3, 1, 4, 1, 0, 4, 10, 16, 16, 11, 4, 2, 7, 7, 11, 0, 20, 5, 1, 0, 6, 1, 4, 0, 15, 4, 0, 15, 0, 8, 0, 6, 1, 5, 5, 14, 16, 4, 11, 0, 1, 5, 12, 2, 5, 1, 1, 13, 1, 0, 2, 19, 3, 0, 20, 0, 10, 22, 24, 8, 5, 2, 1, 9, 13, 4, 4, 10, 6, 2, 20, 1, 7, 13, 0, 3, 4, 0, 7, 0, 1, 0, 2, 3, 8, 4, 3, 1, 4, 6, 14, 1, 15, 1, 2, 1, 12, 2, 6, 7, 1, 8, 0, 7, 5, 0, 2, 4, 5, 10, 0, 5, 0, 8, 5, 9, 3, 8, 1, 4, 2, 6, 17, 0, 10, 4, 3, 1, 2, 11, 6, 3, 19, 20, 1, 3, 7, 4, 3, 2, 0, 8, 16, 9, 7, 9, 3, 4, 9, 2, 4, 9, 1, 17, 5, 4, 21, 0, 2, 3, 14, 13, 4, 3, 10, 14, 21, 5, 0, 1, 1, 3, 4, 3, 5, 0, 17, 2, 18, 5, 13, 1, 5, 2, 5, 10], "30": [2, 4, 7, 6, 9, 15, 7, 19, 3, 10, 2, 5, 6, 13, 10, 12, 5, 6, 4, 10, 0, 9, 2, 4, 6, 0, 8, 8, 15, 0, 15, 6, 8, 1, 0, 20, 3, 6, 5, 12, 4, 13, 3, 0, 1, 6, 9, 6, 1, 0, 19, 11, 10, 5, 6, 8, 0, 0, 4, 0, 18, 2, 0, 1, 2, 2, 0, 1, 0, 4, 7, 9, 3, 0, 7, 5, 3, 5, 4, 0, 11, 0, 4, 9, 2, 0, 0, 10, 4, 1, 3, 0, 1, 11, 3, 10, 0, 0, 1, 14, 6, 4, 9, 12, 14, 8, 7, 1, 1, 4, 1, 10, 2, 6, 1, 2, 0, 23, 1, 0, 4, 13, 4, 10, 10, 2, 2, 6, 0, 17, 10, 13, 12, 24, 0, 0, 21, 1, 15, 9, 17, 9, 1, 7, 5, 15, 21, 19, 23, 18, 27, 0, 26, 1, 13, 0, 20, 20, 0, 12, 3, 0, 0, 12, 0, 0, 2, 16, 13, 4, 11, 3, 1, 17, 2, 2, 3, 5, 11, 16, 24, 0, 25, 8, 13, 0, 3, 1, 1, 0, 1, 1, 0, 6, 19, 1, 10, 14, 16, 1, 0, 1, 2, 9, 2, 13, 2, 11, 1, 7, 12, 2, 0, 17, 0, 4, 13, 6, 7, 9, 6, 3, 18, 0, 19, 9, 9, 0, 8, 5, 0, 3, 0, 12, 7, 15, 12, 8, 5, 1, 14, 9, 3, 1, 2, 3, 0, 1, 5, 9, 1, 9, 10, 0, 5, 0, 1, 9, 3, 10, 20, 0, 3, 1, 0, 2, 4, 12, 0, 5, 7, 1, 5, 7, 0, 3, 8, 5, 14, 5, 6, 0, 3, 0, 0, 10, 0, 4, 1, 29, 3, 1, 4, 4, 0, 4, 11, 18, 18, 19, 8, 7, 6, 6, 19, 0, 22, 5, 1, 0, 2, 1, 8, 0, 17, 8, 0, 17, 0, 9, 0, 2, 4, 5, 2, 16, 18, 8, 20, 0, 1, 5, 13, 7, 5, 4, 1, 14, 1, 0, 8, 21, 12, 0, 22, 0, 11, 26, 28, 9, 5, 7, 1, 10, 14, 4, 7, 11, 2, 8, 22, 1, 6, 14, 0, 3, 8, 0, 6, 0, 1, 0, 7, 3, 9, 4, 3, 1, 8, 2, 16, 1, 17, 1, 7, 1, 13, 7, 2, 6, 1, 9, 0, 6, 2, 0, 7, 4, 2, 11, 0, 5, 0, 9, 2, 10, 3, 9, 1, 8, 7, 2, 23, 0, 11, 8, 12, 1, 7, 20, 2, 3, 21, 22, 1, 3, 6, 8, 3, 7, 0, 9, 18, 10, 6, 10, 3, 8, 10, 7, 4, 10, 1, 24, 5, 8, 25, 0, 7, 3, 16, 14, 4, 3, 11, 16, 25, 5, 0, 1, 1, 3, 4, 3, 5, 0, 23, 8, 15, 2, 14, 1, 5, 12, 2, 11]}, "clusters": {"5": [{"i": 0, "host": "The Bronx", "country": "United States", "label": "New York", "lat": 40.84985, "lng": -73.86641, "n": 211, "local": 15, "mean_km": 1426.9547473516018, "max_km": 8241.11860324044}, {"i": 1, "host": "Los Angeles", "country": "United States", "label": "Los Angeles", "lat": 34.05223, "lng": -118.24368, "n": 125, "local": 35, "mean_km": 757.1062223222738, "max_km": 5375.269674784286}, {"i": 2, "host": "London", "country": "United Kingdom", "label": "London", "lat": 51.50853, "lng": -0.12574, "n": 98, "local": 9, "mean_km": 1289.707396174777, "max_km": 9777.411526718892}, {"i": 3, "host": "Bangkok", "country": "Thailand", "label": "Bangkok", "lat": 13.75398, "lng": 100.50144, "n": 25, "local": 5, "mean_km": 2427.952805017286, "max_km": 5087.365683435485}, {"i": 4, "host": "Sydney", "country": "Australia", "label": "Sydney", "lat": -33.86785, "lng": 151.20732, "n": 17, "local": 5, "mean_km": 854.3018817298555, "max_km": 2255.642673193117}], "10": [{"i": 0, "host": "The Bronx", "country": "United States", "label": "New York", "lat": 40.84985, "lng": -73.86641, "n": 127, "local": 15, "mean_km": 596.6086477668275, "max_km": 1306.5213492473506}, {"i": 1, "host": "Los Angeles", "country": "United States", "label": "Los Angeles", "lat": 34.05223, "lng": -118.24368, "n": 114, "local": 35, "mean_km": 695.7454780667244, "max_km": 5375.269674784286}, {"i": 2, "host": "London", "country": "United Kingdom", "label": "London", "lat": 51.50853, "lng": -0.12574, "n": 76, "local": 9, "mean_km": 720.4888765644652, "max_km": 1847.3250654582}, {"i": 3, "host": "Austin", "country": "United States", "label": "Austin", "lat": 30.26715, "lng": -97.74306, "n": 57, "local": 9, "mean_km": 704.4855881021733, "max_km": 2288.715641006717}, {"i": 4, "host": "Miami", "country": "United States", "label": "Miami", "lat": 25.77427, "lng": -80.19366, "n": 30, "local": 13, "mean_km": 640.6761132708801, "max_km": 2920.323282245632}, {"i": 5, "host": "Athens", "country": "Greece", "label": "Athens", "lat": 37.98376, "lng": 23.72784, "n": 18, "local": 4, "mean_km": 737.8548264519555, "max_km": 1216.4883955363623}, {"i": 6, "host": "Sydney", "country": "Australia", "label": "Sydney", "lat": -33.86785, "lng": 151.20732, "n": 17, "local": 5, "mean_km": 854.3018817298555, "max_km": 2255.642673193117}, {"i": 7, "host": "Bangkok", "country": "Thailand", "label": "Bangkok", "lat": 13.75398, "lng": 100.50144, "n": 17, "local": 5, "mean_km": 1649.6121128279071, "max_km": 3723.488916102335}, {"i": 8, "host": "Dubai", "country": "United Arab Emirates", "label": "Dubai", "lat": 25.07725, "lng": 55.30927, "n": 11, "local": 4, "mean_km": 1271.932092660291, "max_km": 4388.550387438934}, {"i": 9, "host": "Rio de Janeiro", "country": "Brazil", "label": "Rio de Janeiro", "lat": -22.90642, "lng": -43.18223, "n": 9, "local": 3, "mean_km": 1502.6229338312942, "max_km": 6413.204203401005}], "15": [{"i": 0, "host": "Los Angeles", "country": "United States", "label": "Los Angeles", "lat": 34.05223, "lng": -118.24368, "n": 89, "local": 35, "mean_km": 367.3531749421047, "max_km": 1184.6502849496144}, {"i": 1, "host": "The Bronx", "country": "United States", "label": "New York", "lat": 40.84985, "lng": -73.86641, "n": 78, "local": 15, "mean_km": 292.2112307347017, "max_km": 1014.9603765755745}, {"i": 2, "host": "London", "country": "United Kingdom", "label": "London", "lat": 51.50853, "lng": -0.12574, "n": 70, "local": 9, "mean_km": 671.0536107277361, "max_km": 1847.3250654582}, {"i": 3, "host": "Chicago", "country": "United States", "label": "Chicago", "lat": 41.85003, "lng": -87.65005, "n": 68, "local": 13, "mean_km": 1093.312801059764, "max_km": 2739.248102464438}, {"i": 4, "host": "Miami", "country": "United States", "label": "Miami", "lat": 25.77427, "lng": -80.19366, "n": 59, "local": 13, "mean_km": 805.8066597684121, "max_km": 1756.4545137666003}, {"i": 5, "host": "Seattle", "country": "United States", "label": "Seattle", "lat": 47.60621, "lng": -122.33207, "n": 25, "local": 6, "mean_km": 298.7985387239719, "max_km": 1342.7761212725343}, {"i": 6, "host": "Athens", "country": "Greece", "label": "Athens", "lat": 37.98376, "lng": 23.72784, "n": 24, "local": 4, "mean_km": 855.9530992383521, "max_km": 1311.1277263367558}, {"i": 7, "host": "Sydney", "country": "Australia", "label": "Sydney", "lat": -33.86785, "lng": 151.20732, "n": 17, "local": 5, "mean_km": 854.3018817298555, "max_km": 2255.642673193117}, {"i": 8, "host": "Bangkok", "country": "Thailand", "label": "Bangkok", "lat": 13.75398, "lng": 100.50144, "n": 14, "local": 5, "mean_km": 1102.2495628764593, "max_km": 2965.3741934615973}, {"i": 9, "host": "Dubai", "country": "United Arab Emirates", "label": "Dubai", "lat": 25.07725, "lng": 55.30927, "n": 9, "local": 4, "mean_km": 759.1688422129037, "max_km": 2224.0799456218183}, {"i": 10, "host": "Rio de Janeiro", "country": "Brazil", "label": "Rio de Janeiro", "lat": -22.90642, "lng": -43.18223, "n": 8, "local": 3, "mean_km": 888.8002751350803, "max_km": 2907.2944787854362}, {"i": 11, "host": "Carolina", "country": "Puerto Rico", "label": "San Juan", "lat": 18.38078, "lng": -65.95739, "n": 7, "local": 3, "mean_km": 1223.4357109287082, "max_km": 2512.712873653218}, {"i": 12, "host": "Ansan-si", "country": "South Korea", "label": "Seoul", "lat": 37.32361, "lng": 126.82194, "n": 4, "local": 1, "mean_km": 29.870196730955634, "max_km": 50.04204580580272}, {"i": 13, "host": "Edmonton", "country": "Canada", "label": "Edmonton", "lat": 53.55014, "lng": -113.46871, "n": 2, "local": 2, "mean_km": 3293.25812925894, "max_km": 3356.304481267749}, {"i": 14, "host": "Port Elizabeth", "country": "South Africa", "label": "Port Elizabeth", "lat": -33.96109, "lng": 25.61494, "n": 2, "local": 1, "mean_km": 2367.3247438832573, "max_km": 4429.734912752773}], "20": [{"i": 0, "host": "Los Angeles", "country": "United States", "label": "Los Angeles", "lat": 34.05223, "lng": -118.24368, "n": 78, "local": 35, "mean_km": 286.09916251726315, "max_km": 700.0366873211246}, {"i": 1, "host": "The Bronx", "country": "United States", "label": "New York", "lat": 40.84985, "lng": -73.86641, "n": 73, "local": 15, "mean_km": 253.88314544906865, "max_km": 611.3506952639482}, {"i": 2, "host": "Chicago", "country": "United States", "label": "Chicago", "lat": 41.85003, "lng": -87.65005, "n": 45, "local": 13, "mean_km": 391.5795444716641, "max_km": 905.3822715305021}, {"i": 3, "host": "Miami", "country": "United States", "label": "Miami", "lat": 25.77427, "lng": -80.19366, "n": 43, "local": 13, "mean_km": 573.6995592000036, "max_km": 1170.2635972660407}, {"i": 4, "host": "Frankfurt am Main", "country": "Germany", "label": "Frankfurt", "lat": 50.11552, "lng": 8.68417, "n": 37, "local": 4, "mean_km": 614.3576073549139, "max_km": 1665.1200022337841}, {"i": 5, "host": "Austin", "country": "United States", "label": "Austin", "lat": 30.26715, "lng": -97.74306, "n": 36, "local": 9, "mean_km": 344.255227850122, "max_km": 1228.6099737891498}, {"i": 6, "host": "London", "country": "United Kingdom", "label": "London", "lat": 51.50853, "lng": -0.12574, "n": 34, "local": 9, "mean_km": 265.162146320002, "max_km": 518.6732336920087}, {"i": 7, "host": "Seattle", "country": "United States", "label": "Seattle", "lat": 47.60621, "lng": -122.33207, "n": 24, "local": 6, "mean_km": 255.29947278444843, "max_km": 714.7283090740148}, {"i": 8, "host": "Salt Lake City", "country": "United States", "label": "Salt Lake City", "lat": 40.76078, "lng": -111.89105, "n": 20, "local": 10, "mean_km": 349.43577826147964, "max_km": 1205.8956094626442}, {"i": 9, "host": "Athens", "country": "Greece", "label": "Athens", "lat": 37.98376, "lng": 23.72784, "n": 16, "local": 4, "mean_km": 711.6993200788507, "max_km": 1216.4883955363623}, {"i": 10, "host": "Sydney", "country": "Australia", "label": "Sydney", "lat": -33.86785, "lng": 151.20732, "n": 13, "local": 5, "mean_km": 448.0023612866334, "max_km": 736.7763952001076}, {"i": 11, "host": "Bangkok", "country": "Thailand", "label": "Bangkok", "lat": 13.75398, "lng": 100.50144, "n": 13, "local": 5, "mean_km": 1019.9491272183524, "max_km": 2965.3741934615973}, {"i": 12, "host": "Dubai", "country": "United Arab Emirates", "label": "Dubai", "lat": 25.07725, "lng": 55.30927, "n": 11, "local": 4, "mean_km": 1271.932092660291, "max_km": 4388.550387438934}, {"i": 13, "host": "Rio de Janeiro", "country": "Brazil", "label": "Rio de Janeiro", "lat": -22.90642, "lng": -43.18223, "n": 8, "local": 3, "mean_km": 888.8002751350803, "max_km": 2907.2944787854362}, {"i": 14, "host": "Valencia", "country": "Spain", "label": "Valencia", "lat": 39.47391, "lng": -0.37966, "n": 7, "local": 2, "mean_km": 397.82464096249566, "max_km": 785.2360309044277}, {"i": 15, "host": "Carolina", "country": "Puerto Rico", "label": "San Juan", "lat": 18.38078, "lng": -65.95739, "n": 7, "local": 3, "mean_km": 1223.4357109287082, "max_km": 2512.712873653218}, {"i": 16, "host": "Ansan-si", "country": "South Korea", "label": "Seoul", "lat": 37.32361, "lng": 126.82194, "n": 4, "local": 1, "mean_km": 29.870196730955634, "max_km": 50.04204580580272}, {"i": 17, "host": "North Shore", "country": "New Zealand", "label": "Auckland", "lat": -36.8, "lng": 174.75, "n": 4, "local": 2, "mean_km": 336.38114208590616, "max_km": 786.4198713883039}, {"i": 18, "host": "Edmonton", "country": "Canada", "label": "Edmonton", "lat": 53.55014, "lng": -113.46871, "n": 2, "local": 2, "mean_km": 3293.25812925894, "max_km": 3356.304481267749}, {"i": 19, "host": "Port Elizabeth", "country": "South Africa", "label": "Port Elizabeth", "lat": -33.96109, "lng": 25.61494, "n": 1, "local": 1, "mean_km": 304.91457501374117, "max_km": 304.91457501374117}], "25": [{"i": 0, "host": "Los Angeles", "country": "United States", "label": "Los Angeles", "lat": 34.05223, "lng": -118.24368, "n": 78, "local": 35, "mean_km": 286.09916251726315, "max_km": 700.0366873211246}, {"i": 1, "host": "The Bronx", "country": "United States", "label": "New York", "lat": 40.84985, "lng": -73.86641, "n": 66, "local": 15, "mean_km": 232.5431791354361, "max_km": 589.295023537891}, {"i": 2, "host": "Chicago", "country": "United States", "label": "Chicago", "lat": 41.85003, "lng": -87.65005, "n": 39, "local": 13, "mean_km": 368.3854140678807, "max_km": 905.3822715305021}, {"i": 3, "host": "Austin", "country": "United States", "label": "Austin", "lat": 30.26715, "lng": -97.74306, "n": 35, "local": 9, "mean_km": 331.0595012625415, "max_km": 1228.6099737891498}, {"i": 4, "host": "Atlanta", "country": "United States", "label": "Atlanta", "lat": 33.749, "lng": -84.38798, "n": 34, "local": 12, "mean_km": 427.87908260412075, "max_km": 976.690497442479}, {"i": 5, "host": "Amsterdam", "country": "The Netherlands", "label": "Amsterdam", "lat": 52.37403, "lng": 4.88969, "n": 31, "local": 5, "mean_km": 463.0215811726807, "max_km": 1287.7330685335626}, {"i": 6, "host": "London", "country": "United Kingdom", "label": "London", "lat": 51.50853, "lng": -0.12574, "n": 26, "local": 9, "mean_km": 234.96156374718262, "max_km": 518.6732336920087}, {"i": 7, "host": "Seattle", "country": "United States", "label": "Seattle", "lat": 47.60621, "lng": -122.33207, "n": 24, "local": 6, "mean_km": 255.29947278444843, "max_km": 714.7283090740148}, {"i": 8, "host": "Miami", "country": "United States", "label": "Miami", "lat": 25.77427, "lng": -80.19366, "n": 23, "local": 13, "mean_km": 165.66404881298766, "max_km": 482.64354396723945}, {"i": 9, "host": "Salt Lake City", "country": "United States", "label": "Salt Lake City", "lat": 40.76078, "lng": -111.89105, "n": 20, "local": 10, "mean_km": 349.43577826147964, "max_km": 1205.8956094626442}, {"i": 10, "host": "Sydney", "country": "Australia", "label": "Sydney", "lat": -33.86785, "lng": 151.20732, "n": 13, "local": 5, "mean_km": 448.0023612866334, "max_km": 736.7763952001076}, {"i": 11, "host": "Bangkok", "country": "Thailand", "label": "Bangkok", "lat": 13.75398, "lng": 100.50144, "n": 13, "local": 5, "mean_km": 1019.9491272183524, "max_km": 2965.3741934615973}, {"i": 12, "host": "Athens", "country": "Greece", "label": "Athens", "lat": 37.98376, "lng": 23.72784, "n": 13, "local": 4, "mean_km": 606.471765898862, "max_km": 1258.7013954611157}, {"i": 13, "host": "Stockholm", "country": "Sweden", "label": "Stockholm", "lat": 59.32938, "lng": 18.06871, "n": 10, "local": 4, "mean_km": 275.08827705684223, "max_km": 544.9217806487848}, {"i": 14, "host": "Rio de Janeiro", "country": "Brazil", "label": "Rio de Janeiro", "lat": -22.90642, "lng": -43.18223, "n": 8, "local": 3, "mean_km": 888.8002751350803, "max_km": 2907.2944787854362}, {"i": 15, "host": "Dubai", "country": "United Arab Emirates", "label": "Dubai", "lat": 25.07725, "lng": 55.30927, "n": 7, "local": 4, "mean_km": 380.7120114367303, "max_km": 884.8713786502584}, {"i": 16, "host": "Valencia", "country": "Spain", "label": "Valencia", "lat": 39.47391, "lng": -0.37966, "n": 7, "local": 2, "mean_km": 397.82464096249566, "max_km": 785.2360309044277}, {"i": 17, "host": "Carolina", "country": "Puerto Rico", "label": "San Juan", "lat": 18.38078, "lng": -65.95739, "n": 7, "local": 3, "mean_km": 1223.4357109287082, "max_km": 2512.712873653218}, {"i": 18, "host": "Jerusalem", "country": "Israel", "label": "Jerusalem", "lat": 31.76904, "lng": 35.21633, "n": 7, "local": 4, "mean_km": 254.4647102477415, "max_km": 727.6264958422848}, {"i": 19, "host": "Ansan-si", "country": "South Korea", "label": "Seoul", "lat": 37.32361, "lng": 126.82194, "n": 4, "local": 1, "mean_km": 29.870196730955634, "max_km": 50.04204580580272}, {"i": 20, "host": "North Shore", "country": "New Zealand", "label": "Auckland", "lat": -36.8, "lng": 174.75, "n": 4, "local": 2, "mean_km": 336.38114208590616, "max_km": 786.4198713883039}, {"i": 21, "host": "Navi Mumbai", "country": "India", "label": "Mumbai", "lat": 19.03681, "lng": 73.01582, "n": 3, "local": 1, "mean_km": 677.9887019814552, "max_km": 1175.2312876971662}, {"i": 22, "host": "Edmonton", "country": "Canada", "label": "Edmonton", "lat": 53.55014, "lng": -113.46871, "n": 2, "local": 2, "mean_km": 3293.25812925894, "max_km": 3356.304481267749}, {"i": 23, "host": "Port Elizabeth", "country": "South Africa", "label": "Port Elizabeth", "lat": -33.96109, "lng": 25.61494, "n": 1, "local": 1, "mean_km": 304.91457501374117, "max_km": 304.91457501374117}, {"i": 24, "host": "Port Louis", "country": "Mauritius", "label": "Port Louis", "lat": -20.16194, "lng": 57.49889, "n": 1, "local": 1, "mean_km": 967.8283907595643, "max_km": 967.8283907595643}], "30": [{"i": 0, "host": "Los Angeles", "country": "United States", "label": "Los Angeles", "lat": 34.05223, "lng": -118.24368, "n": 78, "local": 35, "mean_km": 286.09916251726315, "max_km": 700.0366873211246}, {"i": 1, "host": "The Bronx", "country": "United States", "label": "New York", "lat": 40.84985, "lng": -73.86641, "n": 54, "local": 15, "mean_km": 186.29298756416648, "max_km": 526.7950373577445}, {"i": 2, "host": "London", "country": "United Kingdom", "label": "London", "lat": 51.50853, "lng": -0.12574, "n": 33, "local": 9, "mean_km": 259.27358645503335, "max_km": 518.6732336920087}, {"i": 3, "host": "Austin", "country": "United States", "label": "Austin", "lat": 30.26715, "lng": -97.74306, "n": 32, "local": 9, "mean_km": 284.4058964648228, "max_km": 1228.6099737891498}, {"i": 4, "host": "Washington", "country": "United States", "label": "Washington", "lat": 38.89511, "lng": -77.03637, "n": 28, "local": 8, "mean_km": 316.4282016710284, "max_km": 638.4184032305741}, {"i": 5, "host": "Frankfurt am Main", "country": "Germany", "label": "Frankfurt", "lat": 50.11552, "lng": 8.68417, "n": 26, "local": 4, "mean_km": 370.93542011012465, "max_km": 950.7243994559307}, {"i": 6, "host": "Seattle", "country": "United States", "label": "Seattle", "lat": 47.60621, "lng": -122.33207, "n": 24, "local": 6, "mean_km": 255.29947278444843, "max_km": 714.7283090740148}, {"i": 7, "host": "Chicago", "country": "United States", "label": "Chicago", "lat": 41.85003, "lng": -87.65005, "n": 24, "local": 12, "mean_km": 168.71765357059593, "max_km": 439.31721342066515}, {"i": 8, "host": "Atlanta", "country": "United States", "label": "Atlanta", "lat": 33.749, "lng": -84.38798, "n": 23, "local": 12, "mean_km": 180.9286327747385, "max_km": 523.1243565127426}, {"i": 9, "host": "Miami", "country": "United States", "label": "Miami", "lat": 25.77427, "lng": -80.19366, "n": 23, "local": 13, "mean_km": 165.66404881298766, "max_km": 482.64354396723945}, {"i": 10, "host": "Salt Lake City", "country": "United States", "label": "Salt Lake City", "lat": 40.76078, "lng": -111.89105, "n": 20, "local": 10, "mean_km": 349.43577826147964, "max_km": 1205.8956094626442}, {"i": 11, "host": "Sydney", "country": "Australia", "label": "Sydney", "lat": -33.86785, "lng": 151.20732, "n": 13, "local": 5, "mean_km": 448.0023612866334, "max_km": 736.7763952001076}, {"i": 12, "host": "Oklahoma City", "country": "United States", "label": "Oklahoma City", "lat": 35.46756, "lng": -97.51643, "n": 13, "local": 8, "mean_km": 648.6173616692, "max_km": 1242.168535542131}, {"i": 13, "host": "Athens", "country": "Greece", "label": "Athens", "lat": 37.98376, "lng": 23.72784, "n": 11, "local": 4, "mean_km": 503.3182871114182, "max_km": 1094.686485572171}, {"i": 14, "host": "Stockholm", "country": "Sweden", "label": "Stockholm", "lat": 59.32938, "lng": 18.06871, "n": 10, "local": 4, "mean_km": 275.08827705684223, "max_km": 544.9217806487848}, {"i": 15, "host": "Jerusalem", "country": "Israel", "label": "Jerusalem", "lat": 31.76904, "lng": 35.21633, "n": 7, "local": 4, "mean_km": 254.4647102477415, "max_km": 727.6264958422848}, {"i": 16, "host": "Rio de Janeiro", "country": "Brazil", "label": "Rio de Janeiro", "lat": -22.90642, "lng": -43.18223, "n": 7, "local": 3, "mean_km": 600.4439603278864, "max_km": 1846.391027269587}, {"i": 17, "host": "Dubai", "country": "United Arab Emirates", "label": "Dubai", "lat": 25.07725, "lng": 55.30927, "n": 7, "local": 4, "mean_km": 380.7120114367303, "max_km": 884.8713786502584}, {"i": 18, "host": "Valencia", "country": "Spain", "label": "Valencia", "lat": 39.47391, "lng": -0.37966, "n": 7, "local": 2, "mean_km": 397.82464096249566, "max_km": 785.2360309044277}, {"i": 19, "host": "Bangkok", "country": "Thailand", "label": "Bangkok", "lat": 13.75398, "lng": 100.50144, "n": 7, "local": 5, "mean_km": 477.7370275880081, "max_km": 2224.839257723381}, {"i": 20, "host": "Singapore", "country": "Singapore", "label": "Singapore", "lat": 1.28967, "lng": 103.85007, "n": 6, "local": 1, "mean_km": 342.75184324108426, "max_km": 1665.6411773127163}, {"i": 21, "host": "Ansan-si", "country": "South Korea", "label": "Seoul", "lat": 37.32361, "lng": 126.82194, "n": 4, "local": 1, "mean_km": 29.870196730955634, "max_km": 50.04204580580272}, {"i": 22, "host": "North Shore", "country": "New Zealand", "label": "Auckland", "lat": -36.8, "lng": 174.75, "n": 4, "local": 2, "mean_km": 336.38114208590616, "max_km": 786.4198713883039}, {"i": 23, "host": "Quito", "country": "Ecuador", "label": "Quito", "lat": -0.22985, "lng": -78.52495, "n": 4, "local": 2, "mean_km": 395.07962965707884, "max_km": 783.6804102660396}, {"i": 24, "host": "Carolina", "country": "Puerto Rico", "label": "San Juan", "lat": 18.38078, "lng": -65.95739, "n": 3, "local": 3, "mean_km": 41.14345450886203, "max_km": 85.20334425657686}, {"i": 25, "host": "Navi Mumbai", "country": "India", "label": "Mumbai", "lat": 19.03681, "lng": 73.01582, "n": 3, "local": 1, "mean_km": 677.9887019814552, "max_km": 1175.2312876971662}, {"i": 26, "host": "Edmonton", "country": "Canada", "label": "Edmonton", "lat": 53.55014, "lng": -113.46871, "n": 2, "local": 2, "mean_km": 3293.25812925894, "max_km": 3356.304481267749}, {"i": 27, "host": "Port Elizabeth", "country": "South Africa", "label": "Port Elizabeth", "lat": -33.96109, "lng": 25.61494, "n": 1, "local": 1, "mean_km": 304.91457501374117, "max_km": 304.91457501374117}, {"i": 28, "host": "Port Louis", "country": "Mauritius", "label": "Port Louis", "lat": -20.16194, "lng": 57.49889, "n": 1, "local": 1, "mean_km": 967.8283907595643, "max_km": 967.8283907595643}, {"i": 29, "host": "Santiago", "country": "Chile", "label": "Santiago", "lat": -33.45694, "lng": -70.64827, "n": 1, "local": 1, "mean_km": 30.09512009772841, "max_km": 30.09512009772841}]}, "total": 476, "ks": [5, 10, 15, 20, 25, 30]};
 const KS = DATA.ks;
+
+// editorial palette: 30 desaturated tones across the wheel
 const PALETTE = [
-  "#58a6ff","#f78166","#3fb950","#d2a8ff","#f0883e","#56d364","#79c0ff","#ff7b72",
-  "#a5d6ff","#ffa657","#7ee787","#bc8cff","#ff9d72","#76e3a3","#92d4ff","#ffaca0",
-  "#c8e1ff","#ffbf85","#a3f0bc","#d2b9ff","#ffb6a3","#a8eac8","#b8e0ff","#ffd2bf",
-  "#cef5d9","#e0d0ff","#ffd9cb","#d4f4e1","#dcebff","#ffe8de"
+  "#b04127","#2d5d6e","#c69749","#5a7d4e","#8b4773","#1f4a78","#b87f44","#6e8e76",
+  "#a8472a","#4a6175","#9e8b3a","#3e6a4a","#6c4a78","#2c3e5a","#c97e3a","#4a7d70",
+  "#7c402c","#5a8590","#b39144","#4a6346","#823b58","#36527a","#c98c5a","#5d8073",
+  "#93452f","#406b8a","#a08537","#4d7355","#6d3e6e","#2f4a6a"
 ];
 
-const map = L.map("map", { zoomControl: true, worldCopyJump: true }).setView([30, 0], 2);
+// ───────── COMPUTE ROLLUPS ─────────
+const usCount = (DATA.assignments[String(KS[0])] || []).length;  // we'll compute from clusters
+function topByMembers(clusters, n) {
+  return clusters.slice().sort((a,b) => b.n - a.n).slice(0, n).reduce((s,c) => s + c.n, 0);
+}
+const allClusters5 = DATA.clusters[String(5)];
+const fiveHubCoverage = topByMembers(allClusters5, 5);
+const allClusters30 = DATA.clusters[String(30)];
+const usMembersInClusters = allClusters30.filter(c => c.country === "United States").reduce((s,c)=>s+c.n,0);
+const countriesInClusters = new Set(allClusters30.map(c => c.country)).size;
+
+document.getElementById('stat-coverage').textContent = String(fiveHubCoverage);
+document.getElementById('stat-share').innerHTML = `<em>${Math.round(usMembersInClusters / DATA.total * 100)}<span style="font-size:0.55em;letter-spacing:-0.02em;">%</span></em>`;
+document.getElementById('stat-countries').textContent = String(countriesInClusters);
+
+// ───────── MAP ─────────
+const map = L.map("map", { zoomControl: true, worldCopyJump: true, preferCanvas: true })
+  .setView([28, -10], 2);
+
 L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
-  attribution: '&copy; OSM &copy; CARTO',
+  attribution: 'tiles &copy; CARTO &copy; OpenStreetMap',
   subdomains: 'abcd',
   maxZoom: 19
 }).addTo(map);
 
-let memberLayer = L.layerGroup().addTo(map);
-let hostLayer = L.layerGroup().addTo(map);
-let currentK = 20;
+const memberLayer = L.layerGroup().addTo(map);
+const hostLayer = L.layerGroup().addTo(map);
 
 function colorFor(idx) { return PALETTE[idx % PALETTE.length]; }
-function el(tag, props, ...children) {
-  const e = document.createElement(tag);
-  if (props) for (const [k, v] of Object.entries(props)) {
-    if (k === "class") e.className = v;
-    else if (k === "style") Object.assign(e.style, v);
-    else if (k.startsWith("on")) e[k] = v;
-    else e.setAttribute(k, v);
-  }
-  for (const c of children) {
-    if (c == null) continue;
-    e.appendChild(c instanceof Node ? c : document.createTextNode(String(c)));
-  }
-  return e;
-}
 
-function makeHostLabel(label, n) {
+function makeHostLabelHTML(label, n) {
   const wrap = document.createElement("div");
   wrap.className = "host-label";
   wrap.appendChild(document.createTextNode(label));
@@ -118,7 +499,7 @@ function makeHostLabel(label, n) {
   span.className = "pop-n";
   span.appendChild(document.createTextNode(String(n)));
   wrap.appendChild(span);
-  return wrap;
+  return wrap.outerHTML;
 }
 
 function makePopupNode(c) {
@@ -126,15 +507,22 @@ function makePopupNode(c) {
   const b = document.createElement("b");
   b.appendChild(document.createTextNode(c.label));
   wrap.appendChild(b);
-  wrap.appendChild(document.createElement("br"));
-  wrap.appendChild(document.createTextNode(`${c.n} members in cluster`));
-  wrap.appendChild(document.createElement("br"));
-  wrap.appendChild(document.createTextNode(`${c.local} live closest to this metro`));
-  wrap.appendChild(document.createElement("br"));
-  wrap.appendChild(document.createTextNode(`avg ${Math.round(c.mean_km)} km · max ${Math.round(c.max_km)} km`));
+  const stats = document.createElement("div");
+  stats.className = "pop-stats";
+  const lines = [
+    `${c.n} members in cluster`,
+    `${c.local} live closest to this metro`,
+    `avg ${Math.round(c.mean_km)} km · max ${Math.round(c.max_km)} km`,
+  ];
+  lines.forEach((line, i) => {
+    if (i > 0) stats.appendChild(document.createElement("br"));
+    stats.appendChild(document.createTextNode(line));
+  });
+  wrap.appendChild(stats);
   return wrap;
 }
 
+let currentK = 20;
 function render(k) {
   currentK = k;
   memberLayer.clearLayers();
@@ -145,28 +533,30 @@ function render(k) {
 
   DATA.members.forEach((m, i) => {
     const cIdx = assignments[i];
+    const c = colorFor(cIdx);
     L.circleMarker([m.lat, m.lng], {
-      radius: 3,
-      fillColor: colorFor(cIdx),
-      color: colorFor(cIdx),
+      radius: 2.6,
+      fillColor: c,
+      color: c,
       weight: 0,
-      fillOpacity: 0.75,
+      fillOpacity: 0.78,
     }).addTo(memberLayer);
   });
 
   clusters.forEach((c) => {
+    const col = colorFor(c.i);
     L.circleMarker([c.lat, c.lng], {
-      radius: Math.min(20, 6 + Math.sqrt(c.n)),
-      fillColor: colorFor(c.i),
-      color: "#fff",
-      weight: 2,
-      fillOpacity: 0.9,
+      radius: Math.min(20, 5.5 + Math.sqrt(c.n) * 1.1),
+      fillColor: col,
+      color: "#fdfaf3",
+      weight: 1.5,
+      fillOpacity: 0.92,
     }).addTo(hostLayer).bindPopup(makePopupNode(c));
 
     L.marker([c.lat, c.lng], {
       icon: L.divIcon({
         className: 'host-label-wrap',
-        html: makeHostLabel(c.label, c.n).outerHTML,
+        html: makeHostLabelHTML(c.label, c.n),
         iconSize: [0, 0],
       }),
       interactive: false,
@@ -175,28 +565,27 @@ function render(k) {
 
   renderSidebar(k, clusters);
   renderButtons(k);
+  renderToggleCaption(k, clusters);
+}
+
+function renderToggleCaption(k, clusters) {
+  const totalCovered = clusters.reduce((s, c) => s + c.n, 0);
+  const dominant = clusters[0];
+  const dominantPct = Math.round(dominant.n / totalCovered * 100);
+  const txt = `At k=${k}, the largest hub is ${dominant.label} (${dominant.n} members, ${dominantPct}% of all). The smallest is ${clusters[clusters.length - 1].label}.`;
+  document.getElementById('toggle-caption').textContent = txt;
 }
 
 function renderSidebar(k, clusters) {
-  const totalCovered = clusters.reduce((s, c) => s + c.n, 0);
-  const goodLocal = clusters.filter(c => c.local >= 5).length;
-
-  const stats = document.getElementById('stats');
-  stats.replaceChildren();
-  stats.appendChild(el("b", null, String(k)));
-  stats.appendChild(document.createTextNode(" meetup cities · "));
-  stats.appendChild(el("b", null, String(totalCovered)));
-  stats.appendChild(document.createTextNode(" members covered · "));
-  stats.appendChild(el("b", null, String(goodLocal)));
-  stats.appendChild(document.createTextNode(" hubs with 5+ locals"));
-
   const tbody = document.createElement("tbody");
-  clusters.forEach(c => {
+  clusters.forEach((c, idx) => {
     const tr = document.createElement("tr");
+    tr.style.setProperty('--i', String(idx));
+
     const tdCity = document.createElement("td");
     const swatch = document.createElement("span");
     swatch.className = "swatch";
-    swatch.style.background = colorFor(c.i);
+    swatch.style.color = colorFor(c.i);
     const city = document.createElement("span");
     city.className = "city";
     city.appendChild(document.createTextNode(c.label));
@@ -204,28 +593,31 @@ function renderSidebar(k, clusters) {
     country.className = "country";
     country.appendChild(document.createTextNode(c.country));
     tdCity.append(swatch, city, country);
+
     const tdN = document.createElement("td");
     tdN.className = "n";
     tdN.appendChild(document.createTextNode(String(c.n)));
+
     const tdKm = document.createElement("td");
     tdKm.className = "km";
-    tdKm.appendChild(document.createTextNode(String(Math.round(c.mean_km))));
+    tdKm.appendChild(document.createTextNode(Math.round(c.mean_km).toLocaleString()));
+
     tr.append(tdCity, tdN, tdKm);
     tbody.appendChild(tr);
   });
+
   const table = document.createElement("table");
   const thead = document.createElement("thead");
   const trh = document.createElement("tr");
-  ["Host city", "n", "avg km"].forEach((label, i) => {
+  [["Host", false], ["n", true], ["avg km", true]].forEach(([label, right]) => {
     const th = document.createElement("th");
-    if (i > 0) th.className = "r";
+    if (right) th.className = "r";
     th.appendChild(document.createTextNode(label));
     trh.appendChild(th);
   });
   thead.appendChild(trh);
   table.append(thead, tbody);
-  const wrap = document.getElementById('cluster-table');
-  wrap.replaceChildren(table);
+  document.getElementById('cluster-table').replaceChildren(table);
 }
 
 function renderButtons(currentK) {
@@ -234,6 +626,8 @@ function renderButtons(currentK) {
   KS.forEach(k => {
     const b = document.createElement("button");
     b.className = "k-btn" + (k === currentK ? " active" : "");
+    b.setAttribute("role", "tab");
+    b.setAttribute("aria-selected", k === currentK ? "true" : "false");
     b.appendChild(document.createTextNode(String(k)));
     b.addEventListener("click", () => render(k));
     wrap.appendChild(b);
