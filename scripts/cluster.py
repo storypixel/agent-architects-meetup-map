@@ -2,24 +2,28 @@
 Cluster member coordinates into theoretical meetup hubs.
 
 Reads:
-  - members.csv (columns: lat, lng)
+  - members.csv (columns: lat, lng[, points])
 
 Writes:
   - data.json (consumed by index.html)
 
+Two views are produced when the `points` column is present:
+  - "members": one member = one vote. Where do MOST members live?
+  - "activity": each member's vote weighted by their all-time points on
+    Skool. Where do ENGAGED members live? Pulls centroids toward heavy
+    contributors. James's question.
+
 Algorithm:
-  1. Reverse-geocode each member to (city, country) using the offline
-     `reverse_geocoder` package — no API key, ships its own dataset.
-  2. Apply small ALIASES table to roll boroughs/suburbs up to their parent
-     metro (e.g. "The Bronx" -> "New York"). The reverse-geocoder is
-     accurate but too granular for "where would we actually meet up".
-  3. K-means on raw lat/lng for each k in K_VALUES (10, 15, 20, 25, 30).
-     Note: this treats lat/lng as Euclidean. Fine at this scale for picking
-     hubs; we could swap to haversine-aware clustering later if needed.
-  4. For each cluster, choose host = the metro most cluster members already
-     live in (tiebreak by lowest mean haversine distance to the rest of the
-     cluster — i.e. the metro that minimizes group travel).
-  5. Compute per-cluster stats: n (members), local (members already in host
+  1. Snap each member to a major METRO (75km radius). Suburbs roll up so
+     NYC boroughs become "New York", LA suburbs become "Los Angeles", etc.
+     Outside any metro, fall back to the offline `reverse_geocoder` city.
+  2. K-means on raw lat/lng for each k in K_VALUES (10, 15, 20, 25, 30).
+     For "activity" view we pass sample_weight=points to bias centroids
+     toward heavy contributors.
+  3. For each cluster, choose host = the metro with the most weight in the
+     cluster (members in "members" view, points in "activity" view).
+     Tiebreak by global metro size for stable reruns.
+  4. Compute per-cluster stats: n (members or points), local (in host
      metro), mean_km / max_km (haversine distance from each member to host).
 """
 from __future__ import annotations
@@ -156,13 +160,23 @@ def haversine_km(a_lat: float, a_lng: float, b_lat: float, b_lng: float) -> floa
     return 2 * R * math.asin(math.sqrt(h))
 
 
-def load_members(path: Path) -> np.ndarray:
+def load_members(path: Path) -> tuple[np.ndarray, np.ndarray]:
+    """Returns (points_array, weights_array). Weights default to 1 if no
+    `points` column. Members with 0 points get weight 0 in the activity
+    view, but the points array always returns full weight 1 for the
+    members view."""
     with path.open() as f:
         reader = csv.DictReader(f)
-        rows = [(float(r["lat"]), float(r["lng"])) for r in reader]
+        rows = []
+        for r in reader:
+            pts = float(r.get("points", 0) or 0)
+            rows.append((float(r["lat"]), float(r["lng"]), pts))
     if not rows:
         raise SystemExit(f"{path} has no rows")
-    return np.array(rows, dtype=float)
+    arr = np.array(rows, dtype=float)
+    coords = arr[:, :2]
+    weights = arr[:, 2]
+    return coords, weights
 
 
 def reverse_geocode(points: np.ndarray) -> list[tuple[str, str]]:
@@ -258,10 +272,22 @@ def cluster_summary(
     points: np.ndarray,
     metros: list[tuple[str, str]],
     k: int,
+    weights: np.ndarray | None = None,
 ) -> list[dict]:
-    km = KMeans(n_clusters=k, random_state=RANDOM_STATE, n_init=10).fit(points)
+    """Run kmeans + summarize clusters. If `weights` is provided, kmeans
+    centroids are pulled toward high-weight points and per-cluster `n`
+    becomes the sum of weights instead of the member count."""
+    fit_weights = weights if weights is not None else None
+    km = KMeans(n_clusters=k, random_state=RANDOM_STATE, n_init=10).fit(
+        points, sample_weight=fit_weights
+    )
     labels = km.labels_
     centers = km.cluster_centers_
+
+    # Global metro size (member count) for stable tiebreaks. Even in the
+    # activity view, host city is picked by raw member count: a meetup
+    # happens where the most people LIVE, not where the heaviest contributor
+    # lives. Weights only affect cluster geometry and the size metric.
     global_counts = Counter(metros)
 
     out: list[dict] = []
@@ -269,13 +295,19 @@ def cluster_summary(
         mask = labels == i
         cluster_pts = points[mask]
         cluster_metros = [metros[j] for j in range(len(metros)) if mask[j]]
-        n = int(mask.sum())
+        cluster_weights = weights[mask] if weights is not None else None
+
+        # Cluster "size" shown in the UI = member count or summed weight
+        if weights is None:
+            n: float = int(mask.sum())
+        else:
+            n = float(cluster_weights.sum())
         if n == 0:
             continue
 
-        # Pick host metro: most cluster members already live there.
-        # Tiebreak by global metro size (a tie of 9 Austin / 9 Dallas resolves
-        # to whichever is bigger overall in the dataset). Stable across reruns.
+        # Pick host metro by raw member count (NOT weight) so the label
+        # reads as "where most people live in this cluster". Tiebreak by
+        # global metro size for stable reruns.
         counts = Counter(cluster_metros)
         top_count = counts.most_common(1)[0][1]
         candidates = [m for m, c in counts.items() if c == top_count]
@@ -296,6 +328,7 @@ def cluster_summary(
 
         dists = [haversine_km(host_lat, host_lng, p[0], p[1]) for p in cluster_pts]
 
+        local = counts[(host_city, host_country)]
         out.append(
             {
                 "i": i,
@@ -304,8 +337,8 @@ def cluster_summary(
                 "label": host_city,
                 "lat": round(host_lat, 5),
                 "lng": round(host_lng, 5),
-                "n": n,
-                "local": int(counts[(host_city, host_country)]),
+                "n": int(round(n)) if weights is None else round(float(n), 1),
+                "local": int(round(local)) if weights is None else round(float(local), 1),
                 "mean_km": float(np.mean(dists)),
                 "max_km": float(np.max(dists)),
             }
@@ -315,25 +348,42 @@ def cluster_summary(
     return out
 
 
-def build_assignments(points: np.ndarray) -> dict[str, list[int]]:
+def build_assignments(
+    points: np.ndarray,
+    weights: np.ndarray | None = None,
+) -> dict[str, list[int]]:
     """For each k, the cluster index assigned to each member (0..k-1)."""
     out: dict[str, list[int]] = {}
     for k in K_VALUES:
-        km = KMeans(n_clusters=k, random_state=RANDOM_STATE, n_init=10).fit(points)
+        km = KMeans(n_clusters=k, random_state=RANDOM_STATE, n_init=10).fit(
+            points, sample_weight=weights
+        )
         out[str(k)] = [int(x) for x in km.labels_]
     return out
 
 
-def build_top(metros: list[tuple[str, str]]):
-    metro_counts = Counter(metros)
-    country_counts = Counter(c for _, c in metros)
+def build_top(
+    metros: list[tuple[str, str]],
+    weights: np.ndarray | None = None,
+):
+    if weights is None:
+        metro_counts = Counter(metros)
+        country_counts = Counter(c for _, c in metros)
+        fmt = lambda n: int(n)
+    else:
+        metro_counts = Counter()
+        country_counts = Counter()
+        for (city, country), w in zip(metros, weights):
+            metro_counts[(city, country)] += w
+            country_counts[country] += w
+        fmt = lambda n: round(float(n), 1)
     return (
         [
-            {"city": city, "country": country, "n": n}
+            {"city": city, "country": country, "n": fmt(n)}
             for (city, country), n in metro_counts.most_common(20)
         ],
         [
-            {"country": c, "n": n}
+            {"country": c, "n": fmt(n)}
             for c, n in country_counts.most_common(20)
         ],
     )
@@ -344,28 +394,53 @@ def main() -> int:
     members_csv = repo / "members.csv"
     out_path = repo / "data.json"
 
-    points = load_members(members_csv)
-    metros = reverse_geocode(points)
+    coords, weights = load_members(members_csv)
+    has_activity = bool((weights > 0).any())
+    metros = reverse_geocode(coords)
 
-    clusters = {str(k): cluster_summary(points, metros, k) for k in K_VALUES}
-    top_metros, top_countries = build_top(metros)
+    views: dict[str, dict] = {}
+    # Members view (unweighted)
+    print("computing members view...")
+    views["members"] = {
+        "clusters": {str(k): cluster_summary(coords, metros, k) for k in K_VALUES},
+        "assignments": build_assignments(coords),
+        "total": len(coords),
+        "top_metros": build_top(metros)[0],
+        "top_countries": build_top(metros)[1],
+    }
+    # Activity view (weighted by points). Only built when at least one
+    # member has nonzero points, otherwise it'd be identical to members.
+    if has_activity:
+        print("computing activity view (weighted by points)...")
+        views["activity"] = {
+            "clusters": {
+                str(k): cluster_summary(coords, metros, k, weights) for k in K_VALUES
+            },
+            "assignments": build_assignments(coords, weights),
+            "total": round(float(weights.sum()), 1),
+            "total_members": len(coords),
+            "active_members": int((weights > 0).sum()),
+            "top_metros": build_top(metros, weights)[0],
+            "top_countries": build_top(metros, weights)[1],
+        }
 
     data = {
-        "members": [{"lat": float(lat), "lng": float(lng)} for lat, lng in points],
-        "assignments": build_assignments(points),
-        "clusters": clusters,
-        "total": len(points),
+        "members": [
+            {"lat": float(lat), "lng": float(lng), "points": float(w)}
+            for (lat, lng), w in zip(coords, weights)
+        ],
         "ks": K_VALUES,
-        "top_metros": top_metros,
-        "top_countries": top_countries,
+        "views": views,
+        "default_view": "members",
     }
 
     with out_path.open("w") as f:
         json.dump(data, f, separators=(",", ":"))
-    print(f"wrote {out_path} ({len(points)} members, ks={K_VALUES})")
-    print("top hubs at k=10:")
-    for c in clusters["10"][:5]:
-        print(f"  {c['n']:>4}  {c['host']}, {c['country']}")
+    print(f"\nwrote {out_path} ({len(coords)} members, ks={K_VALUES})")
+    for view_name, view in views.items():
+        print(f"\ntop hubs at k=10 ({view_name}):")
+        for c in view["clusters"]["10"][:5]:
+            print(f"  {c['n']:>6}  {c['host']}, {c['country']}")
     return 0
 
 

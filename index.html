@@ -620,9 +620,11 @@
   </div>
 </div>
 
-<!-- BOTTOM K TOGGLE -->
+<!-- BOTTOM CONTROLS: VIEW + K TOGGLE -->
 <div class="k-bar" role="tablist">
-  <span class="k-label">Hubs</span>
+  <span class="k-label">Weight</span>
+  <div id="view-buttons" style="display:flex;gap:0;"></div>
+  <span class="k-label" style="border-left:1px solid var(--rule);margin-left:6px;padding-left:14px;">Hubs</span>
   <div id="k-buttons" style="display:flex;gap:0;"></div>
 </div>
 
@@ -662,7 +664,7 @@
       <ol class="method">
         <li>Pulled <strong>476 member coordinates</strong> from Skool's member&#8209;map endpoint &mdash; the same data feeding the dots on the live community map.</li>
         <li>Snapped each member to their nearest <strong>major metro</strong> (city pop &ge; 500k). A handful of US metros that fall below the threshold but have outsized metro areas &mdash; Miami, Tampa, Orlando, Salt&nbsp;Lake&nbsp;City, St.&nbsp;Louis, etc. &mdash; were force&#8209;included so people don't snap to a different country.</li>
-        <li>Ran <strong>k&#8209;means clustering</strong> on raw lat/lng for k = 10, 15, 20, 25, 30.</li>
+        <li>Ran <strong>k&#8209;means clustering</strong> on raw lat/lng for k = 10, 15, 20, 25, 30. Toggle <strong>Activity</strong> at the bottom to weight each member by their all&#8209;time Skool points &mdash; centroids and hub size shift toward heavy contributors.</li>
         <li>For each cluster, picked the <strong>host city</strong> = the metro where the most cluster members already live (tie&#8209;break by global metro size).</li>
         <li>All distances are <strong>great&#8209;circle</strong> (haversine) from member home to host metro &mdash; not driving distance.</li>
       </ol>
@@ -692,6 +694,29 @@
 (async () => {
 const DATA = await fetch('./data.json').then(r => r.json());
 const KS = DATA.ks;
+const VIEWS = Object.keys(DATA.views);  // ['members', 'activity'] when activity present
+const VIEW_LABELS = { members: 'Members', activity: 'Activity' };
+
+// URL-driven state
+function readUrl() {
+  const p = new URLSearchParams(location.search);
+  let view = p.get('view') || DATA.default_view || 'members';
+  if (!VIEWS.includes(view)) view = VIEWS[0];
+  let k = parseInt(p.get('k'), 10);
+  if (!KS.includes(k)) k = 10;
+  return { view, k };
+}
+function writeUrl(view, k) {
+  const p = new URLSearchParams();
+  if (view !== (DATA.default_view || 'members')) p.set('view', view);
+  if (k !== 10) p.set('k', String(k));
+  const qs = p.toString();
+  const url = location.pathname + (qs ? '?' + qs : '') + location.hash;
+  history.replaceState(null, '', url);
+}
+
+let currentView = readUrl().view;
+function getView() { return DATA.views[currentView]; }
 
 const PALETTE = [
   "#b04127","#2d5d6e","#c69749","#5a7d4e","#8b4773","#1f4a78","#b87f44","#6e8e76",
@@ -700,20 +725,33 @@ const PALETTE = [
   "#93452f","#406b8a","#a08537","#4d7355","#6d3e6e","#2f4a6a"
 ];
 
-// rollups
+// rollups (recomputed when view changes)
 function topByMembers(clusters, n) {
   return clusters.slice().sort((a,b) => b.n - a.n).slice(0, n).reduce((s,c) => s + c.n, 0);
 }
-const top5At20 = topByMembers(DATA.clusters[String(20)], 5);
-const top5Pct = Math.round(top5At20 / DATA.total * 100);
-const allClusters30 = DATA.clusters[String(30)];
-const usMembers = allClusters30.filter(c => c.country === "United States").reduce((s,c)=>s+c.n,0);
-const usPct = Math.round(usMembers / DATA.total * 100);
-const countriesN = new Set(allClusters30.map(c => c.country)).size;
-
-document.getElementById('stat-coverage').innerHTML = `<em>${top5Pct}<span style="font-size:0.55em;letter-spacing:-0.02em;">%</span></em>`;
-document.getElementById('stat-share').innerHTML = `<em>${usPct}<span style="font-size:0.55em;letter-spacing:-0.02em;">%</span></em>`;
-document.getElementById('stat-countries').textContent = String(countriesN);
+function setPercentStat(elId, pct) {
+  const el = document.getElementById(elId);
+  el.replaceChildren();
+  const em = document.createElement('em');
+  em.textContent = String(pct);
+  const sp = document.createElement('span');
+  sp.style.cssText = 'font-size:0.55em;letter-spacing:-0.02em;';
+  sp.textContent = '%';
+  em.appendChild(sp);
+  el.appendChild(em);
+}
+function renderStats() {
+  const view = getView();
+  const top5At20 = topByMembers(view.clusters[String(20)], 5);
+  const top5Pct = Math.round(top5At20 / view.total * 100);
+  const allClusters30 = view.clusters[String(30)];
+  const usMembers = allClusters30.filter(c => c.country === "United States").reduce((s,c)=>s+c.n,0);
+  const usPct = Math.round(usMembers / view.total * 100);
+  const countriesN = new Set(allClusters30.map(c => c.country)).size;
+  setPercentStat('stat-coverage', top5Pct);
+  setPercentStat('stat-share', usPct);
+  document.getElementById('stat-countries').textContent = String(countriesN);
+}
 
 // raw country + metro tables
 function buildMiniTable(elId, rows, leftKey, glossKey) {
@@ -737,8 +775,11 @@ function buildMiniTable(elId, rows, leftKey, glossKey) {
     tbl.appendChild(tr);
   });
 }
-buildMiniTable('country-table', (DATA.top_countries || []).slice(0, 10), 'country');
-buildMiniTable('metro-table', (DATA.top_metros || []).slice(0, 10), 'metro', 'country');
+function renderMiniTables() {
+  const view = getView();
+  buildMiniTable('country-table', (view.top_countries || []).slice(0, 10), 'country');
+  buildMiniTable('metro-table', (view.top_metros || []).slice(0, 10), 'city', 'country');
+}
 
 // ───── MAP ─────
 const map = L.map("map", { zoomControl: true, worldCopyJump: true, preferCanvas: true })
@@ -773,9 +814,16 @@ function makePopupNode(c) {
   wrap.appendChild(b);
   const stats = document.createElement("div");
   stats.className = "pop-stats";
+  const isActivity = currentView === 'activity';
+  const sizeLabel = isActivity
+    ? `${fmtN(c.n)} activity points in cluster`
+    : `${c.n} members in cluster`;
+  const localLabel = isActivity
+    ? `${fmtN(c.local)} points live closest to this metro`
+    : `${c.local} live closest to this metro`;
   const lines = [
-    `${c.n} members in cluster`,
-    `${c.local} live closest to this metro`,
+    sizeLabel,
+    localLabel,
     `avg ${Math.round(c.mean_km)} km · max ${Math.round(c.max_km)} km`,
   ];
   lines.forEach((line, i) => {
@@ -786,32 +834,50 @@ function makePopupNode(c) {
   return wrap;
 }
 
-let currentK = 10;
-function render(k) {
+let currentK = readUrl().k;
+function fmtN(n) {
+  // Activity view stores n as float; round for display.
+  return Math.round(n).toLocaleString();
+}
+function render(k, view) {
+  if (view !== undefined) currentView = view;
   currentK = k;
+  writeUrl(currentView, currentK);
   memberLayer.clearLayers();
   hostLayer.clearLayers();
-  const clusters = DATA.clusters[String(k)];
-  const assignments = DATA.assignments[String(k)];
+  const v = getView();
+  const clusters = v.clusters[String(k)];
+  const assignments = v.assignments[String(k)];
+  const isActivity = currentView === 'activity';
 
   DATA.members.forEach((m, i) => {
     const cIdx = assignments[i];
     const c = colorFor(cIdx);
+    // In activity view, scale member dot radius by sqrt(points) so heavy
+    // contributors stand out. Min radius keeps lurkers visible.
+    const r = isActivity
+      ? Math.max(1.6, 1.6 + Math.sqrt(m.points || 0) * 0.45)
+      : 2.6;
     L.circleMarker([m.lat, m.lng], {
-      radius: 2.6,
+      radius: r,
       fillColor: c, color: c, weight: 0, fillOpacity: 0.78,
     }).addTo(memberLayer);
   });
+  // Compute max cluster n for relative sizing
+  const maxN = Math.max(...clusters.map(c => c.n));
   clusters.forEach((c) => {
     const col = colorFor(c.i);
+    // Scale host marker by sqrt(n / maxN) so the activity view (huge
+    // numbers) and members view (small numbers) both look reasonable.
+    const radius = Math.min(22, 6 + Math.sqrt(c.n / maxN) * 16);
     L.circleMarker([c.lat, c.lng], {
-      radius: Math.min(20, 5.5 + Math.sqrt(c.n) * 1.1),
+      radius,
       fillColor: col, color: "#fdfaf3", weight: 1.5, fillOpacity: 0.92,
     }).addTo(hostLayer).bindPopup(makePopupNode(c));
     L.marker([c.lat, c.lng], {
       icon: L.divIcon({
         className: 'host-label-wrap',
-        html: makeHostLabelHTML(c.label, c.n),
+        html: makeHostLabelHTML(c.label, fmtN(c.n)),
         iconSize: [0, 0],
       }),
       interactive: false,
@@ -820,10 +886,15 @@ function render(k) {
 
   renderTable(k, clusters);
   renderButtons(k);
-  document.getElementById('ledger-label').textContent = `Cluster ledger · k=${k}`;
+  renderViewButtons();
+  renderStats();
+  renderMiniTables();
+  document.getElementById('ledger-label').textContent =
+    `Cluster ledger · k=${k}` + (isActivity ? ' · weighted by activity' : '');
 }
 
 function renderTable(k, clusters) {
+  const isActivity = currentView === 'activity';
   const tbody = document.createElement("tbody");
   clusters.forEach((c, idx) => {
     const tr = document.createElement("tr");
@@ -838,7 +909,7 @@ function renderTable(k, clusters) {
     tdCity.append(swatch, city, country);
     const tdN = document.createElement("td");
     tdN.className = "n";
-    tdN.appendChild(document.createTextNode(String(c.n)));
+    tdN.appendChild(document.createTextNode(fmtN(c.n)));
     const tdKm = document.createElement("td");
     tdKm.className = "km";
     tdKm.appendChild(document.createTextNode(Math.round(c.mean_km).toLocaleString()));
@@ -848,7 +919,8 @@ function renderTable(k, clusters) {
   const table = document.createElement("table");
   const thead = document.createElement("thead");
   const trh = document.createElement("tr");
-  [["Host", false], ["n", true], ["avg km", true]].forEach(([label, right]) => {
+  const nLabel = isActivity ? "pts" : "n";
+  [["Host", false], [nLabel, true], ["avg km", true]].forEach(([label, right]) => {
     const th = document.createElement("th");
     if (right) th.className = "r";
     th.appendChild(document.createTextNode(label));
@@ -859,16 +931,30 @@ function renderTable(k, clusters) {
   document.getElementById('cluster-table').replaceChildren(table);
 }
 
-function renderButtons(currentK) {
+function renderButtons(activeK) {
   const wrap = document.getElementById('k-buttons');
   wrap.replaceChildren();
   KS.forEach(k => {
     const b = document.createElement("button");
-    b.className = "k-btn" + (k === currentK ? " active" : "");
+    b.className = "k-btn" + (k === activeK ? " active" : "");
     b.setAttribute("role", "tab");
-    b.setAttribute("aria-selected", k === currentK ? "true" : "false");
+    b.setAttribute("aria-selected", k === activeK ? "true" : "false");
     b.appendChild(document.createTextNode(String(k)));
     b.addEventListener("click", () => render(k));
+    wrap.appendChild(b);
+  });
+}
+
+function renderViewButtons() {
+  const wrap = document.getElementById('view-buttons');
+  wrap.replaceChildren();
+  VIEWS.forEach(v => {
+    const b = document.createElement("button");
+    b.className = "k-btn" + (v === currentView ? " active" : "");
+    b.setAttribute("role", "tab");
+    b.setAttribute("aria-selected", v === currentView ? "true" : "false");
+    b.appendChild(document.createTextNode(VIEW_LABELS[v] || v));
+    b.addEventListener("click", () => render(currentK, v));
     wrap.appendChild(b);
   });
 }
@@ -885,7 +971,7 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && modal.classList.contains('open')) closeModal();
 });
 
-render(10);
+render(currentK);
 })();
 </script>
 </body>
