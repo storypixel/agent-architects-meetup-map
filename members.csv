@@ -1,477 +1,477 @@
-member_idx,lat,lng,cluster_k10,cluster_k15,cluster_k20,cluster_k25,cluster_k30
-0,51.209257,1.072083,"London, United Kingdom","London, United Kingdom","London, United Kingdom","London, United Kingdom","London, United Kingdom"
-1,38.48799461,-81.87011719,"New York, United States","Miami, United States","Chicago, United States","Atlanta, United States","Washington, United States"
-2,42.142112,-87.682321,"New York, United States","Chicago, United States","Chicago, United States","Chicago, United States","Chicago, United States"
-3,47.67740909,-122.3286438,"Los Angeles, United States","Seattle, United States","Seattle, United States","Seattle, United States","Seattle, United States"
-4,28.875856,-81.550448,"Miami, United States","Miami, United States","Miami, United States","Miami, United States","Miami, United States"
-5,30.307724,31.232452,"Athens, Greece","Athens, Greece","Athens, Greece","Jerusalem, Israel","Jerusalem, Israel"
-6,39.63806844,-83.90787954,"New York, United States","Miami, United States","Chicago, United States","Atlanta, United States","Chicago, United States"
-7,13.964473,100.61611,"Bangkok, Thailand","Bangkok, Thailand","Bangkok, Thailand","Bangkok, Thailand","Bangkok, Thailand"
-8,31.365693,-106.106658,"Austin, United States","Chicago, United States","Austin, United States","Austin, United States","Austin, United States"
-9,40.376383,-111.947583,"Los Angeles, United States","Los Angeles, United States","Salt Lake City, United States","Salt Lake City, United States","Salt Lake City, United States"
-10,54.87579308,-1.4307009,"London, United Kingdom","London, United Kingdom","London, United Kingdom","London, United Kingdom","London, United Kingdom"
-11,50.17669068,8.66463844,"London, United Kingdom","London, United Kingdom","Frankfurt, Germany","Amsterdam, The Netherlands","Frankfurt, Germany"
-12,49.10867342,-122.54844946,"Los Angeles, United States","Seattle, United States","Seattle, United States","Seattle, United States","Seattle, United States"
-13,45.65244829,25.6111908,"Athens, Greece","Athens, Greece","Athens, Greece","Athens, Greece","Athens, Greece"
-14,38.61687046,-102.3046875,"Austin, United States","Chicago, United States","Salt Lake City, United States","Salt Lake City, United States","Salt Lake City, United States"
-15,36.922576,-94.28799,"Austin, United States","Chicago, United States","Austin, United States","Chicago, United States","Oklahoma City, United States"
-16,48.032948,16.592204,"London, United Kingdom","Athens, Greece","Frankfurt, Germany","Amsterdam, The Netherlands","Frankfurt, Germany"
-17,49.869287,-122.849685,"Los Angeles, United States","Seattle, United States","Seattle, United States","Seattle, United States","Seattle, United States"
-18,35.825918,-78.620027,"New York, United States","Miami, United States","Miami, United States","Atlanta, United States","Washington, United States"
-19,40.75505951,-111.88682556,"Los Angeles, United States","Los Angeles, United States","Salt Lake City, United States","Salt Lake City, United States","Salt Lake City, United States"
-20,34.10136422,-117.7468727,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-21,26.008879,-80.200078,"Miami, United States","Miami, United States","Miami, United States","Miami, United States","Miami, United States"
-22,51.269267,-2.354736,"London, United Kingdom","London, United Kingdom","London, United Kingdom","London, United Kingdom","London, United Kingdom"
-23,38.740753,-76.786551,"New York, United States","New York, United States","New York, United States","New York, United States","Washington, United States"
-24,48.50955339,-123.51318107,"Los Angeles, United States","Seattle, United States","Seattle, United States","Seattle, United States","Seattle, United States"
-25,33.590521,-117.552086,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-26,35.672365,-84.144752,"New York, United States","Miami, United States","Miami, United States","Atlanta, United States","Atlanta, United States"
-27,36.07615969,-86.68472137,"New York, United States","Miami, United States","Chicago, United States","Chicago, United States","Atlanta, United States"
-28,30.280705,31.339874,"Athens, Greece","Athens, Greece","Athens, Greece","Jerusalem, Israel","Jerusalem, Israel"
-29,33.452802,-111.777708,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-30,37.85762655,32.29239845,"Athens, Greece","Athens, Greece","Athens, Greece","Jerusalem, Israel","Jerusalem, Israel"
-31,47.387426,-122.217244,"Los Angeles, United States","Seattle, United States","Seattle, United States","Seattle, United States","Seattle, United States"
-32,36.20007696,-86.71580774,"New York, United States","Miami, United States","Chicago, United States","Chicago, United States","Atlanta, United States"
-33,41.39007281,-73.5059913,"New York, United States","New York, United States","New York, United States","New York, United States","New York, United States"
-34,33.39993132,-111.85394665,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-35,2.935011,101.595746,"Bangkok, Thailand","Bangkok, Thailand","Bangkok, Thailand","Bangkok, Thailand","Singapore, Singapore"
-36,29.79092871,-95.58775887,"Austin, United States","Chicago, United States","Austin, United States","Austin, United States","Austin, United States"
-37,47.517785,-122.691147,"Los Angeles, United States","Seattle, United States","Seattle, United States","Seattle, United States","Seattle, United States"
-38,48.20637134,16.36413574,"London, United Kingdom","Athens, Greece","Frankfurt, Germany","Amsterdam, The Netherlands","Frankfurt, Germany"
-39,38.98129653,-94.68360901,"Austin, United States","Chicago, United States","Chicago, United States","Chicago, United States","Oklahoma City, United States"
-40,40.640861,-78.121711,"New York, United States","New York, United States","New York, United States","New York, United States","Washington, United States"
-41,37.768174,23.611258,"Athens, Greece","Athens, Greece","Athens, Greece","Athens, Greece","Athens, Greece"
-42,32.789219,-97.47727,"Austin, United States","Chicago, United States","Austin, United States","Austin, United States","Austin, United States"
-43,33.16629498,-117.32917786,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-44,40.677998,-73.894811,"New York, United States","New York, United States","New York, United States","New York, United States","New York, United States"
-45,49.399381,-123.239201,"Los Angeles, United States","Seattle, United States","Seattle, United States","Seattle, United States","Seattle, United States"
-46,25.926128,-79.991905,"Miami, United States","Miami, United States","Miami, United States","Miami, United States","Miami, United States"
-47,49.494011,-123.00789,"Los Angeles, United States","Seattle, United States","Seattle, United States","Seattle, United States","Seattle, United States"
-48,40.11700852,-75.29011215,"New York, United States","New York, United States","New York, United States","New York, United States","New York, United States"
-49,33.874659,-118.44813,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-50,14.60077588,121.12695638,"Bangkok, Thailand","Bangkok, Thailand","Bangkok, Thailand","Bangkok, Thailand","Bangkok, Thailand"
-51,-27.708786,153.087548,"Sydney, Australia","Sydney, Australia","Sydney, Australia","Sydney, Australia","Sydney, Australia"
-52,40.47816,-111.958424,"Los Angeles, United States","Los Angeles, United States","Salt Lake City, United States","Salt Lake City, United States","Salt Lake City, United States"
-53,50.009074,14.068312,"London, United Kingdom","London, United Kingdom","Frankfurt, Germany","Amsterdam, The Netherlands","Frankfurt, Germany"
-54,49.19276396,-122.97101691,"Los Angeles, United States","Seattle, United States","Seattle, United States","Seattle, United States","Seattle, United States"
-55,33.934046,-84.062502,"New York, United States","Miami, United States","Miami, United States","Atlanta, United States","Atlanta, United States"
-56,33.839004,-118.084747,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-57,35.266759,-119.21359,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-58,36.027522,-78.658532,"New York, United States","Miami, United States","Miami, United States","Atlanta, United States","Washington, United States"
-59,37.05703525,-113.49213905,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-60,38.743971,-8.830408,"London, United Kingdom","London, United Kingdom","Valencia, Spain","Valencia, Spain","Valencia, Spain"
-61,50.912572,2.883244,"London, United Kingdom","London, United Kingdom","London, United Kingdom","London, United Kingdom","London, United Kingdom"
-62,33.997848,-119.009321,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-63,41.94531425,-73.72001115,"New York, United States","New York, United States","New York, United States","New York, United States","New York, United States"
-64,53.284377,-5.816271,"London, United Kingdom","London, United Kingdom","London, United Kingdom","London, United Kingdom","London, United Kingdom"
-65,52.5835667,-7.2272696,"London, United Kingdom","London, United Kingdom","London, United Kingdom","London, United Kingdom","London, United Kingdom"
-66,33.505179,-117.680801,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-67,43.886586,-70.358411,"New York, United States","New York, United States","New York, United States","New York, United States","New York, United States"
-68,32.289596,-111.198884,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-69,43.75453,-79.731283,"New York, United States","New York, United States","New York, United States","New York, United States","Washington, United States"
-70,38.928786,-86.471736,"New York, United States","Miami, United States","Chicago, United States","Chicago, United States","Chicago, United States"
-71,25.64343419,-80.40743573,"Miami, United States","Miami, United States","Miami, United States","Miami, United States","Miami, United States"
-72,26.052187,-98.520921,"Austin, United States","Chicago, United States","Austin, United States","Austin, United States","Austin, United States"
-73,37.69009,-122.14943,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-74,42.56104275,-84.6052263,"New York, United States","New York, United States","Chicago, United States","Chicago, United States","Chicago, United States"
-75,50.08646766,8.53440635,"London, United Kingdom","London, United Kingdom","Frankfurt, Germany","Amsterdam, The Netherlands","Frankfurt, Germany"
-76,30.312431,-98.008419,"Austin, United States","Chicago, United States","Austin, United States","Austin, United States","Austin, United States"
-77,47.75267036,11.4853601,"London, United Kingdom","London, United Kingdom","Frankfurt, Germany","Amsterdam, The Netherlands","Frankfurt, Germany"
-78,43.40287431,-79.96647812,"New York, United States","New York, United States","New York, United States","New York, United States","Washington, United States"
-79,37.329609,-122.261534,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-80,-33.946164,150.833648,"Sydney, Australia","Sydney, Australia","Sydney, Australia","Sydney, Australia","Sydney, Australia"
-81,32.982584,-117.477332,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-82,36.253425,-79.052467,"New York, United States","Miami, United States","Miami, United States","Atlanta, United States","Washington, United States"
-83,25.779867,-80.474615,"Miami, United States","Miami, United States","Miami, United States","Miami, United States","Miami, United States"
-84,51.533028,-3.57087,"London, United Kingdom","London, United Kingdom","London, United Kingdom","London, United Kingdom","London, United Kingdom"
-85,36.08116521,-115.03832206,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-86,32.70449,-116.947923,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-87,39.862941,-105.254213,"Austin, United States","Chicago, United States","Salt Lake City, United States","Salt Lake City, United States","Salt Lake City, United States"
-88,36.028266,-78.633258,"New York, United States","Miami, United States","Miami, United States","Atlanta, United States","Washington, United States"
-89,40.955389,-74.128318,"New York, United States","New York, United States","New York, United States","New York, United States","New York, United States"
-90,29.66233623,-95.33785486,"Austin, United States","Chicago, United States","Austin, United States","Austin, United States","Austin, United States"
-91,37.110931,-122.056608,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-92,42.192489,-70.811775,"New York, United States","New York, United States","New York, United States","New York, United States","New York, United States"
-93,-38.039715,144.843326,"Sydney, Australia","Sydney, Australia","Sydney, Australia","Sydney, Australia","Sydney, Australia"
-94,30.73183752,-97.82592842,"Austin, United States","Chicago, United States","Austin, United States","Austin, United States","Austin, United States"
-95,40.478034,-111.543581,"Los Angeles, United States","Los Angeles, United States","Salt Lake City, United States","Salt Lake City, United States","Salt Lake City, United States"
-96,34.23401564,-118.53492737,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-97,38.840357,-121.587488,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-98,41.53539,-72.847128,"New York, United States","New York, United States","New York, United States","New York, United States","New York, United States"
-99,59.86756471,10.8578663,"London, United Kingdom","London, United Kingdom","Frankfurt, Germany","Stockholm, Sweden","Stockholm, Sweden"
-100,45.609706,-122.993347,"Los Angeles, United States","Seattle, United States","Seattle, United States","Seattle, United States","Seattle, United States"
-101,39.00312035,-76.79967513,"New York, United States","New York, United States","New York, United States","New York, United States","Washington, United States"
-102,27.700238,-82.019331,"Miami, United States","Miami, United States","Miami, United States","Miami, United States","Miami, United States"
-103,41.783508,-91.855444,"Austin, United States","Chicago, United States","Chicago, United States","Chicago, United States","Oklahoma City, United States"
-104,55.434157,12.541579,"London, United Kingdom","London, United Kingdom","Frankfurt, Germany","Stockholm, Sweden","Stockholm, Sweden"
-105,36.417365,-86.812768,"New York, United States","Miami, United States","Chicago, United States","Chicago, United States","Atlanta, United States"
-106,42.157974,-87.575205,"New York, United States","Chicago, United States","Chicago, United States","Chicago, United States","Chicago, United States"
-107,41.001521,-74.042758,"New York, United States","New York, United States","New York, United States","New York, United States","New York, United States"
-108,42.163247,-70.838646,"New York, United States","New York, United States","New York, United States","New York, United States","New York, United States"
-109,39.26043,-77.281875,"New York, United States","New York, United States","New York, United States","New York, United States","Washington, United States"
-110,45.31127567,-75.82027616,"New York, United States","New York, United States","New York, United States","New York, United States","New York, United States"
-111,40.62983452,-111.86327236,"Los Angeles, United States","Los Angeles, United States","Salt Lake City, United States","Salt Lake City, United States","Salt Lake City, United States"
-112,51.807348,0.097823,"London, United Kingdom","London, United Kingdom","London, United Kingdom","London, United Kingdom","London, United Kingdom"
-113,47.581393,-121.82985,"Los Angeles, United States","Seattle, United States","Seattle, United States","Seattle, United States","Seattle, United States"
-114,42.138214,-70.506596,"New York, United States","New York, United States","New York, United States","New York, United States","New York, United States"
-115,51.257333,-0.028032,"London, United Kingdom","London, United Kingdom","London, United Kingdom","London, United Kingdom","London, United Kingdom"
-116,33.475497,-112.209798,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-117,-0.21285962,-78.51104736,"Miami, United States","San Juan, Puerto Rico","San Juan, Puerto Rico","San Juan, Puerto Rico","Quito, Ecuador"
-118,40.669437,-74.379905,"New York, United States","New York, United States","New York, United States","New York, United States","New York, United States"
-119,33.76681867,-118.19641113,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-120,38.882096,-77.228921,"New York, United States","New York, United States","New York, United States","Atlanta, United States","Washington, United States"
-121,41.191106,28.749819,"Athens, Greece","Athens, Greece","Athens, Greece","Athens, Greece","Athens, Greece"
-122,44.4012,-79.216573,"New York, United States","New York, United States","New York, United States","New York, United States","Washington, United States"
-123,41.25299262,-111.98551949,"Los Angeles, United States","Los Angeles, United States","Salt Lake City, United States","Salt Lake City, United States","Salt Lake City, United States"
-124,50.244267,-104.346887,"Austin, United States","Seattle, United States","Salt Lake City, United States","Salt Lake City, United States","Salt Lake City, United States"
-125,55.655701,-3.727794,"London, United Kingdom","London, United Kingdom","London, United Kingdom","London, United Kingdom","London, United Kingdom"
-126,53.096589,-6.227744,"London, United Kingdom","London, United Kingdom","London, United Kingdom","London, United Kingdom","London, United Kingdom"
-127,50.915007,-113.877839,"Los Angeles, United States","Seattle, United States","Seattle, United States","Seattle, United States","Seattle, United States"
-128,33.76578215,-117.99167278,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-129,25.10674092,55.23376465,"Dubai, United Arab Emirates","Dubai, United Arab Emirates","Dubai, United Arab Emirates","Dubai, United Arab Emirates","Dubai, United Arab Emirates"
-130,39.857726,-105.181513,"Austin, United States","Chicago, United States","Salt Lake City, United States","Salt Lake City, United States","Salt Lake City, United States"
-131,37.760802,23.842735,"Athens, Greece","Athens, Greece","Athens, Greece","Athens, Greece","Athens, Greece"
-132,38.839984,-94.544683,"Austin, United States","Chicago, United States","Chicago, United States","Chicago, United States","Oklahoma City, United States"
-133,18.608485,-65.86829,"Miami, United States","San Juan, Puerto Rico","San Juan, Puerto Rico","San Juan, Puerto Rico","San Juan, Puerto Rico"
-134,33.931584,-118.527049,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-135,34.219095,-118.115414,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-136,37.36156,126.788269,"Bangkok, Thailand","Seoul, South Korea","Seoul, South Korea","Seoul, South Korea","Seoul, South Korea"
-137,42.794711,-73.996064,"New York, United States","New York, United States","New York, United States","New York, United States","New York, United States"
-138,31.843593,34.788477,"Athens, Greece","Athens, Greece","Athens, Greece","Jerusalem, Israel","Jerusalem, Israel"
-139,26.22243728,-80.24917417,"Miami, United States","Miami, United States","Miami, United States","Miami, United States","Miami, United States"
-140,24.477904,46.567902,"Dubai, United Arab Emirates","Dubai, United Arab Emirates","Dubai, United Arab Emirates","Dubai, United Arab Emirates","Dubai, United Arab Emirates"
-141,29.015541,-81.446579,"Miami, United States","Miami, United States","Miami, United States","Miami, United States","Miami, United States"
-142,42.591823,-71.119962,"New York, United States","New York, United States","New York, United States","New York, United States","New York, United States"
-143,41.63688,-87.579991,"New York, United States","Chicago, United States","Chicago, United States","Chicago, United States","Chicago, United States"
-144,47.29264983,8.39710557,"London, United Kingdom","London, United Kingdom","Frankfurt, Germany","Amsterdam, The Netherlands","Frankfurt, Germany"
-145,31.92923,34.526965,"Athens, Greece","Athens, Greece","Athens, Greece","Jerusalem, Israel","Jerusalem, Israel"
-146,37.522668,126.74213,"Bangkok, Thailand","Seoul, South Korea","Seoul, South Korea","Seoul, South Korea","Seoul, South Korea"
-147,9.73313585,99.98505092,"Bangkok, Thailand","Bangkok, Thailand","Bangkok, Thailand","Bangkok, Thailand","Bangkok, Thailand"
-148,6.21470994,-75.6665995,"Miami, United States","San Juan, Puerto Rico","San Juan, Puerto Rico","San Juan, Puerto Rico","Quito, Ecuador"
-149,38.65805,-0.560697,"London, United Kingdom","London, United Kingdom","Valencia, Spain","Valencia, Spain","Valencia, Spain"
-150,-34.184301,22.315296,"Rio de Janeiro, Brazil","Port Elizabeth, South Africa","Port Elizabeth, South Africa","Port Elizabeth, South Africa","Port Elizabeth, South Africa"
-151,33.546157,-117.849955,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-152,77.69287034,-159.2578125,"Los Angeles, United States","Edmonton, Canada","Edmonton, Canada","Edmonton, Canada","Edmonton, Canada"
-153,40.1603608,-75.12097165,"New York, United States","New York, United States","New York, United States","New York, United States","New York, United States"
-154,47.248802,19.186871,"Athens, Greece","Athens, Greece","Frankfurt, Germany","Athens, Greece","Athens, Greece"
-155,33.875821,-118.042963,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-156,1.110831,103.964623,"Bangkok, Thailand","Bangkok, Thailand","Bangkok, Thailand","Bangkok, Thailand","Singapore, Singapore"
-157,1.28115203,103.85071491,"Bangkok, Thailand","Bangkok, Thailand","Bangkok, Thailand","Bangkok, Thailand","Singapore, Singapore"
-158,37.532658,-121.815313,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-159,45.29131277,-93.66217478,"Austin, United States","Chicago, United States","Chicago, United States","Chicago, United States","Oklahoma City, United States"
-160,30.200422,-98.031066,"Austin, United States","Chicago, United States","Austin, United States","Austin, United States","Austin, United States"
-161,34.109871,-118.764684,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-162,33.241993,-112.167974,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-163,44.814281,-93.018686,"Austin, United States","Chicago, United States","Chicago, United States","Chicago, United States","Oklahoma City, United States"
-164,37.31048603,-121.90085685,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-165,37.97962,-122.462345,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-166,51.31481,0.120294,"London, United Kingdom","London, United Kingdom","London, United Kingdom","London, United Kingdom","London, United Kingdom"
-167,-22.89034476,-43.07660572,"Rio de Janeiro, Brazil","Rio de Janeiro, Brazil","Rio de Janeiro, Brazil","Rio de Janeiro, Brazil","Rio de Janeiro, Brazil"
-168,44.803602,22.386553,"Athens, Greece","Athens, Greece","Athens, Greece","Athens, Greece","Athens, Greece"
-169,42.849734,-79.199366,"New York, United States","New York, United States","New York, United States","New York, United States","Washington, United States"
-170,-33.662369,151.401293,"Sydney, Australia","Sydney, Australia","Sydney, Australia","Sydney, Australia","Sydney, Australia"
-171,33.080766,-96.938038,"Austin, United States","Chicago, United States","Austin, United States","Austin, United States","Austin, United States"
-172,40.714151,-74.233066,"New York, United States","New York, United States","New York, United States","New York, United States","New York, United States"
-173,24.830495,55.345338,"Dubai, United Arab Emirates","Dubai, United Arab Emirates","Dubai, United Arab Emirates","Dubai, United Arab Emirates","Dubai, United Arab Emirates"
-174,51.395423,3.510291,"London, United Kingdom","London, United Kingdom","London, United Kingdom","London, United Kingdom","London, United Kingdom"
-175,52.36386043,4.90539551,"London, United Kingdom","London, United Kingdom","London, United Kingdom","Amsterdam, The Netherlands","London, United Kingdom"
-176,30.051877,-97.514342,"Austin, United States","Chicago, United States","Austin, United States","Austin, United States","Austin, United States"
-177,51.47111883,7.15209961,"London, United Kingdom","London, United Kingdom","Frankfurt, Germany","Amsterdam, The Netherlands","Frankfurt, Germany"
-178,-33.9033097,151.10058476,"Sydney, Australia","Sydney, Australia","Sydney, Australia","Sydney, Australia","Sydney, Australia"
-179,-15.603645,-48.121462,"Rio de Janeiro, Brazil","Rio de Janeiro, Brazil","Rio de Janeiro, Brazil","Rio de Janeiro, Brazil","Rio de Janeiro, Brazil"
-180,18.209541,-65.170753,"Miami, United States","San Juan, Puerto Rico","San Juan, Puerto Rico","San Juan, Puerto Rico","San Juan, Puerto Rico"
-181,37.40191735,-121.8412502,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-182,18.80824,72.921267,"Dubai, United Arab Emirates","Dubai, United Arab Emirates","Dubai, United Arab Emirates","Mumbai, India","Mumbai, India"
-183,33.78946978,-84.41482716,"New York, United States","Miami, United States","Miami, United States","Atlanta, United States","Atlanta, United States"
-184,44.839416,20.831669,"Athens, Greece","Athens, Greece","Frankfurt, Germany","Athens, Greece","Athens, Greece"
-185,33.829664,-118.156276,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-186,32.598648,-96.981939,"Austin, United States","Chicago, United States","Austin, United States","Austin, United States","Austin, United States"
-187,40.60205224,-73.96065278,"New York, United States","New York, United States","New York, United States","New York, United States","New York, United States"
-188,41.071825,-73.919601,"New York, United States","New York, United States","New York, United States","New York, United States","New York, United States"
-189,33.98564551,-118.31836676,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-190,41.277685,-72.86012,"New York, United States","New York, United States","New York, United States","New York, United States","New York, United States"
-191,42.430634,-70.787533,"New York, United States","New York, United States","New York, United States","New York, United States","New York, United States"
-192,36.295502,-114.980973,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-193,45.551473,-122.475156,"Los Angeles, United States","Seattle, United States","Seattle, United States","Seattle, United States","Seattle, United States"
-194,13.9234039,100.8984375,"Bangkok, Thailand","Bangkok, Thailand","Bangkok, Thailand","Bangkok, Thailand","Bangkok, Thailand"
-195,42.11920729,-71.17487608,"New York, United States","New York, United States","New York, United States","New York, United States","New York, United States"
-196,39.635687,-105.293352,"Austin, United States","Chicago, United States","Salt Lake City, United States","Salt Lake City, United States","Salt Lake City, United States"
-197,59.543303,18.391837,"London, United Kingdom","London, United Kingdom","Frankfurt, Germany","Stockholm, Sweden","Stockholm, Sweden"
-198,-23.414781,-46.891066,"Rio de Janeiro, Brazil","Rio de Janeiro, Brazil","Rio de Janeiro, Brazil","Rio de Janeiro, Brazil","Rio de Janeiro, Brazil"
-199,40.76909712,-73.67274169,"New York, United States","New York, United States","New York, United States","New York, United States","New York, United States"
-200,37.115134,-122.030057,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-201,40.71457861,-74.02498247,"New York, United States","New York, United States","New York, United States","New York, United States","New York, United States"
-202,49.03384574,2.45988797,"London, United Kingdom","London, United Kingdom","London, United Kingdom","London, United Kingdom","London, United Kingdom"
-203,26.047134,-80.190454,"Miami, United States","Miami, United States","Miami, United States","Miami, United States","Miami, United States"
-204,51.787327,-0.254301,"London, United Kingdom","London, United Kingdom","London, United Kingdom","London, United Kingdom","London, United Kingdom"
-205,37.727862,23.664663,"Athens, Greece","Athens, Greece","Athens, Greece","Athens, Greece","Athens, Greece"
-206,51.423278,0.281364,"London, United Kingdom","London, United Kingdom","London, United Kingdom","London, United Kingdom","London, United Kingdom"
-207,-33.715206,150.990132,"Sydney, Australia","Sydney, Australia","Sydney, Australia","Sydney, Australia","Sydney, Australia"
-208,41.702803,-71.342249,"New York, United States","New York, United States","New York, United States","New York, United States","New York, United States"
-209,41.593857,-87.81496,"New York, United States","Chicago, United States","Chicago, United States","Chicago, United States","Chicago, United States"
-210,38.97515797,-94.68463898,"Austin, United States","Chicago, United States","Chicago, United States","Chicago, United States","Oklahoma City, United States"
-211,53.16876922,-6.29599009,"London, United Kingdom","London, United Kingdom","London, United Kingdom","London, United Kingdom","London, United Kingdom"
-212,33.54316971,-117.6919198,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-213,25.16624118,55.35442027,"Dubai, United Arab Emirates","Dubai, United Arab Emirates","Dubai, United Arab Emirates","Dubai, United Arab Emirates","Dubai, United Arab Emirates"
-214,33.732924,-118.357483,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-215,38.13455658,-81.9140625,"New York, United States","Miami, United States","Chicago, United States","Atlanta, United States","Washington, United States"
-216,42.59564007,23.00260544,"Athens, Greece","Athens, Greece","Athens, Greece","Athens, Greece","Athens, Greece"
-217,49.056855,-122.475343,"Los Angeles, United States","Seattle, United States","Seattle, United States","Seattle, United States","Seattle, United States"
-218,42.241023,-88.057003,"New York, United States","Chicago, United States","Chicago, United States","Chicago, United States","Chicago, United States"
-219,28.898331,-81.504355,"Miami, United States","Miami, United States","Miami, United States","Miami, United States","Miami, United States"
-220,47.71063402,-122.2271784,"Los Angeles, United States","Seattle, United States","Seattle, United States","Seattle, United States","Seattle, United States"
-221,30.038922,-97.662188,"Austin, United States","Chicago, United States","Austin, United States","Austin, United States","Austin, United States"
-222,41.24781872,1.86855465,"London, United Kingdom","London, United Kingdom","Valencia, Spain","Valencia, Spain","Valencia, Spain"
-223,34.05961,-118.700766,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-224,13.558487,100.671157,"Bangkok, Thailand","Bangkok, Thailand","Bangkok, Thailand","Bangkok, Thailand","Bangkok, Thailand"
-225,25.745479,-80.471461,"Miami, United States","Miami, United States","Miami, United States","Miami, United States","Miami, United States"
-226,25.53363895,-80.47078942,"Miami, United States","Miami, United States","Miami, United States","Miami, United States","Miami, United States"
-227,33.942325,-118.115028,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-228,34.259896,-84.542233,"New York, United States","Miami, United States","Miami, United States","Atlanta, United States","Atlanta, United States"
-229,45.94687177,16.03789054,"London, United Kingdom","Athens, Greece","Frankfurt, Germany","Athens, Greece","Frankfurt, Germany"
-230,38.71747817,-121.23764525,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-231,29.925383,-95.939305,"Austin, United States","Chicago, United States","Austin, United States","Austin, United States","Austin, United States"
-232,33.08295,-112.10732,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-233,37.515142,-97.974713,"Austin, United States","Chicago, United States","Austin, United States","Austin, United States","Oklahoma City, United States"
-234,42.094602,-87.942895,"New York, United States","Chicago, United States","Chicago, United States","Chicago, United States","Chicago, United States"
-235,32.07803835,34.77422297,"Athens, Greece","Athens, Greece","Athens, Greece","Jerusalem, Israel","Jerusalem, Israel"
-236,45.194055,-93.056064,"Austin, United States","Chicago, United States","Chicago, United States","Chicago, United States","Oklahoma City, United States"
-237,35.11625782,-89.84670639,"Austin, United States","Chicago, United States","Chicago, United States","Chicago, United States","Atlanta, United States"
-238,51.366045,7.408892,"London, United Kingdom","London, United Kingdom","Frankfurt, Germany","Amsterdam, The Netherlands","Frankfurt, Germany"
-239,40.75634,-73.664145,"New York, United States","New York, United States","New York, United States","New York, United States","New York, United States"
-240,59.110398,18.296952,"London, United Kingdom","London, United Kingdom","Frankfurt, Germany","Stockholm, Sweden","Stockholm, Sweden"
-241,28.103059,-82.720065,"Miami, United States","Miami, United States","Miami, United States","Miami, United States","Miami, United States"
-242,29.526319,-95.406965,"Austin, United States","Chicago, United States","Austin, United States","Austin, United States","Austin, United States"
-243,45.39432248,-73.57147134,"New York, United States","New York, United States","New York, United States","New York, United States","New York, United States"
-244,51.36247433,-0.60412461,"London, United Kingdom","London, United Kingdom","London, United Kingdom","London, United Kingdom","London, United Kingdom"
-245,29.76506469,-95.51354528,"Austin, United States","Chicago, United States","Austin, United States","Austin, United States","Austin, United States"
-246,33.8950777,-118.05929543,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-247,41.862083,-70.30639,"New York, United States","New York, United States","New York, United States","New York, United States","New York, United States"
-248,41.95642632,12.37956731,"London, United Kingdom","Athens, Greece","Frankfurt, Germany","Amsterdam, The Netherlands","Frankfurt, Germany"
-249,26.64316264,-81.87149048,"Miami, United States","Miami, United States","Miami, United States","Miami, United States","Miami, United States"
-250,40.553369,-74.109183,"New York, United States","New York, United States","New York, United States","New York, United States","New York, United States"
-251,29.66896253,-82.35900879,"Miami, United States","Miami, United States","Miami, United States","Miami, United States","Miami, United States"
-252,39.75457744,-105.12699758,"Austin, United States","Chicago, United States","Salt Lake City, United States","Salt Lake City, United States","Salt Lake City, United States"
-253,33.504945,-117.790624,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-254,52.111787,10.855667,"London, United Kingdom","London, United Kingdom","Frankfurt, Germany","Amsterdam, The Netherlands","Frankfurt, Germany"
-255,33.93414815,-117.86403137,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-256,45.571248,-73.939015,"New York, United States","New York, United States","New York, United States","New York, United States","New York, United States"
-257,26.593091,-79.987844,"Miami, United States","Miami, United States","Miami, United States","Miami, United States","Miami, United States"
-258,30.206028,-97.467885,"Austin, United States","Chicago, United States","Austin, United States","Austin, United States","Austin, United States"
-259,39.445562,-106.758806,"Austin, United States","Los Angeles, United States","Salt Lake City, United States","Salt Lake City, United States","Salt Lake City, United States"
-260,-8.62260063,115.1182555,"Bangkok, Thailand","Bangkok, Thailand","Bangkok, Thailand","Bangkok, Thailand","Singapore, Singapore"
-261,32.89851555,-117.15128404,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-262,19.317913,-99.380263,"Austin, United States","Chicago, United States","Austin, United States","Austin, United States","Austin, United States"
-263,41.569433,-73.849693,"New York, United States","New York, United States","New York, United States","New York, United States","New York, United States"
-264,37.329276,-121.680108,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-265,51.270991,-0.081606,"London, United Kingdom","London, United Kingdom","London, United Kingdom","London, United Kingdom","London, United Kingdom"
-266,35.612428,-78.476033,"New York, United States","Miami, United States","Miami, United States","Atlanta, United States","Washington, United States"
-267,46.628042,-96.867678,"Austin, United States","Chicago, United States","Chicago, United States","Chicago, United States","Oklahoma City, United States"
-268,34.015081,-118.155321,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-269,47.981031,11.321705,"London, United Kingdom","London, United Kingdom","Frankfurt, Germany","Amsterdam, The Netherlands","Frankfurt, Germany"
-270,42.331981,-87.546106,"New York, United States","Chicago, United States","Chicago, United States","Chicago, United States","Chicago, United States"
-271,40.946306,-73.907448,"New York, United States","New York, United States","New York, United States","New York, United States","New York, United States"
-272,50.544264,6.862205,"London, United Kingdom","London, United Kingdom","Frankfurt, Germany","Amsterdam, The Netherlands","Frankfurt, Germany"
-273,39.401869,-86.486559,"New York, United States","Miami, United States","Chicago, United States","Chicago, United States","Chicago, United States"
-274,33.352745,-112.360874,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-275,29.97769,-95.349714,"Austin, United States","Chicago, United States","Austin, United States","Austin, United States","Austin, United States"
-276,33.82416758,-84.3356684,"New York, United States","Miami, United States","Miami, United States","Atlanta, United States","Atlanta, United States"
-277,48.417688,16.152283,"London, United Kingdom","Athens, Greece","Frankfurt, Germany","Amsterdam, The Netherlands","Frankfurt, Germany"
-278,59.33924416,18.31679289,"London, United Kingdom","London, United Kingdom","Frankfurt, Germany","Stockholm, Sweden","Stockholm, Sweden"
-279,48.462383,17.820106,"London, United Kingdom","Athens, Greece","Frankfurt, Germany","Athens, Greece","Frankfurt, Germany"
-280,45.281244,-122.480949,"Los Angeles, United States","Seattle, United States","Seattle, United States","Seattle, United States","Seattle, United States"
-281,34.35628,-119.027294,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-282,27.64095129,-99.52848773,"Austin, United States","Chicago, United States","Austin, United States","Austin, United States","Austin, United States"
-283,37.521932,-122.448227,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-284,38.52625553,-122.87105174,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-285,40.59619922,-111.758392,"Los Angeles, United States","Los Angeles, United States","Salt Lake City, United States","Salt Lake City, United States","Salt Lake City, United States"
-286,35.842916,-115.170184,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-287,39.05223664,-77.00211495,"New York, United States","New York, United States","New York, United States","New York, United States","Washington, United States"
-288,45.304107,-73.415869,"New York, United States","New York, United States","New York, United States","New York, United States","New York, United States"
-289,-33.200899,-70.543278,"Rio de Janeiro, Brazil","Rio de Janeiro, Brazil","Rio de Janeiro, Brazil","Rio de Janeiro, Brazil","Santiago, Chile"
-290,30.27152139,-97.74398804,"Austin, United States","Chicago, United States","Austin, United States","Austin, United States","Austin, United States"
-291,45.49660233,-74.00349906,"New York, United States","New York, United States","New York, United States","New York, United States","New York, United States"
-292,38.91257546,-77.74909792,"New York, United States","New York, United States","New York, United States","Atlanta, United States","Washington, United States"
-293,40.3338021,-76.86870399,"New York, United States","New York, United States","New York, United States","New York, United States","Washington, United States"
-294,37.283703,-121.580978,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-295,41.554022,-81.047146,"New York, United States","New York, United States","New York, United States","Atlanta, United States","Washington, United States"
-296,-27.688874,153.256224,"Sydney, Australia","Sydney, Australia","Sydney, Australia","Sydney, Australia","Sydney, Australia"
-297,36.657899,-4.620222,"London, United Kingdom","London, United Kingdom","Valencia, Spain","Valencia, Spain","Valencia, Spain"
-298,41.630518,2.261117,"London, United Kingdom","London, United Kingdom","Valencia, Spain","Valencia, Spain","Valencia, Spain"
-299,13.8672,100.661213,"Bangkok, Thailand","Bangkok, Thailand","Bangkok, Thailand","Bangkok, Thailand","Bangkok, Thailand"
-300,35.12595523,-80.98528093,"New York, United States","Miami, United States","Miami, United States","Atlanta, United States","Atlanta, United States"
-301,42.96115195,-85.81020482,"New York, United States","New York, United States","Chicago, United States","Chicago, United States","Chicago, United States"
-302,43.780472,-115.9402,"Los Angeles, United States","Seattle, United States","Seattle, United States","Seattle, United States","Seattle, United States"
-303,43.336833,-116.463568,"Los Angeles, United States","Seattle, United States","Seattle, United States","Seattle, United States","Seattle, United States"
-304,11.52158252,104.979845,"Bangkok, Thailand","Bangkok, Thailand","Bangkok, Thailand","Bangkok, Thailand","Bangkok, Thailand"
-305,36.291019,-115.052447,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-306,-41.309043,175.134761,"Sydney, Australia","Sydney, Australia","Auckland, New Zealand","Auckland, New Zealand","Auckland, New Zealand"
-307,50.198756,11.867847,"London, United Kingdom","London, United Kingdom","Frankfurt, Germany","Amsterdam, The Netherlands","Frankfurt, Germany"
-308,40.938592,-73.706115,"New York, United States","New York, United States","New York, United States","New York, United States","New York, United States"
-309,34.34657503,-119.29839461,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-310,55.0430086,-1.72011455,"London, United Kingdom","London, United Kingdom","London, United Kingdom","London, United Kingdom","London, United Kingdom"
-311,42.191368,-71.944664,"New York, United States","New York, United States","New York, United States","New York, United States","New York, United States"
-312,34.03268832,-84.17628101,"New York, United States","Miami, United States","Miami, United States","Atlanta, United States","Atlanta, United States"
-313,37.201002,-121.929729,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-314,25.07472,55.572894,"Dubai, United Arab Emirates","Dubai, United Arab Emirates","Dubai, United Arab Emirates","Dubai, United Arab Emirates","Dubai, United Arab Emirates"
-315,33.75989574,-84.27916925,"New York, United States","Miami, United States","Miami, United States","Atlanta, United States","Atlanta, United States"
-316,34.121747,-118.350402,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-317,29.116492,47.937696,"Dubai, United Arab Emirates","Dubai, United Arab Emirates","Dubai, United Arab Emirates","Dubai, United Arab Emirates","Dubai, United Arab Emirates"
-318,33.824596,-117.447414,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-319,28.23864144,-81.55464247,"Miami, United States","Miami, United States","Miami, United States","Miami, United States","Miami, United States"
-320,37.91522,-122.664907,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-321,54.095037,-5.914477,"London, United Kingdom","London, United Kingdom","London, United Kingdom","London, United Kingdom","London, United Kingdom"
-322,43.625731,-79.09355,"New York, United States","New York, United States","New York, United States","New York, United States","Washington, United States"
-323,50.06806022,8.93909536,"London, United Kingdom","London, United Kingdom","Frankfurt, Germany","Amsterdam, The Netherlands","Frankfurt, Germany"
-324,50.92008585,4.47760916,"London, United Kingdom","London, United Kingdom","London, United Kingdom","Amsterdam, The Netherlands","London, United Kingdom"
-325,-15.586233,-47.748157,"Rio de Janeiro, Brazil","Rio de Janeiro, Brazil","Rio de Janeiro, Brazil","Rio de Janeiro, Brazil","Rio de Janeiro, Brazil"
-326,38.764548,0.041834,"London, United Kingdom","London, United Kingdom","Valencia, Spain","Valencia, Spain","Valencia, Spain"
-327,34.926838,-82.599258,"New York, United States","Miami, United States","Miami, United States","Atlanta, United States","Atlanta, United States"
-328,1.42072,103.682191,"Bangkok, Thailand","Bangkok, Thailand","Bangkok, Thailand","Bangkok, Thailand","Singapore, Singapore"
-329,33.93745722,-117.86024994,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-330,40.030742,-74.920732,"New York, United States","New York, United States","New York, United States","New York, United States","New York, United States"
-331,52.727559,13.310285,"London, United Kingdom","London, United Kingdom","Frankfurt, Germany","Amsterdam, The Netherlands","Frankfurt, Germany"
-332,36.022617,14.752305,"Athens, Greece","Athens, Greece","Athens, Greece","Athens, Greece","Athens, Greece"
-333,41.86637922,-87.63122555,"New York, United States","Chicago, United States","Chicago, United States","Chicago, United States","Chicago, United States"
-334,45.68625,9.407136,"London, United Kingdom","London, United Kingdom","Frankfurt, Germany","Amsterdam, The Netherlands","Frankfurt, Germany"
-335,43.752272,-79.408843,"New York, United States","New York, United States","New York, United States","New York, United States","Washington, United States"
-336,40.84459586,-73.87458171,"New York, United States","New York, United States","New York, United States","New York, United States","New York, United States"
-337,59.585851,18.077667,"London, United Kingdom","London, United Kingdom","Frankfurt, Germany","Stockholm, Sweden","Stockholm, Sweden"
-338,40.533487,-74.757785,"New York, United States","New York, United States","New York, United States","New York, United States","New York, United States"
-339,33.055994,-116.99491,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-340,36.065508,-86.645536,"New York, United States","Miami, United States","Chicago, United States","Chicago, United States","Atlanta, United States"
-341,36.965125,126.711526,"Bangkok, Thailand","Seoul, South Korea","Seoul, South Korea","Seoul, South Korea","Seoul, South Korea"
-342,37.73235414,-97.66621196,"Austin, United States","Chicago, United States","Austin, United States","Austin, United States","Oklahoma City, United States"
-343,37.71369,-122.082298,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-344,-36.823113,174.456135,"Sydney, Australia","Sydney, Australia","Auckland, New Zealand","Auckland, New Zealand","Auckland, New Zealand"
-345,34.19617,-117.958731,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-346,-27.44557371,152.87827422,"Sydney, Australia","Sydney, Australia","Sydney, Australia","Sydney, Australia","Sydney, Australia"
-347,78.63000557,-163.125,"Los Angeles, United States","Edmonton, Canada","Edmonton, Canada","Edmonton, Canada","Edmonton, Canada"
-348,-13.5819209,63.45703125,"Dubai, United Arab Emirates","Port Elizabeth, South Africa","Dubai, United Arab Emirates","Port Louis, Mauritius","Port Louis, Mauritius"
-349,26.183094,-79.950227,"Miami, United States","Miami, United States","Miami, United States","Miami, United States","Miami, United States"
-350,52.97654636,6.18557498,"London, United Kingdom","London, United Kingdom","London, United Kingdom","Amsterdam, The Netherlands","Frankfurt, Germany"
-351,39.989118,-85.869437,"New York, United States","Miami, United States","Chicago, United States","Chicago, United States","Chicago, United States"
-352,45.4146693,-75.40752332,"New York, United States","New York, United States","New York, United States","New York, United States","New York, United States"
-353,40.5081519,-111.91286118,"Los Angeles, United States","Los Angeles, United States","Salt Lake City, United States","Salt Lake City, United States","Salt Lake City, United States"
-354,59.89673632,10.99616727,"London, United Kingdom","London, United Kingdom","Frankfurt, Germany","Stockholm, Sweden","Stockholm, Sweden"
-355,39.488307,-77.730649,"New York, United States","New York, United States","New York, United States","Atlanta, United States","Washington, United States"
-356,42.451223,-82.868054,"New York, United States","New York, United States","Chicago, United States","Atlanta, United States","Chicago, United States"
-357,-37.864178,145.372858,"Sydney, Australia","Sydney, Australia","Sydney, Australia","Sydney, Australia","Sydney, Australia"
-358,53.55319918,-1.62297273,"London, United Kingdom","London, United Kingdom","London, United Kingdom","London, United Kingdom","London, United Kingdom"
-359,36.16254765,-86.77310944,"New York, United States","Miami, United States","Chicago, United States","Chicago, United States","Atlanta, United States"
-360,-43.720898,172.838009,"Sydney, Australia","Sydney, Australia","Auckland, New Zealand","Auckland, New Zealand","Auckland, New Zealand"
-361,41.37422986,-72.74058904,"New York, United States","New York, United States","New York, United States","New York, United States","New York, United States"
-362,50.9065181,-114.15416088,"Los Angeles, United States","Seattle, United States","Seattle, United States","Seattle, United States","Seattle, United States"
-363,63.207963,22.167143,"London, United Kingdom","London, United Kingdom","Frankfurt, Germany","Stockholm, Sweden","Stockholm, Sweden"
-364,37.219104,-120.151558,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-365,32.825227,-97.104592,"Austin, United States","Chicago, United States","Austin, United States","Austin, United States","Austin, United States"
-366,34.71452466,-86.57226563,"New York, United States","Miami, United States","Chicago, United States","Atlanta, United States","Atlanta, United States"
-367,37.705979,-122.544303,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-368,43.64421094,-116.3640211,"Los Angeles, United States","Seattle, United States","Seattle, United States","Seattle, United States","Seattle, United States"
-369,37.38752324,-121.96270501,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-370,40.71851,-74.108179,"New York, United States","New York, United States","New York, United States","New York, United States","New York, United States"
-371,33.83605,-112.317687,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-372,42.097994,-88.090035,"New York, United States","Chicago, United States","Chicago, United States","Chicago, United States","Chicago, United States"
-373,19.388731,-99.045428,"Austin, United States","Chicago, United States","Austin, United States","Austin, United States","Austin, United States"
-374,25.77148411,-80.32465422,"Miami, United States","Miami, United States","Miami, United States","Miami, United States","Miami, United States"
-375,36.586327,-75.761743,"New York, United States","New York, United States","New York, United States","Atlanta, United States","Washington, United States"
-376,29.778722,-98.592455,"Austin, United States","Chicago, United States","Austin, United States","Austin, United States","Austin, United States"
-377,40.6126,-73.661126,"New York, United States","New York, United States","New York, United States","New York, United States","New York, United States"
-378,33.937596,-83.865434,"New York, United States","Miami, United States","Miami, United States","Atlanta, United States","Atlanta, United States"
-379,52.692495,-1.318681,"London, United Kingdom","London, United Kingdom","London, United Kingdom","London, United Kingdom","London, United Kingdom"
-380,-22.890154,-42.903753,"Rio de Janeiro, Brazil","Rio de Janeiro, Brazil","Rio de Janeiro, Brazil","Rio de Janeiro, Brazil","Rio de Janeiro, Brazil"
-381,45.5128731,-73.57020378,"New York, United States","New York, United States","New York, United States","New York, United States","New York, United States"
-382,24.905867,46.874416,"Dubai, United Arab Emirates","Dubai, United Arab Emirates","Dubai, United Arab Emirates","Dubai, United Arab Emirates","Dubai, United Arab Emirates"
-383,40.539321,-74.184691,"New York, United States","New York, United States","New York, United States","New York, United States","New York, United States"
-384,42.907377,-84.230153,"New York, United States","New York, United States","Chicago, United States","Chicago, United States","Chicago, United States"
-385,42.287976,-72.910122,"New York, United States","New York, United States","New York, United States","New York, United States","New York, United States"
-386,38.205824,23.635101,"Athens, Greece","Athens, Greece","Athens, Greece","Athens, Greece","Athens, Greece"
-387,41.10068376,-84.8080476,"New York, United States","Miami, United States","Chicago, United States","Chicago, United States","Chicago, United States"
-388,51.454925,-3.166695,"London, United Kingdom","London, United Kingdom","London, United Kingdom","London, United Kingdom","London, United Kingdom"
-389,49.216628,-123.320065,"Los Angeles, United States","Seattle, United States","Seattle, United States","Seattle, United States","Seattle, United States"
-390,40.656609,-74.26386,"New York, United States","New York, United States","New York, United States","New York, United States","New York, United States"
-391,28.070001,-81.732523,"Miami, United States","Miami, United States","Miami, United States","Miami, United States","Miami, United States"
-392,33.599267,-117.97365,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-393,49.20988867,-123.00786996,"Los Angeles, United States","Seattle, United States","Seattle, United States","Seattle, United States","Seattle, United States"
-394,52.315683,5.764775,"London, United Kingdom","London, United Kingdom","London, United Kingdom","Amsterdam, The Netherlands","London, United Kingdom"
-395,38.67210882,-121.06693268,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-396,40.103264,-88.370587,"New York, United States","Chicago, United States","Chicago, United States","Chicago, United States","Chicago, United States"
-397,41.339211,-81.135041,"New York, United States","New York, United States","New York, United States","Atlanta, United States","Washington, United States"
-398,51.806669,4.266183,"London, United Kingdom","London, United Kingdom","London, United Kingdom","Amsterdam, The Netherlands","London, United Kingdom"
-399,-38.197039,145.354736,"Sydney, Australia","Sydney, Australia","Sydney, Australia","Sydney, Australia","Sydney, Australia"
-400,38.367608,-121.973807,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-401,53.47341824,10.07426414,"London, United Kingdom","London, United Kingdom","Frankfurt, Germany","Amsterdam, The Netherlands","Frankfurt, Germany"
-402,33.52150461,-117.70751953,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-403,25.905212,-79.903989,"Miami, United States","Miami, United States","Miami, United States","Miami, United States","Miami, United States"
-404,52.4805458,5.02351298,"London, United Kingdom","London, United Kingdom","London, United Kingdom","Amsterdam, The Netherlands","London, United Kingdom"
-405,40.12752206,-111.60727462,"Los Angeles, United States","Los Angeles, United States","Salt Lake City, United States","Salt Lake City, United States","Salt Lake City, United States"
-406,30.380117,-97.406335,"Austin, United States","Chicago, United States","Austin, United States","Austin, United States","Austin, United States"
-407,25.76652298,-80.19497037,"Miami, United States","Miami, United States","Miami, United States","Miami, United States","Miami, United States"
-408,45.37353426,-73.63917876,"New York, United States","New York, United States","New York, United States","New York, United States","New York, United States"
-409,33.75411822,-84.30902946,"New York, United States","Miami, United States","Miami, United States","Atlanta, United States","Atlanta, United States"
-410,42.048028,-87.925423,"New York, United States","Chicago, United States","Chicago, United States","Chicago, United States","Chicago, United States"
-411,49.114241,2.406553,"London, United Kingdom","London, United Kingdom","London, United Kingdom","London, United Kingdom","London, United Kingdom"
-412,-0.447563,-78.669826,"Miami, United States","San Juan, Puerto Rico","San Juan, Puerto Rico","San Juan, Puerto Rico","Quito, Ecuador"
-413,32.000973,-111.142342,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-414,-37.632823,145.197306,"Sydney, Australia","Sydney, Australia","Sydney, Australia","Sydney, Australia","Sydney, Australia"
-415,36.321813,-83.55102,"New York, United States","Miami, United States","Chicago, United States","Atlanta, United States","Atlanta, United States"
-416,37.907585,-97.557814,"Austin, United States","Chicago, United States","Austin, United States","Austin, United States","Oklahoma City, United States"
-417,41.024363,-73.763613,"New York, United States","New York, United States","New York, United States","New York, United States","New York, United States"
-418,38.530662,-90.456344,"Austin, United States","Chicago, United States","Chicago, United States","Chicago, United States","Chicago, United States"
-419,1.368755,104.130953,"Bangkok, Thailand","Bangkok, Thailand","Bangkok, Thailand","Bangkok, Thailand","Singapore, Singapore"
-420,51.58525216,-0.56516913,"London, United Kingdom","London, United Kingdom","London, United Kingdom","London, United Kingdom","London, United Kingdom"
-421,32.857966,-96.637046,"Austin, United States","Chicago, United States","Austin, United States","Austin, United States","Austin, United States"
-422,37.190099,127.361912,"Bangkok, Thailand","Seoul, South Korea","Seoul, South Korea","Seoul, South Korea","Seoul, South Korea"
-423,-36.52729481,174.73974606,"Sydney, Australia","Sydney, Australia","Auckland, New Zealand","Auckland, New Zealand","Auckland, New Zealand"
-424,45.58232862,-73.56445313,"New York, United States","New York, United States","New York, United States","New York, United States","New York, United States"
-425,26.3735776,-98.30303501,"Austin, United States","Chicago, United States","Austin, United States","Austin, United States","Austin, United States"
-426,45.62719209,-122.85572946,"Los Angeles, United States","Seattle, United States","Seattle, United States","Seattle, United States","Seattle, United States"
-427,34.008481,-84.429556,"New York, United States","Miami, United States","Miami, United States","Atlanta, United States","Atlanta, United States"
-428,32.544407,-97.482868,"Austin, United States","Chicago, United States","Austin, United States","Austin, United States","Austin, United States"
-429,41.740479,-87.963305,"New York, United States","Chicago, United States","Chicago, United States","Chicago, United States","Chicago, United States"
-430,33.549483,-117.594416,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-431,28.50027496,-81.35614484,"Miami, United States","Miami, United States","Miami, United States","Miami, United States","Miami, United States"
-432,38.78339786,-9.44337946,"London, United Kingdom","London, United Kingdom","Valencia, Spain","Valencia, Spain","Valencia, Spain"
-433,40.366207,-111.764126,"Los Angeles, United States","Los Angeles, United States","Salt Lake City, United States","Salt Lake City, United States","Salt Lake City, United States"
-434,47.55429102,-122.33272081,"Los Angeles, United States","Seattle, United States","Seattle, United States","Seattle, United States","Seattle, United States"
-435,39.702972,-105.041267,"Austin, United States","Chicago, United States","Salt Lake City, United States","Salt Lake City, United States","Salt Lake City, United States"
-436,32.80825998,-96.93789498,"Austin, United States","Chicago, United States","Austin, United States","Austin, United States","Austin, United States"
-437,33.718811,-84.646781,"New York, United States","Miami, United States","Miami, United States","Atlanta, United States","Atlanta, United States"
-438,39.989404,-104.967029,"Austin, United States","Chicago, United States","Salt Lake City, United States","Salt Lake City, United States","Salt Lake City, United States"
-439,42.21732,-87.937586,"New York, United States","Chicago, United States","Chicago, United States","Chicago, United States","Chicago, United States"
-440,35.507204,-80.611373,"New York, United States","Miami, United States","Miami, United States","Atlanta, United States","Washington, United States"
-441,39.923639,-104.683769,"Austin, United States","Chicago, United States","Salt Lake City, United States","Salt Lake City, United States","Salt Lake City, United States"
-442,42.015267,-73.67184,"New York, United States","New York, United States","New York, United States","New York, United States","New York, United States"
-443,18.308749,-65.882941,"Miami, United States","San Juan, Puerto Rico","San Juan, Puerto Rico","San Juan, Puerto Rico","San Juan, Puerto Rico"
-444,45.928395,7.243967,"London, United Kingdom","London, United Kingdom","Frankfurt, Germany","Amsterdam, The Netherlands","Frankfurt, Germany"
-445,33.529,-84.421377,"New York, United States","Miami, United States","Miami, United States","Atlanta, United States","Atlanta, United States"
-446,16.692161,80.47691,"Dubai, United Arab Emirates","Bangkok, Thailand","Dubai, United Arab Emirates","Mumbai, India","Mumbai, India"
-447,37.818981,-122.101061,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-448,39.676933,-85.874256,"New York, United States","Miami, United States","Chicago, United States","Chicago, United States","Chicago, United States"
-449,33.04750144,-96.43705119,"Austin, United States","Chicago, United States","Austin, United States","Austin, United States","Austin, United States"
-450,-22.852922,-42.932578,"Rio de Janeiro, Brazil","Rio de Janeiro, Brazil","Rio de Janeiro, Brazil","Rio de Janeiro, Brazil","Rio de Janeiro, Brazil"
-451,60.000583,11.18935,"London, United Kingdom","London, United Kingdom","Frankfurt, Germany","Stockholm, Sweden","Stockholm, Sweden"
-452,38.92920672,-77.10821544,"New York, United States","New York, United States","New York, United States","Atlanta, United States","Washington, United States"
-453,32.998855,-96.663127,"Austin, United States","Chicago, United States","Austin, United States","Austin, United States","Austin, United States"
-454,-33.725308,151.473051,"Sydney, Australia","Sydney, Australia","Sydney, Australia","Sydney, Australia","Sydney, Australia"
-455,-8.136893,-35.278885,"Rio de Janeiro, Brazil","Rio de Janeiro, Brazil","Rio de Janeiro, Brazil","Rio de Janeiro, Brazil","Rio de Janeiro, Brazil"
-456,28.825292,77.385834,"Dubai, United Arab Emirates","Dubai, United Arab Emirates","Dubai, United Arab Emirates","Mumbai, India","Mumbai, India"
-457,45.40182488,11.87759399,"London, United Kingdom","London, United Kingdom","Frankfurt, Germany","Amsterdam, The Netherlands","Frankfurt, Germany"
-458,34.279558,-119.157213,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-459,40.976345,-73.665822,"New York, United States","New York, United States","New York, United States","New York, United States","New York, United States"
-460,40.766583,-73.586084,"New York, United States","New York, United States","New York, United States","New York, United States","New York, United States"
-461,29.6478848,-95.20074261,"Austin, United States","Chicago, United States","Austin, United States","Austin, United States","Austin, United States"
-462,41.260754,-81.929689,"New York, United States","New York, United States","Chicago, United States","Atlanta, United States","Washington, United States"
-463,30.42841968,-97.70469295,"Austin, United States","Chicago, United States","Austin, United States","Austin, United States","Austin, United States"
-464,52.539215,12.94404,"London, United Kingdom","London, United Kingdom","Frankfurt, Germany","Amsterdam, The Netherlands","Frankfurt, Germany"
-465,32.938166,-117.225428,"Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States","Los Angeles, United States"
-466,6.071317,-75.755576,"Miami, United States","San Juan, Puerto Rico","San Juan, Puerto Rico","San Juan, Puerto Rico","Quito, Ecuador"
-467,35.66916385,-87.05423915,"New York, United States","Miami, United States","Chicago, United States","Chicago, United States","Atlanta, United States"
-468,31.99769,34.488925,"Athens, Greece","Athens, Greece","Athens, Greece","Jerusalem, Israel","Jerusalem, Israel"
-469,52.357563,4.473193,"London, United Kingdom","London, United Kingdom","London, United Kingdom","Amsterdam, The Netherlands","London, United Kingdom"
-470,60.168324,10.819783,"London, United Kingdom","London, United Kingdom","Frankfurt, Germany","Stockholm, Sweden","Stockholm, Sweden"
-471,42.584062,-71.183984,"New York, United States","New York, United States","New York, United States","New York, United States","New York, United States"
-472,50.06689461,8.54420401,"London, United Kingdom","London, United Kingdom","Frankfurt, Germany","Amsterdam, The Netherlands","Frankfurt, Germany"
-473,39.07485,-94.781464,"Austin, United States","Chicago, United States","Chicago, United States","Chicago, United States","Oklahoma City, United States"
-474,51.276585,4.847041,"London, United Kingdom","London, United Kingdom","London, United Kingdom","Amsterdam, The Netherlands","London, United Kingdom"
-475,-37.727621,144.841444,"Sydney, Australia","Sydney, Australia","Sydney, Australia","Sydney, Australia","Sydney, Australia"
+lat,lng
+51.209257,1.072083
+38.48799461,-81.87011719
+42.142112,-87.682321
+47.67740909,-122.3286438
+28.875856,-81.550448
+30.307724,31.232452
+39.63806844,-83.90787954
+13.964473,100.61611
+31.365693,-106.106658
+40.376383,-111.947583
+54.87579308,-1.4307009
+50.17669068,8.66463844
+49.10867342,-122.54844946
+45.65244829,25.6111908
+38.61687046,-102.3046875
+36.922576,-94.28799
+48.032948,16.592204
+49.869287,-122.849685
+35.825918,-78.620027
+40.75505951,-111.88682556
+34.10136422,-117.7468727
+26.008879,-80.200078
+51.269267,-2.354736
+38.740753,-76.786551
+48.50955339,-123.51318107
+33.590521,-117.552086
+35.672365,-84.144752
+36.07615969,-86.68472137
+30.280705,31.339874
+33.452802,-111.777708
+37.85762655,32.29239845
+47.387426,-122.217244
+36.20007696,-86.71580774
+41.39007281,-73.5059913
+33.39993132,-111.85394665
+2.935011,101.595746
+29.79092871,-95.58775887
+47.517785,-122.691147
+48.20637134,16.36413574
+38.98129653,-94.68360901
+40.640861,-78.121711
+37.768174,23.611258
+32.789219,-97.47727
+33.16629498,-117.32917786
+40.677998,-73.894811
+49.399381,-123.239201
+25.926128,-79.991905
+49.494011,-123.00789
+40.11700852,-75.29011215
+33.874659,-118.44813
+14.60077588,121.12695638
+-27.708786,153.087548
+40.47816,-111.958424
+50.009074,14.068312
+49.19276396,-122.97101691
+33.934046,-84.062502
+33.839004,-118.084747
+35.266759,-119.21359
+36.027522,-78.658532
+37.05703525,-113.49213905
+38.743971,-8.830408
+50.912572,2.883244
+33.997848,-119.009321
+41.94531425,-73.72001115
+53.284377,-5.816271
+52.5835667,-7.2272696
+33.505179,-117.680801
+43.886586,-70.358411
+32.289596,-111.198884
+43.75453,-79.731283
+38.928786,-86.471736
+25.64343419,-80.40743573
+26.052187,-98.520921
+37.69009,-122.14943
+42.56104275,-84.6052263
+50.08646766,8.53440635
+30.312431,-98.008419
+47.75267036,11.4853601
+43.40287431,-79.96647812
+37.329609,-122.261534
+-33.946164,150.833648
+32.982584,-117.477332
+36.253425,-79.052467
+25.779867,-80.474615
+51.533028,-3.57087
+36.08116521,-115.03832206
+32.70449,-116.947923
+39.862941,-105.254213
+36.028266,-78.633258
+40.955389,-74.128318
+29.66233623,-95.33785486
+37.110931,-122.056608
+42.192489,-70.811775
+-38.039715,144.843326
+30.73183752,-97.82592842
+40.478034,-111.543581
+34.23401564,-118.53492737
+38.840357,-121.587488
+41.53539,-72.847128
+59.86756471,10.8578663
+45.609706,-122.993347
+39.00312035,-76.79967513
+27.700238,-82.019331
+41.783508,-91.855444
+55.434157,12.541579
+36.417365,-86.812768
+42.157974,-87.575205
+41.001521,-74.042758
+42.163247,-70.838646
+39.26043,-77.281875
+45.31127567,-75.82027616
+40.62983452,-111.86327236
+51.807348,0.097823
+47.581393,-121.82985
+42.138214,-70.506596
+51.257333,-0.028032
+33.475497,-112.209798
+-0.21285962,-78.51104736
+40.669437,-74.379905
+33.76681867,-118.19641113
+38.882096,-77.228921
+41.191106,28.749819
+44.4012,-79.216573
+41.25299262,-111.98551949
+50.244267,-104.346887
+55.655701,-3.727794
+53.096589,-6.227744
+50.915007,-113.877839
+33.76578215,-117.99167278
+25.10674092,55.23376465
+39.857726,-105.181513
+37.760802,23.842735
+38.839984,-94.544683
+18.608485,-65.86829
+33.931584,-118.527049
+34.219095,-118.115414
+37.36156,126.788269
+42.794711,-73.996064
+31.843593,34.788477
+26.22243728,-80.24917417
+24.477904,46.567902
+29.015541,-81.446579
+42.591823,-71.119962
+41.63688,-87.579991
+47.29264983,8.39710557
+31.92923,34.526965
+37.522668,126.74213
+9.73313585,99.98505092
+6.21470994,-75.6665995
+38.65805,-0.560697
+-34.184301,22.315296
+33.546157,-117.849955
+77.69287034,-159.2578125
+40.1603608,-75.12097165
+47.248802,19.186871
+33.875821,-118.042963
+1.110831,103.964623
+1.28115203,103.85071491
+37.532658,-121.815313
+45.29131277,-93.66217478
+30.200422,-98.031066
+34.109871,-118.764684
+33.241993,-112.167974
+44.814281,-93.018686
+37.31048603,-121.90085685
+37.97962,-122.462345
+51.31481,0.120294
+-22.89034476,-43.07660572
+44.803602,22.386553
+42.849734,-79.199366
+-33.662369,151.401293
+33.080766,-96.938038
+40.714151,-74.233066
+24.830495,55.345338
+51.395423,3.510291
+52.36386043,4.90539551
+30.051877,-97.514342
+51.47111883,7.15209961
+-33.9033097,151.10058476
+-15.603645,-48.121462
+18.209541,-65.170753
+37.40191735,-121.8412502
+18.80824,72.921267
+33.78946978,-84.41482716
+44.839416,20.831669
+33.829664,-118.156276
+32.598648,-96.981939
+40.60205224,-73.96065278
+41.071825,-73.919601
+33.98564551,-118.31836676
+41.277685,-72.86012
+42.430634,-70.787533
+36.295502,-114.980973
+45.551473,-122.475156
+13.9234039,100.8984375
+42.11920729,-71.17487608
+39.635687,-105.293352
+59.543303,18.391837
+-23.414781,-46.891066
+40.76909712,-73.67274169
+37.115134,-122.030057
+40.71457861,-74.02498247
+49.03384574,2.45988797
+26.047134,-80.190454
+51.787327,-0.254301
+37.727862,23.664663
+51.423278,0.281364
+-33.715206,150.990132
+41.702803,-71.342249
+41.593857,-87.81496
+38.97515797,-94.68463898
+53.16876922,-6.29599009
+33.54316971,-117.6919198
+25.16624118,55.35442027
+33.732924,-118.357483
+38.13455658,-81.9140625
+42.59564007,23.00260544
+49.056855,-122.475343
+42.241023,-88.057003
+28.898331,-81.504355
+47.71063402,-122.2271784
+30.038922,-97.662188
+41.24781872,1.86855465
+34.05961,-118.700766
+13.558487,100.671157
+25.745479,-80.471461
+25.53363895,-80.47078942
+33.942325,-118.115028
+34.259896,-84.542233
+45.94687177,16.03789054
+38.71747817,-121.23764525
+29.925383,-95.939305
+33.08295,-112.10732
+37.515142,-97.974713
+42.094602,-87.942895
+32.07803835,34.77422297
+45.194055,-93.056064
+35.11625782,-89.84670639
+51.366045,7.408892
+40.75634,-73.664145
+59.110398,18.296952
+28.103059,-82.720065
+29.526319,-95.406965
+45.39432248,-73.57147134
+51.36247433,-0.60412461
+29.76506469,-95.51354528
+33.8950777,-118.05929543
+41.862083,-70.30639
+41.95642632,12.37956731
+26.64316264,-81.87149048
+40.553369,-74.109183
+29.66896253,-82.35900879
+39.75457744,-105.12699758
+33.504945,-117.790624
+52.111787,10.855667
+33.93414815,-117.86403137
+45.571248,-73.939015
+26.593091,-79.987844
+30.206028,-97.467885
+39.445562,-106.758806
+-8.62260063,115.1182555
+32.89851555,-117.15128404
+19.317913,-99.380263
+41.569433,-73.849693
+37.329276,-121.680108
+51.270991,-0.081606
+35.612428,-78.476033
+46.628042,-96.867678
+34.015081,-118.155321
+47.981031,11.321705
+42.331981,-87.546106
+40.946306,-73.907448
+50.544264,6.862205
+39.401869,-86.486559
+33.352745,-112.360874
+29.97769,-95.349714
+33.82416758,-84.3356684
+48.417688,16.152283
+59.33924416,18.31679289
+48.462383,17.820106
+45.281244,-122.480949
+34.35628,-119.027294
+27.64095129,-99.52848773
+37.521932,-122.448227
+38.52625553,-122.87105174
+40.59619922,-111.758392
+35.842916,-115.170184
+39.05223664,-77.00211495
+45.304107,-73.415869
+-33.200899,-70.543278
+30.27152139,-97.74398804
+45.49660233,-74.00349906
+38.91257546,-77.74909792
+40.3338021,-76.86870399
+37.283703,-121.580978
+41.554022,-81.047146
+-27.688874,153.256224
+36.657899,-4.620222
+41.630518,2.261117
+13.8672,100.661213
+35.12595523,-80.98528093
+42.96115195,-85.81020482
+43.780472,-115.9402
+43.336833,-116.463568
+11.52158252,104.979845
+36.291019,-115.052447
+-41.309043,175.134761
+50.198756,11.867847
+40.938592,-73.706115
+34.34657503,-119.29839461
+55.0430086,-1.72011455
+42.191368,-71.944664
+34.03268832,-84.17628101
+37.201002,-121.929729
+25.07472,55.572894
+33.75989574,-84.27916925
+34.121747,-118.350402
+29.116492,47.937696
+33.824596,-117.447414
+28.23864144,-81.55464247
+37.91522,-122.664907
+54.095037,-5.914477
+43.625731,-79.09355
+50.06806022,8.93909536
+50.92008585,4.47760916
+-15.586233,-47.748157
+38.764548,0.041834
+34.926838,-82.599258
+1.42072,103.682191
+33.93745722,-117.86024994
+40.030742,-74.920732
+52.727559,13.310285
+36.022617,14.752305
+41.86637922,-87.63122555
+45.68625,9.407136
+43.752272,-79.408843
+40.84459586,-73.87458171
+59.585851,18.077667
+40.533487,-74.757785
+33.055994,-116.99491
+36.065508,-86.645536
+36.965125,126.711526
+37.73235414,-97.66621196
+37.71369,-122.082298
+-36.823113,174.456135
+34.19617,-117.958731
+-27.44557371,152.87827422
+78.63000557,-163.125
+-13.5819209,63.45703125
+26.183094,-79.950227
+52.97654636,6.18557498
+39.989118,-85.869437
+45.4146693,-75.40752332
+40.5081519,-111.91286118
+59.89673632,10.99616727
+39.488307,-77.730649
+42.451223,-82.868054
+-37.864178,145.372858
+53.55319918,-1.62297273
+36.16254765,-86.77310944
+-43.720898,172.838009
+41.37422986,-72.74058904
+50.9065181,-114.15416088
+63.207963,22.167143
+37.219104,-120.151558
+32.825227,-97.104592
+34.71452466,-86.57226563
+37.705979,-122.544303
+43.64421094,-116.3640211
+37.38752324,-121.96270501
+40.71851,-74.108179
+33.83605,-112.317687
+42.097994,-88.090035
+19.388731,-99.045428
+25.77148411,-80.32465422
+36.586327,-75.761743
+29.778722,-98.592455
+40.6126,-73.661126
+33.937596,-83.865434
+52.692495,-1.318681
+-22.890154,-42.903753
+45.5128731,-73.57020378
+24.905867,46.874416
+40.539321,-74.184691
+42.907377,-84.230153
+42.287976,-72.910122
+38.205824,23.635101
+41.10068376,-84.8080476
+51.454925,-3.166695
+49.216628,-123.320065
+40.656609,-74.26386
+28.070001,-81.732523
+33.599267,-117.97365
+49.20988867,-123.00786996
+52.315683,5.764775
+38.67210882,-121.06693268
+40.103264,-88.370587
+41.339211,-81.135041
+51.806669,4.266183
+-38.197039,145.354736
+38.367608,-121.973807
+53.47341824,10.07426414
+33.52150461,-117.70751953
+25.905212,-79.903989
+52.4805458,5.02351298
+40.12752206,-111.60727462
+30.380117,-97.406335
+25.76652298,-80.19497037
+45.37353426,-73.63917876
+33.75411822,-84.30902946
+42.048028,-87.925423
+49.114241,2.406553
+-0.447563,-78.669826
+32.000973,-111.142342
+-37.632823,145.197306
+36.321813,-83.55102
+37.907585,-97.557814
+41.024363,-73.763613
+38.530662,-90.456344
+1.368755,104.130953
+51.58525216,-0.56516913
+32.857966,-96.637046
+37.190099,127.361912
+-36.52729481,174.73974606
+45.58232862,-73.56445313
+26.3735776,-98.30303501
+45.62719209,-122.85572946
+34.008481,-84.429556
+32.544407,-97.482868
+41.740479,-87.963305
+33.549483,-117.594416
+28.50027496,-81.35614484
+38.78339786,-9.44337946
+40.366207,-111.764126
+47.55429102,-122.33272081
+39.702972,-105.041267
+32.80825998,-96.93789498
+33.718811,-84.646781
+39.989404,-104.967029
+42.21732,-87.937586
+35.507204,-80.611373
+39.923639,-104.683769
+42.015267,-73.67184
+18.308749,-65.882941
+45.928395,7.243967
+33.529,-84.421377
+16.692161,80.47691
+37.818981,-122.101061
+39.676933,-85.874256
+33.04750144,-96.43705119
+-22.852922,-42.932578
+60.000583,11.18935
+38.92920672,-77.10821544
+32.998855,-96.663127
+-33.725308,151.473051
+-8.136893,-35.278885
+28.825292,77.385834
+45.40182488,11.87759399
+34.279558,-119.157213
+40.976345,-73.665822
+40.766583,-73.586084
+29.6478848,-95.20074261
+41.260754,-81.929689
+30.42841968,-97.70469295
+52.539215,12.94404
+32.938166,-117.225428
+6.071317,-75.755576
+35.66916385,-87.05423915
+31.99769,34.488925
+52.357563,4.473193
+60.168324,10.819783
+42.584062,-71.183984
+50.06689461,8.54420401
+39.07485,-94.781464
+51.276585,4.847041
+-37.727621,144.841444
