@@ -432,6 +432,7 @@ def main() -> int:
         "ks": K_VALUES,
         "views": views,
         "default_view": "members",
+        "default_k": 10,
     }
 
     with out_path.open("w") as f:

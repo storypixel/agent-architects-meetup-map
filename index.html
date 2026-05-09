@@ -698,18 +698,19 @@ const VIEWS = Object.keys(DATA.views);  // ['members', 'activity'] when activity
 const VIEW_LABELS = { members: 'Members', activity: 'Activity' };
 
 // URL-driven state
+const DEFAULT_K = DATA.default_k || 10;
 function readUrl() {
   const p = new URLSearchParams(location.search);
   let view = p.get('view') || DATA.default_view || 'members';
   if (!VIEWS.includes(view)) view = VIEWS[0];
   let k = parseInt(p.get('k'), 10);
-  if (!KS.includes(k)) k = 10;
+  if (!KS.includes(k)) k = DEFAULT_K;
   return { view, k };
 }
 function writeUrl(view, k) {
   const p = new URLSearchParams();
   if (view !== (DATA.default_view || 'members')) p.set('view', view);
-  if (k !== 10) p.set('k', String(k));
+  if (k !== DEFAULT_K) p.set('k', String(k));
   const qs = p.toString();
   const url = location.pathname + (qs ? '?' + qs : '') + location.hash;
   history.replaceState(null, '', url);
