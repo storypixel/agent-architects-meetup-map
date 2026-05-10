@@ -8,6 +8,7 @@ dependencies = [
     "scikit-learn>=1.5",
     "numpy>=2.0",
     "reverse_geocoder>=1.5",
+    "playwright>=1.50",
 ]
 
 [tool.uv]

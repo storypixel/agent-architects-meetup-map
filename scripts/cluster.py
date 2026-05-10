@@ -29,6 +29,7 @@ Algorithm:
 from __future__ import annotations
 
 import csv
+import datetime as dt
 import json
 import math
 from collections import Counter
@@ -278,7 +279,7 @@ def cluster_summary(
     centroids are pulled toward high-weight points and per-cluster `n`
     becomes the sum of weights instead of the member count."""
     fit_weights = weights if weights is not None else None
-    km = KMeans(n_clusters=k, random_state=RANDOM_STATE, n_init=10).fit(
+    km = KMeans(n_clusters=k, random_state=RANDOM_STATE, n_init=100).fit(
         points, sample_weight=fit_weights
     )
     labels = km.labels_
@@ -355,7 +356,7 @@ def build_assignments(
     """For each k, the cluster index assigned to each member (0..k-1)."""
     out: dict[str, list[int]] = {}
     for k in K_VALUES:
-        km = KMeans(n_clusters=k, random_state=RANDOM_STATE, n_init=10).fit(
+        km = KMeans(n_clusters=k, random_state=RANDOM_STATE, n_init=100).fit(
             points, sample_weight=weights
         )
         out[str(k)] = [int(x) for x in km.labels_]
@@ -433,6 +434,7 @@ def main() -> int:
         "views": views,
         "default_view": "members",
         "default_k": 10,
+        "last_updated": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d"),
     }
 
     with out_path.open("w") as f:

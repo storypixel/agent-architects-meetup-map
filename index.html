@@ -681,7 +681,7 @@
       </div>
     </div>
     <div class="modal-footer">
-      <p class="footnote">Full per&#8209;member dataset: <a href="members.csv" download>members.csv</a> &middot; <a href="https://github.com/storypixel/agent-architects-meetup-map" target="_blank" rel="noopener">code on github</a></p>
+      <p class="footnote"><span id="last-updated"></span>Full per&#8209;member dataset: <a href="members.csv" download>members.csv</a> &middot; <a href="https://github.com/storypixel/agent-architects-meetup-map" target="_blank" rel="noopener">code on github</a></p>
       <button class="cta" id="cta-explore">
         <span>Explore the map</span>
         <span class="arrow">&rarr;</span>
@@ -718,6 +718,11 @@ function writeUrl(view, k) {
 
 let currentView = readUrl().view;
 function getView() { return DATA.views[currentView]; }
+
+if (DATA.last_updated) {
+  const el = document.getElementById('last-updated');
+  if (el) el.textContent = `Updated ${DATA.last_updated} · `;
+}
 
 const PALETTE = [
   "#b04127","#2d5d6e","#c69749","#5a7d4e","#8b4773","#1f4a78","#b87f44","#6e8e76",

@@ -35,25 +35,40 @@ You need [`uv`](https://github.com/astral-sh/uv) and a Skool account that's a me
 
 ```bash
 uv sync
+uv run playwright install chromium
 
-# 1. Get your auth_token cookie:
-#    - log into skool.com in any browser
-#    - devtools -> Application -> Cookies -> https://www.skool.com
-#    - copy the value of the `auth_token` cookie
-export SKOOL_AUTH_TOKEN=<paste here>
+# One-time login. Opens a browser; log into Skool, then close the window.
+# Session cookies persist in ~/.aa-meetup-map-profile/ for all future runs.
+uv run python scripts/scrape.py --login
 
-# 2. Scrape coordinates (writes members.csv)
+# Scrape coordinates + activity points (writes members.csv)
 uv run python scripts/scrape.py --community agent-architects
 
-# 3. Cluster + reverse-geocode (writes data.json)
+# Cluster + reverse-geocode (writes data.json)
 uv run python scripts/cluster.py
 
-# 4. Serve the page locally
+# Serve the page locally
 python3 -m http.server 8000
 # open http://localhost:8000
 ```
 
-To analyze a different community, change `--community` to that community's slug (the part of the URL after `skool.com/`).
+To analyze a different community, pass `--community <slug>` (the part of the URL after `skool.com/`).
+
+## Weekly auto-refresh (macOS, launchd)
+
+`scripts/refresh.sh` runs scrape + cluster + commit + push. To schedule it Sundays at 7am local time:
+
+```bash
+mkdir -p ~/.local/share/aa-meetup-map
+cp scripts/com.bonayrindustries.aa-meetup-map.plist ~/Library/LaunchAgents/
+launchctl load ~/Library/LaunchAgents/com.bonayrindustries.aa-meetup-map.plist
+
+# Run once now to verify it works:
+launchctl start com.bonayrindustries.aa-meetup-map
+tail -f ~/.local/share/aa-meetup-map/stderr.log
+```
+
+If a Skool session expires (rare; the cookie is good for ~1 year), the cron will fail with "auth state likely expired" in stderr.log. Re-run `uv run python scripts/scrape.py --login` to refresh.
 
 ## Algorithm
 
