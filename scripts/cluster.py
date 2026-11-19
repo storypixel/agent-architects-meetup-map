@@ -278,9 +278,8 @@ def cluster_summary(
     """Run kmeans + summarize clusters. If `weights` is provided, kmeans
     centroids are pulled toward high-weight points and per-cluster `n`
     becomes the sum of weights instead of the member count."""
-    fit_weights = weights if weights is not None else None
     km = KMeans(n_clusters=k, random_state=RANDOM_STATE, n_init=100).fit(
-        points, sample_weight=fit_weights
+        points, sample_weight=weights
     )
     labels = km.labels_
     centers = km.cluster_centers_
@@ -402,17 +401,19 @@ def main() -> int:
     views: dict[str, dict] = {}
     # Members view (unweighted)
     print("computing members view...")
+    member_metros, member_countries = build_top(metros)
     views["members"] = {
         "clusters": {str(k): cluster_summary(coords, metros, k) for k in K_VALUES},
         "assignments": build_assignments(coords),
         "total": len(coords),
-        "top_metros": build_top(metros)[0],
-        "top_countries": build_top(metros)[1],
+        "top_metros": member_metros,
+        "top_countries": member_countries,
     }
     # Activity view (weighted by points). Only built when at least one
     # member has nonzero points, otherwise it'd be identical to members.
     if has_activity:
         print("computing activity view (weighted by points)...")
+        activity_metros, activity_countries = build_top(metros, weights)
         views["activity"] = {
             "clusters": {
                 str(k): cluster_summary(coords, metros, k, weights) for k in K_VALUES
@@ -421,8 +422,8 @@ def main() -> int:
             "total": round(float(weights.sum()), 1),
             "total_members": len(coords),
             "active_members": int((weights > 0).sum()),
-            "top_metros": build_top(metros, weights)[0],
-            "top_countries": build_top(metros, weights)[1],
+            "top_metros": activity_metros,
+            "top_countries": activity_countries,
         }
 
     data = {
